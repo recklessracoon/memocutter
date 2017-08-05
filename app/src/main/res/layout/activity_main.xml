@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:weightSum="20"
+    tools:context="com.example.roman.audiocuttertest.MainActivity">
+
+    <TextView
+        android:text="@string/first_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/first_textView"
+        android:layout_weight="2"
+        android:textSize="30sp" />
+
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="18">
+        <Button
+            app:layout_widthPercent="100%"
+            app:layout_aspectRatio="100%"
+        android:id="@+id/first_button"
+        android:background="@drawable/round"
+        android:textSize="36sp"
+        android:text="@string/first_button"
+        />
+
+    </android.support.percent.PercentRelativeLayout>
+
+</LinearLayout>

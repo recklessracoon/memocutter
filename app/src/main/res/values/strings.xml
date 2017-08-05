@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">AudioCutterTest</string>
+
+    <!--> First Activity </-->
+    <string name="first_button">Insert memo</string>
+    <string name="first_text">Choose the sound file you want to edit</string>
+    <string name="first_select_file">Select a file</string>
+    <string name="first_no_file_manager">You dont have a file manager installed</string>
+    <string name="first_file_load_error">An error occurred while loading</string>
+
+    <!--> Edit Activity </-->
+    <string name="edit_load_fail">Could not load the sound file</string>
+</resources>
