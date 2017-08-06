@@ -98,11 +98,8 @@ public class MainActivity extends AppCompatActivity {
                 Uri uri = data.getData();
                 // Get the path
                 String path = null;
-                try {
-                    path = getPath(this, uri);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
+
+                path = getPath(this, uri);
 
                 Log.d("CHOOSE", "File Path: " + path);
                 File file = new File(path);
@@ -126,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public static String getPath(Context context, Uri uri) throws URISyntaxException {
+    public static String getPath(Context context, Uri uri) {
         if ("content".equalsIgnoreCase(uri.getScheme())) {
             String[] projection = { "_data" };
             Cursor cursor = null;

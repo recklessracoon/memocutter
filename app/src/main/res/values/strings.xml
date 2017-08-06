@@ -17,7 +17,7 @@
     <string name="edit_start_tag">Mark beginning</string>
     <string name="edit_end_tag">Mark end</string>
     <string name="edit_btn_cut">Cut Audio</string>
-    <string name="edit_cut_not_allowed">You must first set a beginning and end time</string>
+    <string name="edit_cut_not_allowed">You must set a valid beginning and end time</string>
 
     <!--> Other </-->
     <string name="other_prefs_last">lastFile</string>

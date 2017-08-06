@@ -53,7 +53,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
     private TextView beginningTxt, endTxt;
     private Cutter cutter;
 
-    private Runnable updateBar = new Runnable() {
+    private final Runnable updateBar = new Runnable() {
 
         @Override
         public void run() {
@@ -66,7 +66,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
         }
     };
 
-    private Runnable updateBarFromCut = new Runnable() {
+    private final Runnable updateBarFromCut = new Runnable() {
 
         @Override
         public void run() {

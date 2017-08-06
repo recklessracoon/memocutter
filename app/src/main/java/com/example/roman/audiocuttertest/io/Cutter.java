@@ -61,7 +61,7 @@ public class Cutter implements FFmpegExecuteResponseHandler {
     }
 
     public boolean cutAllowed(){
-        return set1&&set2;
+        return set1 && set2 && (beginning != end);
     }
 
     public MediaPlayer cutWithFFMPEG(){

@@ -10,6 +10,6 @@ import java.io.IOException;
  */
 
 public interface AudioLoaderCallback {
-    public void audioLoadSuccess(File audioFile, MediaPlayer mediaPlayer);
-    public void audioLoadFail(IOException e);
+    void audioLoadSuccess(File audioFile, MediaPlayer mediaPlayer);
+    void audioLoadFail(IOException e);
 }
