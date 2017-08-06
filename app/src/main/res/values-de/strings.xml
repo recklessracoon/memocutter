@@ -9,12 +9,12 @@
     <string name="edit_load_fail">Konnte die Datei nicht laden</string>
     <string name="edit_start_tag">Anfang markieren</string>
     <string name="edit_wait">Bitte warten..</string>
-    <string name="first_button">Audiodatei einfügen</string>
+    <string name="first_button">Audiodatei auswählen</string>
     <string name="first_button_last">Zuletzt bearbeitet</string>
     <string name="first_file_load_error">Ein Fehler trat auf beim Laden</string>
     <string name="first_no_file_manager">Es ist kein File Browser installiert</string>
     <string name="first_select_file">Datei wählen</string>
-    <string name="first_text">Audiodatei zum Bearbeiten auswählen</string>
+    <string name="first_text">Audiodatei entweder manuell auswählen, oder aus einer anderen App teilen</string>
     <string name="other_content_playpause1">Spielt die zu bearbeitende Audiodatei</string>
     <string name="other_content_playpause2">Spielt die bearbeitete Audiodatei</string>
     <string name="other_share">Teilen via</string>

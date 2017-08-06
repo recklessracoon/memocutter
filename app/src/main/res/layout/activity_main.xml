@@ -21,7 +21,7 @@
         android:gravity="center"
         android:id="@+id/first_textView"
         android:layout_weight="2"
-        android:textSize="30sp" />
+        android:textSize="22sp" />
 
     <android.support.percent.PercentRelativeLayout
         android:layout_width="match_parent"

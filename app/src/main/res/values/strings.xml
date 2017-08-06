@@ -3,8 +3,8 @@
 
     <!--> First Activity </-->
     <string name="first_button_last">Last file used</string>
-    <string name="first_button">Insert memo</string>
-    <string name="first_text">Choose the sound file you want to edit</string>
+    <string name="first_button">Insert sound file</string>
+    <string name="first_text">Insert the sound file manually or open by sharing from another App</string>
     <string name="first_select_file">Select a file</string>
     <string name="first_no_file_manager">You dont have a file manager installed</string>
     <string name="first_file_load_error">An error occurred while loading</string>
