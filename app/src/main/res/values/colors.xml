@@ -6,6 +6,7 @@
 
     <color name="colorYellow">#FFFF00</color>
 
-    <color name="lightPrimary">#bcc5ff</color>
-    <color name="lightPrimaryDark">#7b8fff</color>
+    <color name="primaryBackground">#d6d6d6</color>
+
+    <color name="colorWhite">#ffffff</color>
 </resources>

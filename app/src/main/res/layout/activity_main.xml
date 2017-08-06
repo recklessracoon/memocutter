@@ -10,7 +10,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:weightSum="20"
+    android:weightSum="22"
+    android:background="@color/primaryBackground"
     tools:context="com.example.roman.audiocuttertest.MainActivity">
 
     <TextView
@@ -32,9 +33,20 @@
         android:id="@+id/first_button"
         android:background="@drawable/round"
         android:textSize="36sp"
+            android:textColor="@color/colorWhite"
         android:text="@string/first_button"
         />
 
     </android.support.percent.PercentRelativeLayout>
+
+    <Button
+        android:text="@string/first_button_last"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/first_button_last"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/roundbutton"
+        android:layout_weight="2" />
 
 </LinearLayout>

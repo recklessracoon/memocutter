@@ -2,6 +2,7 @@
     <string name="app_name">AudioCutterTest</string>
 
     <!--> First Activity </-->
+    <string name="first_button_last">Last file used</string>
     <string name="first_button">Insert memo</string>
     <string name="first_text">Choose the sound file you want to edit</string>
     <string name="first_select_file">Select a file</string>
@@ -10,4 +11,18 @@
 
     <!--> Edit Activity </-->
     <string name="edit_load_fail">Could not load the sound file</string>
+    <string name="edit_wait">Please wait..</string>
+    <string name="edit_convert">Converting .opus to .mp3</string>
+    <string name="edit_cut">Cutting the audio file</string>
+    <string name="edit_start_tag">Mark beginning</string>
+    <string name="edit_end_tag">Mark end</string>
+    <string name="edit_btn_cut">Cut Audio</string>
+    <string name="edit_cut_not_allowed">You must first set a beginning and end time</string>
+
+    <!--> Other </-->
+    <string name="other_prefs_last">lastFile</string>
+    <string name="other_content_playpause1">Plays the sound file you want to edit</string>
+    <string name="other_content_playpause2">Plays the edited sound file</string>
+    <string name="other_share">Share audio via</string>
+    <string name="other_share_nothing">There is nothing you can share</string>
 </resources>

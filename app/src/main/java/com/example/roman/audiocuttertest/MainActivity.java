@@ -1,9 +1,12 @@
 package com.example.roman.audiocuttertest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +20,7 @@ import java.net.URISyntaxException;
 public class MainActivity extends AppCompatActivity {
 
     private static final int FILE_SELECT_CODE = 0;
-    private Button insert;
+    private Button insert, last;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +28,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         insert = (Button) findViewById(R.id.first_button);
+        last = (Button) findViewById(R.id.first_button_last);
+
+        File lastConverted = new File(MainActivity.getLastFile(this));
+        if(!lastConverted.exists()){
+            last.setVisibility(View.GONE);
+        }
+
+        final Activity activity = this;
+
         insert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFileChooser();
             }
         });
-
+        last.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File lastConverted = new File(MainActivity.getLastFile(activity));
+                if(lastConverted.exists()){
+                    intentWithFile(lastConverted);
+                }
+            }
+        });
     }
 
     /*
@@ -46,9 +66,13 @@ public class MainActivity extends AppCompatActivity {
     */
 
     private void showFileChooser() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        //intent.setType("*/*");
+        //intent.addCategory(Intent.CATEGORY_OPENABLE);
+        Intent intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
+        intent.putExtra("CONTENT_TYPE", "*/*");
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
 
         try {
             startActivityForResult(
@@ -84,11 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 File file = new File(path);
 
                 if(file.exists()){
-                    Intent intent = new Intent(this, EditActivity.class);
-                    Bundle b = new Bundle();
-                    b.putSerializable("theFile", file);
-                    intent.putExtras(b); //Put your id to your next Intent
-                    startActivity(intent);
+                    intentWithFile(file);
                 } else {
                     makeToast("");
                 }
@@ -96,6 +116,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void intentWithFile(File file){
+        Intent intent = new Intent(this, EditActivity.class);
+        Bundle b = new Bundle();
+        b.putSerializable("theFile", file);
+        intent.putExtras(b); //Put your id to your next Intent
+        startActivity(intent);
     }
 
     public static String getPath(Context context, Uri uri) throws URISyntaxException {
@@ -124,5 +152,21 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),
                 text , Toast.LENGTH_LONG)
                 .show();
+    }
+
+    public static void saveLastFile(Activity activity, String lastFile){
+        SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        SharedPreferences.Editor edit = sh.edit();
+
+        edit.putString(activity.getString(R.string.other_prefs_last), lastFile);
+        Log.d("SAVE",lastFile);
+        edit.apply();
+    }
+
+    public static String getLastFile(Activity activity){
+        SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        String out = sh.getString(activity.getString(R.string.other_prefs_last), "");
+        Log.d("LOAD",out);
+        return out;
     }
 }
