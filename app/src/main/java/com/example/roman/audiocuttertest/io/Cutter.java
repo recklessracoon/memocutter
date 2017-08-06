@@ -3,6 +3,7 @@ package com.example.roman.audiocuttertest.io;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.Log;
 
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
@@ -146,22 +147,13 @@ public class Cutter implements FFmpegExecuteResponseHandler {
         }
 
         MediaPlayer mediaPlayer = null;
-        //Uri myUri = Uri.fromFile(cut); // initialize Uri here
-        mediaPlayer = new MediaPlayer();
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(cut);
-            mediaPlayer.setDataSource(fis.getFD());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Uri myUri = Uri.fromFile(cut); // initialize Uri here
 
+        mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         try {
-            //mediaPlayer.setDataSource(context, myUri);
+            mediaPlayer.setDataSource(context, myUri);
             mediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();

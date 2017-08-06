@@ -7,7 +7,6 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -249,7 +248,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
                 ffmpeg.execute(cmd, new FFmpegExecuteResponseHandler() {
                     @Override
                     public void onSuccess(String message) {
-                        name1.setText(file.getName());
+                        name1.setText(file.getAbsolutePath());
                         new AudioLoader(context, mypath, tmp).start();
                         MainActivity.saveLastFile(context, mypath.getAbsolutePath());
                     }
@@ -353,7 +352,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
     }
 
     @Override
-    public void audioLoadSuccess(MediaPlayer mediaPlayer) {
+    public void audioLoadSuccess(File audioFile, MediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -366,9 +365,8 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
                 });
             }
         });
-        Bundle extras = getIntent().getExtras();
-        final File file = (File) extras.getSerializable("theFile");
-        cutter = new Cutter(this, ffmpeg, mediaPlayer, file);
+
+        cutter = new Cutter(this, ffmpeg, mediaPlayer, audioFile);
 
         runOnUiThread(new Runnable() {
             @Override

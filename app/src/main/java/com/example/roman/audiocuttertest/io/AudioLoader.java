@@ -32,7 +32,7 @@ public class AudioLoader extends Thread {
         try {
             mediaPlayer.setDataSource(context, myUri);
             mediaPlayer.prepare();
-            callback.audioLoadSuccess(mediaPlayer);
+            callback.audioLoadSuccess(audioFile, mediaPlayer);
         } catch (IOException e) {
             callback.audioLoadFail(e);
         }

@@ -2,6 +2,7 @@ package com.example.roman.audiocuttertest.io;
 
 import android.media.MediaPlayer;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -9,6 +10,6 @@ import java.io.IOException;
  */
 
 public interface AudioLoaderCallback {
-    public void audioLoadSuccess(MediaPlayer mediaPlayer);
+    public void audioLoadSuccess(File audioFile, MediaPlayer mediaPlayer);
     public void audioLoadFail(IOException e);
 }
