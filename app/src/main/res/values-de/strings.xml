@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AudioCutterTest</string>
+    <string name="edit_btn_cut">Bereich ausschneiden</string>
+    <string name="edit_convert">Konvertiere .opus zu .mp3</string>
+    <string name="edit_cut">Schneide die Audiodatei</string>
+    <string name="edit_cut_not_allowed">Zuerst muss ein gültiger Zeitbereich ausgewählt sein</string>
+    <string name="edit_end_tag">Ende markieren</string>
+    <string name="edit_load_fail">Konnte die Datei nicht laden</string>
+    <string name="edit_start_tag">Anfang markieren</string>
+    <string name="edit_wait">Bitte warten..</string>
+    <string name="first_button">Audiodatei einfügen</string>
+    <string name="first_button_last">Zuletzt bearbeitet</string>
+    <string name="first_file_load_error">Ein Fehler trat auf beim Laden</string>
+    <string name="first_no_file_manager">Es ist kein File Browser installiert</string>
+    <string name="first_select_file">Datei wählen</string>
+    <string name="first_text">Audiodatei zum Bearbeiten auswählen</string>
+    <string name="other_content_playpause1">Spielt die zu bearbeitende Audiodatei</string>
+    <string name="other_content_playpause2">Spielt die bearbeitete Audiodatei</string>
+    <string name="other_share">Teilen via</string>
+    <string name="other_share_nothing">Es gibt nichts zu teilen</string>
+</resources>
