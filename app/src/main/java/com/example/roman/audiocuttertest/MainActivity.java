@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
-import java.net.URISyntaxException;
 
 public class MainActivity extends AppCompatActivity {
 

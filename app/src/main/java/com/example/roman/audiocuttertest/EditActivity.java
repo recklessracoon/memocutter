@@ -221,7 +221,8 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
     private void enqueueMediaPlayerInit(){
 
         Bundle extras = getIntent().getExtras();
-        final File file = (File) extras.getSerializable("theFile");
+
+        final File file = (extras.getSerializable("theFile") == null) ? new File(((Uri)extras.get("android.intent.extra.STREAM")).getPath()) : ((File) extras.getSerializable("theFile"));
         //Log.d("OPUS","contains opus?"+file.getName()+" "+file.getName().contains(".opus"));
 
         if(file.getName().contains(".opus")){ // convert to mp3 first
@@ -242,6 +243,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
             final Activity context = this;
 
             try {
+
                 if(mypath.exists())
                     mypath.delete();
 
@@ -260,7 +262,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
 
                     @Override
                     public void onFailure(String message) {
-                        name1.setText(file.getName());
+                        name1.setText(file.getAbsolutePath());
                         new AudioLoader(context, file, tmp).start();
                     }
 
@@ -283,7 +285,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
             }
         }
 
-        name1.setText(file.getName());
+        name1.setText(file.getAbsolutePath());
         new AudioLoader(this, file, this).start();
         MainActivity.saveLastFile(this, file.getAbsolutePath());
     }

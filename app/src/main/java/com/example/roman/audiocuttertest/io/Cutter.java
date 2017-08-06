@@ -11,9 +11,8 @@ import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +27,9 @@ public class Cutter implements FFmpegExecuteResponseHandler {
     private FFmpeg fFmpeg;
     private MediaPlayer toCutMedia;
     private File toCutFile;
+
+    private File afterCut; //saves afterCut here after cut
+
     private Context context;
 
     private int beginning, end;
@@ -67,7 +69,14 @@ public class Cutter implements FFmpegExecuteResponseHandler {
     public MediaPlayer cutWithFFMPEG(){
 
         File cut = getTemporaryCutFileLocation();
-        cut.delete();
+
+        if(!cut.getAbsolutePath().equals(toCutFile.getAbsolutePath())) {
+            cut.delete();
+        } else {
+            do {
+                cut = getTemporaryCutFileLocationWithName("recursive_"+randomInt(69,1337)+".mp3");
+            } while(cut.exists());
+        }
 
         if(beginning <= end) {
             String[] cmd = new String[9];
@@ -146,6 +155,7 @@ public class Cutter implements FFmpegExecuteResponseHandler {
             e.printStackTrace();
         }
 
+        afterCut = cut;
         MediaPlayer mediaPlayer = null;
         Uri myUri = Uri.fromFile(cut); // initialize Uri here
 
@@ -163,26 +173,7 @@ public class Cutter implements FFmpegExecuteResponseHandler {
     }
 
     public File getTemporaryCutFileLocation(){
-
-        //File directory = cw.getDir("AudioCutter", Context.MODE_PRIVATE);
-        //File directory = new File(cw.getFilesDir(), "AudioCutter");
-        File directory = new File(getExternalStorageDirectory().getAbsolutePath()+"/AudioCutter");
-
-        if(!directory.exists())
-            directory.mkdirs();
-
-        final File mypath = new File(directory,"temp_cut.mp3");
-
-        if(mypath.getParentFile() != null && !mypath.getParentFile().exists())
-            mypath.getParentFile().mkdirs();
-
-        try {
-            mypath.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return mypath;
+        return (afterCut == null) ? getTemporaryCutFileLocationWithName("temp_cut.mp3") : afterCut;
     }
 
     private File getTemporaryCutFileLocationWithName(String filename){
@@ -198,12 +189,6 @@ public class Cutter implements FFmpegExecuteResponseHandler {
 
         if(mypath.getParentFile() != null && !mypath.getParentFile().exists())
             mypath.getParentFile().mkdirs();
-
-        try {
-            mypath.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         return mypath;
     }
@@ -247,5 +232,9 @@ public class Cutter implements FFmpegExecuteResponseHandler {
     @Override
     public void onFinish() {
         wait.release();
+    }
+
+    public static int randomInt(int min, int max) {
+        return 1 + (int) (new Random().nextDouble() * (max-1 + (min)));
     }
 }
