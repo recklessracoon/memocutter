@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AudioCutterTest</string>
+    <string name="app_name">AudioCutter</string>
 
     <!--> First Activity </-->
     <string name="first_button_last">Last file used</string>

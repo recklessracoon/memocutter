@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AudioCutterTest</string>
+    <string name="app_name">AudioCutter</string>
     <string name="edit_btn_cut">Bereich ausschneiden</string>
     <string name="edit_convert">Konvertiere .opus zu .mp3</string>
     <string name="edit_cut">Schneide die Audiodatei</string>
