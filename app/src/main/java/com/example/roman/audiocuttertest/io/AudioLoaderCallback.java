@@ -11,5 +11,5 @@ import java.io.IOException;
 
 public interface AudioLoaderCallback {
     void audioLoadSuccess(File audioFile, MediaPlayer mediaPlayer);
-    void audioLoadFail(IOException e);
+    void audioLoadFail(File audioFile, IOException e);
 }

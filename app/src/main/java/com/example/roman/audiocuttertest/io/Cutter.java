@@ -176,7 +176,7 @@ public class Cutter implements FFmpegExecuteResponseHandler {
         return (afterCut == null) ? getTemporaryCutFileLocationWithName("temp_cut.mp3") : afterCut;
     }
 
-    private File getTemporaryCutFileLocationWithName(String filename){
+    public static File getTemporaryCutFileLocationWithName(String filename){
 
         //File directory = cw.getDir("AudioCutter", Context.MODE_PRIVATE);
         //File directory = new File(cw.getFilesDir(), "AudioCutter");

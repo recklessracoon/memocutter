@@ -53,6 +53,8 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
     private TextView beginningTxt, endTxt;
     private Cutter cutter;
 
+    private boolean triedConversionOnce;
+
     private final Runnable updateBar = new Runnable() {
 
         @Override
@@ -95,6 +97,8 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        triedConversionOnce = false;
     }
 
     private void initProgressDialog(){
@@ -222,67 +226,15 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
 
         Bundle extras = getIntent().getExtras();
 
-        final File file = (extras.getSerializable("theFile") == null) ? new File(((Uri)extras.get("android.intent.extra.STREAM")).getPath()) : ((File) extras.getSerializable("theFile"));
+        final File file = (extras.getSerializable("theFile") == null) ?
+                new File((AudioLoader.getRealPathFromURI(this, ((Uri)extras.get("android.intent.extra.STREAM"))))) :
+                ((File) extras.getSerializable("theFile"));
+
+
         //Log.d("OPUS","contains opus?"+file.getName()+" "+file.getName().contains(".opus"));
 
-        if(file.getName().contains(".opus")){ // convert to mp3 first
-
-            progressConvert.show();
-
-            String[] cmd = new String[5];
-            cmd[0] = "-i";
-            cmd[1] = file.getAbsolutePath();
-            cmd[2] = "-acodec";
-            cmd[3] = "libmp3lame";
-
-            final File mypath = EditActivity.getTemporarySavedFile(this);
-
-            cmd[4] = mypath.getAbsolutePath();
-
-            final AudioLoaderCallback tmp = this;
-            final Activity context = this;
-
-            try {
-
-                if(mypath.exists())
-                    mypath.delete();
-
-                ffmpeg.execute(cmd, new FFmpegExecuteResponseHandler() {
-                    @Override
-                    public void onSuccess(String message) {
-                        name1.setText(file.getAbsolutePath());
-                        new AudioLoader(context, mypath, tmp).start();
-                        MainActivity.saveLastFile(context, mypath.getAbsolutePath());
-                    }
-
-                    @Override
-                    public void onProgress(String message) {
-                        Log.d("FFMPEG",message);
-                    }
-
-                    @Override
-                    public void onFailure(String message) {
-                        name1.setText(file.getAbsolutePath());
-                        new AudioLoader(context, file, tmp).start();
-                    }
-
-                    @Override
-                    public void onStart() {
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        progressConvert.dismiss();
-                    }
-                });
-
-                return;
-
-            } catch (FFmpegCommandAlreadyRunningException e) {
-                e.printStackTrace();
-                makeToast("Still running exception");
-            }
+        for(String s : extras.keySet()){
+            Log.d("INTE",s+" -> "+extras.get(s));
         }
 
         name1.setText(file.getAbsolutePath());
@@ -379,13 +331,86 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
     }
 
     @Override
-    public void audioLoadFail(IOException e) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                makeToast(getString(R.string.edit_load_fail));
+    public void audioLoadFail(final File file, IOException e) {
+
+        if(!triedConversionOnce){ // convert to mp3 first
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressConvert.show();
+                }
+            });
+
+            String[] cmd = new String[5];
+            cmd[0] = "-i";
+            cmd[1] = file.getAbsolutePath();
+            cmd[2] = "-acodec";
+            cmd[3] = "libmp3lame";
+
+            final File mypath = EditActivity.getTemporarySavedFile(this);
+
+            cmd[4] = mypath.getAbsolutePath();
+
+            final AudioLoaderCallback tmp = this;
+            final Activity context = this;
+
+            try {
+
+                if(mypath.exists())
+                    mypath.delete();
+
+                ffmpeg.execute(cmd, new FFmpegExecuteResponseHandler() {
+                    @Override
+                    public void onSuccess(String message) {
+                        new AudioLoader(context, mypath, tmp).start();
+                        MainActivity.saveLastFile(context, mypath.getAbsolutePath());
+                    }
+
+                    @Override
+                    public void onProgress(String message) {
+                        Log.d("FFMPEG",message);
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        new AudioLoader(context, file, tmp).start();
+                    }
+
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                name1.setText(file.getAbsolutePath());
+                                progressConvert.dismiss();
+                                triedConversionOnce = true;
+                            }
+                        });
+                    }
+                });
+
+                return;
+
+            } catch (FFmpegCommandAlreadyRunningException ex) {
+                ex.printStackTrace();
+                makeToast("Still running exception");
             }
-        });
+        } else {
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    makeToast(getString(R.string.edit_load_fail));
+                }
+            });
+
+        }
     }
 
     private void mediaPlayerFromCutFileArrives(final MediaPlayer mediaPlayerFromCut){

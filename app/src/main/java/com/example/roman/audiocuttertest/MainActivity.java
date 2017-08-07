@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.roman.audiocuttertest.io.AudioLoader;
 
 import java.io.File;
 
@@ -69,9 +72,24 @@ public class MainActivity extends AppCompatActivity {
         //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         //intent.setType("*/*");
         //intent.addCategory(Intent.CATEGORY_OPENABLE);
-        Intent intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
-        intent.putExtra("CONTENT_TYPE", "*/*");
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
+
+        //Intent intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
+        //intent.putExtra("CONTENT_TYPE", "*/*");
+        //intent.addCategory(Intent.CATEGORY_DEFAULT);
+
+        Intent intent = null;
+
+        if(Build.MODEL.contains("amsung") || Build.MANUFACTURER.contains("amsung")){
+
+            intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
+            intent.putExtra("CONTENT_TYPE", "*/*");
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+
+        } else {
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("*/*");
+        }
 
         try {
             startActivityForResult(
@@ -95,10 +113,13 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Uri uri = data.getData();
+
+                //intentWithUri(uri);
+
                 // Get the path
                 String path = null;
 
-                path = getPath(this, uri);
+                path = AudioLoader.getRealPathFromURI(this, uri);
 
                 Log.d("CHOOSE", "File Path: " + path);
                 File file = new File(path);
@@ -122,6 +143,15 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void intentWithUri(Uri uri){
+        Intent intent = new Intent(this, EditActivity.class);
+        Bundle b = new Bundle();
+        b.putSerializable("theUri", uri.toString());
+        intent.putExtras(b); //Put your id to your next Intent
+        startActivity(intent);
+    }
+
+    /*
     public static String getPath(Context context, Uri uri) {
         if ("content".equalsIgnoreCase(uri.getScheme())) {
             String[] projection = { "_data" };
@@ -143,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
         return null;
     }
+*/
 
     public void makeToast(String text){
         Toast.makeText(getApplicationContext(),

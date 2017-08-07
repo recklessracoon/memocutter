@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">AudioCutter</string>
     <string name="edit_btn_cut">Bereich ausschneiden</string>
-    <string name="edit_convert">Konvertiere .opus zu .mp3</string>
+    <string name="edit_convert">Konvertiere zu .mp3</string>
     <string name="edit_cut">Schneide die Audiodatei</string>
     <string name="edit_cut_not_allowed">Zuerst muss ein gültiger Zeitbereich ausgewählt sein</string>
     <string name="edit_end_tag">Ende markieren</string>

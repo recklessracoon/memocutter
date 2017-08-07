@@ -12,7 +12,7 @@
     <!--> Edit Activity </-->
     <string name="edit_load_fail">Could not load the sound file</string>
     <string name="edit_wait">Please wait..</string>
-    <string name="edit_convert">Converting .opus to .mp3</string>
+    <string name="edit_convert">Converting to .mp3</string>
     <string name="edit_cut">Cutting the audio file</string>
     <string name="edit_start_tag">Mark beginning</string>
     <string name="edit_end_tag">Mark end</string>
