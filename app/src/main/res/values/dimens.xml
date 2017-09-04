@@ -8,4 +8,11 @@
     <dimen name="button_height">256dp</dimen>
 
     <dimen name="button_mini_margin">4dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+
+    <dimen name="recycler_widespace">8dp</dimen>
+    <dimen name="recycler_margin_mini">32dp</dimen>
+    <dimen name="recycler_minsize">96dp</dimen>
+    <dimen name="recycler_margin">128dp</dimen>
 </resources>

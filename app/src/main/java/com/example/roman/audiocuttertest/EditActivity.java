@@ -48,7 +48,6 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
     private ImageButton playpause1, playpause2;
     private TextView from1, now1, to1, name1, from2, now2, to2;
 
-
     private Button markBeginning, markEnd, cut;
     private TextView beginningTxt, endTxt;
     private Cutter cutter;
@@ -148,7 +147,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                playpause1.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
+                                playpause1.setImageResource(R.drawable.ic_pause_circle_outline_white_24dp);
                             }
                         });
                     } else {
@@ -156,7 +155,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                playpause1.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+                                playpause1.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
                             }
                         });
                     }
@@ -174,7 +173,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                playpause2.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
+                                playpause2.setImageResource(R.drawable.ic_pause_circle_outline_white_24dp);
                             }
                         });
                     } else {
@@ -182,7 +181,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                playpause2.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+                                playpause2.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
                             }
                         });
                     }
@@ -314,7 +313,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        playpause1.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+                        playpause1.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
                     }
                 });
             }
@@ -422,7 +421,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        playpause2.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+                        playpause2.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
                     }
                 });
             }
@@ -546,7 +545,7 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
     // create an action bar button
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.mymenu, menu);
+        getMenuInflater().inflate(R.menu.share_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

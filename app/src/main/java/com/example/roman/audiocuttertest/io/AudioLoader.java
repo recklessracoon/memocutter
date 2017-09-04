@@ -93,7 +93,7 @@ public class AudioLoader extends Thread {
 
         try {
             inputStream = context.getContentResolver().openInputStream(contentUri);
-            File bufferHere = Cutter.getTemporaryCutFileLocationWithName("soundFileFromUri.dat");
+            File bufferHere = Cutter.getTemporaryCutFileLocationWithName("lastEditedFile.dat"); // .dat
             copyInputStreamToFile(inputStream, bufferHere);
             finalPath = bufferHere.getAbsolutePath();
         } catch (FileNotFoundException e) {

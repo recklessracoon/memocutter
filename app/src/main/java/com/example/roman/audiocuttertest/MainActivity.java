@@ -1,6 +1,7 @@
 package com.example.roman.audiocuttertest;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.roman.audiocuttertest.io.AudioLoader;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.File;
 
@@ -23,6 +28,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int FILE_SELECT_CODE = 0;
     private Button insert, last;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         last = (Button) findViewById(R.id.first_button_last);
 
         File lastConverted = new File(MainActivity.getLastFile(this));
-        if(!lastConverted.exists()){
+        if (!lastConverted.exists()) {
             last.setVisibility(View.GONE);
         }
 
@@ -48,24 +58,25 @@ public class MainActivity extends AppCompatActivity {
         last.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 File lastConverted = new File(MainActivity.getLastFile(activity));
                 if(lastConverted.exists()){
                     intentWithFile(lastConverted);
                 }
+                */
+
+                fileBrowserIntent();
             }
         });
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    /*
-    public void onStart(){
-        super.onStart();
-
-        makeToast("height: "+insert.getLayoutParams().height);
-        makeToast("width: "+insert.getLayoutParams().width);
-
-        insert.getLayoutParams().height = (insert.getLayoutParams().width);
+    private void fileBrowserIntent(){
+        Intent intent = new Intent(this, FileBrowserActivity.class);
+        startActivity(intent);
     }
-    */
 
     private void showFileChooser() {
 
@@ -79,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = null;
 
-        if(Build.MODEL.contains("amsung") || Build.MANUFACTURER.contains("amsung")){
+        if (Build.MODEL.contains("amsung") || Build.MANUFACTURER.contains("amsung")) {
 
             intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
             intent.putExtra("CONTENT_TYPE", "*/*");
@@ -95,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(
                     Intent.createChooser(intent, getString(R.string.first_select_file)),
                     FILE_SELECT_CODE);
-        } catch (android.content.ActivityNotFoundException ex) {
+        } catch (ActivityNotFoundException ex) {
             // Potentially direct the user to the Market with a Dialog
             Toast.makeText(this, getString(R.string.first_no_file_manager),
                     Toast.LENGTH_LONG).show();
@@ -108,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             case FILE_SELECT_CODE:
                 //if (resultCode == RESULT_OK) {
                 // Get the Uri of the selected file
-                if(data == null){
+                if (data == null) {
                     return;
                 }
 
@@ -124,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("CHOOSE", "File Path: " + path);
                 File file = new File(path);
 
-                if(file.exists()){
+                if (file.exists()) {
                     intentWithFile(file);
                 } else {
                     makeToast("");
@@ -135,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void intentWithFile(File file){
+    private void intentWithFile(File file) {
         Intent intent = new Intent(this, EditActivity.class);
         Bundle b = new Bundle();
         b.putSerializable("theFile", file);
@@ -143,57 +154,61 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void intentWithUri(Uri uri){
-        Intent intent = new Intent(this, EditActivity.class);
-        Bundle b = new Bundle();
-        b.putSerializable("theUri", uri.toString());
-        intent.putExtras(b); //Put your id to your next Intent
-        startActivity(intent);
-    }
-
-    /*
-    public static String getPath(Context context, Uri uri) {
-        if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = { "_data" };
-            Cursor cursor = null;
-
-            try {
-                cursor = context.getContentResolver().query(uri, projection, null, null, null);
-                int column_index = cursor.getColumnIndexOrThrow("_data");
-                if (cursor.moveToFirst()) {
-                    return cursor.getString(column_index);
-                }
-            } catch (Exception e) {
-                // Eat it
-            }
-        }
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-
-        return null;
-    }
-*/
-
-    public void makeToast(String text){
+    public void makeToast(String text) {
         Toast.makeText(getApplicationContext(),
-                text , Toast.LENGTH_LONG)
+                text, Toast.LENGTH_LONG)
                 .show();
     }
 
-    public static void saveLastFile(Activity activity, String lastFile){
+    public static void saveLastFile(Activity activity, String lastFile) {
         SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         SharedPreferences.Editor edit = sh.edit();
 
         edit.putString(activity.getString(R.string.other_prefs_last), lastFile);
-        Log.d("SAVE",lastFile);
+        Log.d("SAVE", lastFile);
         edit.apply();
     }
 
-    public static String getLastFile(Activity activity){
+    public static String getLastFile(Activity activity) {
         SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         String out = sh.getString(activity.getString(R.string.other_prefs_last), "");
-        Log.d("LOAD",out);
+        Log.d("LOAD", out);
         return out;
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }

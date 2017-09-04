@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AudioCutter</string>
+    <string name="app_name">MemoCutter</string>
 
     <!--> First Activity </-->
     <string name="first_button_last">Last file used</string>
@@ -19,10 +19,14 @@
     <string name="edit_btn_cut">Cut Audio</string>
     <string name="edit_cut_not_allowed">You must set a valid beginning and end time</string>
 
+    <!--> Search activity </-->
+    <string name="search_search" translatable="false">search</string>
+
     <!--> Other </-->
     <string name="other_prefs_last" translatable="false">lastFile</string>
     <string name="other_content_playpause1">Plays the sound file you want to edit</string>
     <string name="other_content_playpause2">Plays the edited sound file</string>
     <string name="other_share">Share audio via</string>
     <string name="other_share_nothing">There is nothing you can share</string>
+    <string name="title_activity_file_browser">FileBrowserActivity</string>
 </resources>
