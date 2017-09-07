@@ -5,7 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -14,8 +14,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
+import com.example.roman.audiocuttertest.decorators.AudioFilesPreloader;
+import com.example.roman.audiocuttertest.intro.IntroActivity;
 import com.example.roman.audiocuttertest.io.AudioLoader;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -27,7 +31,9 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity {
 
     private static final int FILE_SELECT_CODE = 0;
-    private Button insert, last;
+
+    private Button insert, last, another;
+    private CheckBox checkBox;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -37,17 +43,34 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_new);
 
+        initButtons();
+        initCheckbox();
+
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        new AudioFilesPreloader().withContext(this).withDirectory(EditActivity.getTemporarySavedFile(this).getParentFile()).apply();
+        handleIntro();
+    }
+
+    private void initCheckbox(){
+        checkBox = (CheckBox) findViewById(R.id.first_checkbox);
+        final Activity activity = this;
+
+        checkBox.setChecked(isIntroActivated(activity));
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                setIntroActivated(activity, isChecked);
+            }
+        });
+    }
+
+    private void initButtons(){
         insert = (Button) findViewById(R.id.first_button);
         last = (Button) findViewById(R.id.first_button_last);
-
-        File lastConverted = new File(MainActivity.getLastFile(this));
-        if (!lastConverted.exists()) {
-            last.setVisibility(View.GONE);
-        }
-
-        final Activity activity = this;
+        another = (Button) findViewById(R.id.first_button_other_app);
 
         insert.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,44 +81,53 @@ public class MainActivity extends AppCompatActivity {
         last.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*
-                File lastConverted = new File(MainActivity.getLastFile(activity));
-                if(lastConverted.exists()){
-                    intentWithFile(lastConverted);
-                }
-                */
-
                 fileBrowserIntent();
             }
         });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        another.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                otherAppIntent();
+            }
+        });
     }
 
+    private void handleIntro(){
+        if(isIntroActivated(this)) {
+            Intent intent = new Intent(this, IntroActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    //opens filebrowser-like activity FileBrowserActivity
     private void fileBrowserIntent(){
         Intent intent = new Intent(this, FileBrowserActivity.class);
         startActivity(intent);
     }
 
+    private void otherAppIntent(){
+        /*
+        Intent intent = Intent.createChooser(new Intent(Intent.), getString(R.string.first_button_other_app));
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+        */
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
     private void showFileChooser() {
-
-        //Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        //intent.setType("*/*");
-        //intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        //Intent intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
-        //intent.putExtra("CONTENT_TYPE", "*/*");
-        //intent.addCategory(Intent.CATEGORY_DEFAULT);
 
         Intent intent = null;
 
         if (Build.MODEL.contains("amsung") || Build.MANUFACTURER.contains("amsung")) {
-
             intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
             intent.putExtra("CONTENT_TYPE", "*/*");
             intent.addCategory(Intent.CATEGORY_DEFAULT);
-
         } else {
             intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -160,20 +192,17 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-    public static void saveLastFile(Activity activity, String lastFile) {
+    public static boolean isIntroActivated(Activity activity) {
+        SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        return sh.getBoolean("INTRO", true);
+    }
+
+    public static void setIntroActivated(Activity activity, boolean value) {
         SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         SharedPreferences.Editor edit = sh.edit();
 
-        edit.putString(activity.getString(R.string.other_prefs_last), lastFile);
-        Log.d("SAVE", lastFile);
+        edit.putBoolean("INTRO", value);
         edit.apply();
-    }
-
-    public static String getLastFile(Activity activity) {
-        SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        String out = sh.getString(activity.getString(R.string.other_prefs_last), "");
-        Log.d("LOAD", out);
-        return out;
     }
 
     /**

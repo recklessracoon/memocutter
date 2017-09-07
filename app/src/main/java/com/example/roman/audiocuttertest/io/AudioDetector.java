@@ -4,11 +4,11 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Roman on 03.09.2017.
@@ -31,8 +31,11 @@ public class AudioDetector extends Thread {
 
         ArrayList<Wrap> audioFiles = new ArrayList<>();
 
+        Log.d("BROWSE","started");
+
         for(File audioFile : audioCutterDirectory.listFiles()){
             if(audioFile.getName().contains("mp3")){
+                Log.d("BROWSE","ABS: "+audioFile.getAbsolutePath());
 
                 MediaPlayer mediaPlayer;
                 Uri myUri = Uri.fromFile(audioFile); // initialize Uri here
@@ -45,25 +48,14 @@ public class AudioDetector extends Thread {
                     audioFiles.add(new Wrap(audioFile, audioFile.getName(), mediaPlayer));
 
                 } catch (IOException e) {
-                    callback.onFail(e);
-                    return;
+                    callback.onAudioDetectorFail(audioFile, e);
+                    Log.d("BROWSE","FAIL"+e.toString());
                 }
 
             }
         } //endfor
 
-        callback.onSuccess(audioFiles);
+        callback.onAudioDetectorSuccess(audioFiles);
     }
 
-    public class Wrap {
-        public MediaPlayer mediaPlayer;
-        public String name;
-        public File actualFile;
-
-        public Wrap(File actualFile, String name, MediaPlayer mediaPlayer){
-            this.mediaPlayer = mediaPlayer;
-            this.name = name;
-            this.actualFile = actualFile;
-        }
-    }
 }

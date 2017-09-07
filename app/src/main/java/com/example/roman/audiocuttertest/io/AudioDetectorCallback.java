@@ -2,6 +2,7 @@ package com.example.roman.audiocuttertest.io;
 
 import android.media.MediaPlayer;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +12,6 @@ import java.util.HashMap;
  */
 
 public interface AudioDetectorCallback {
-    void onSuccess(ArrayList<AudioDetector.Wrap> audioFiles);
-    void onFail(Exception e);
+    void onAudioDetectorSuccess(ArrayList<Wrap> audioFiles);
+    void onAudioDetectorFail(File audioFile, Exception e);
 }

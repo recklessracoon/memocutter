@@ -1,11 +1,13 @@
 package com.example.roman.audiocuttertest.adapters;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Bundle;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,6 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.roman.audiocuttertest.EditActivity;
 import com.example.roman.audiocuttertest.R;
 import com.example.roman.audiocuttertest.decorators.RecyclerViewAdapterWithRemoveOption;
 import com.example.roman.audiocuttertest.decorators.Renameable;
@@ -23,24 +24,23 @@ import com.example.roman.audiocuttertest.io.Wrap;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
- * Created by Roman on 03.09.2017.
+ * Created by Roman on 05.09.2017.
  */
 
-public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.ViewHolder> implements RecyclerViewAdapterWithRemoveOption, Renameable {
+public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHolder> implements RecyclerViewAdapterWithRemoveOption, Renameable {
 
     private ArrayList<Wrap> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
+        public static class ViewHolder extends RecyclerView.ViewHolder{
+            // each data item is just a string in this case
         public TextView mTextView, mTextViewTime;
         public SeekBar mSeekBar;
-        public ImageButton mPlay;
+        public ImageButton mPlay, mShare;
 
         public MediaPlayer mediaPlayer;
         public Handler mHandler;
@@ -67,17 +67,14 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), EditActivity.class);
-                    Bundle b = new Bundle();
-                    b.putSerializable("theFile", actualFile);
-                    intent.putExtras(b); //Put your id to your next Intent
-                    v.getContext().startActivity(intent);
+                    // TODO decide what to do on view onclick
                 }
             });
 
             mTextView = (TextView) view.findViewById(R.id.textViewRecycler);
             mSeekBar = (SeekBar) view.findViewById(R.id.seekBarRecycler);
             mPlay = (ImageButton) view.findViewById(R.id.imageButtonRecycler);
+            mShare = (ImageButton) view.findViewById(R.id.imageButtonRecyclerChevron);
             mTextViewTime = (TextView) view.findViewById(R.id.nowRecycler);
 
             mHandler = new Handler();
@@ -113,9 +110,22 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
                             mPlay.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
                         } else {
                             mediaPlayer.pause();
-                                    mPlay.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+                            mPlay.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
                         }
                     }
+                }
+            });
+
+            mShare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String sharePath = actualFile.getAbsolutePath();
+                    Uri uri = Uri.parse(sharePath);
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.setType("audio/*");
+                    share.putExtra(Intent.EXTRA_STREAM, uri);
+                    Context context = v.getContext();
+                    context.startActivity(Intent.createChooser(share, context.getString(R.string.other_share)));
                 }
             });
         }
@@ -123,17 +133,17 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public FileBrowserAdapter(ArrayList<Wrap> myDataset) {
+    public EditMemoAdapter(ArrayList<Wrap> myDataset) {
         mDataset = myDataset;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public FileBrowserAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent,
+    public EditMemoAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent,
                                                             int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_view_item, parent, false);
+                .inflate(R.layout.edit_recycler_view_item, parent, false);
 
         ViewHolder vh = new ViewHolder(v);
 
@@ -153,7 +163,7 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
         holder.mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                        holder.mPlay.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+                holder.mPlay.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
             }
         });
 
@@ -170,20 +180,8 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
         return mDataset.size();
     }
 
-    public void updateWithSearchQuery(String query){
-        Iterator<Wrap> iterator = mDataset.iterator();
-
-        Log.d("SIZE",""+mDataset.size());
-        Wrap wrap;
-
-        while(iterator.hasNext()){
-            wrap = iterator.next();
-            if(!wrap.name.contains(query)){
-                iterator.remove();
-            }
-        }
-
-        Log.d("SIZE",""+mDataset.size());
+    public void addCutFile(Wrap wrap){
+        mDataset.add(wrap);
         notifyDataSetChanged();
     }
 
@@ -202,11 +200,11 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
     }
 
     @Override
-    public void renameFile(int position, File actualFile, String in){
+    public void renameFile(int position, File actualFile, String newName) {
         boolean re;
         File newFile;
 
-        re = actualFile.renameTo(newFile = new File(actualFile.getParentFile(), in+".mp3"));
+        re = actualFile.renameTo(newFile = new File(actualFile.getParentFile(), newName+".mp3"));
 
         Wrap wrap = mDataset.get(position);
         wrap.name = newFile.getName();
@@ -214,4 +212,5 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
 
         notifyItemChanged(position);
     }
+
 }

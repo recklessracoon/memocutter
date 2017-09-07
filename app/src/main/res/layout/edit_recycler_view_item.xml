@@ -92,11 +92,9 @@
             <ImageButton
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_chevron_right_black_24dp"
+                app:srcCompat="@drawable/ic_share_black_24dp"
                 android:id="@+id/imageButtonRecyclerChevron"
                 android:layout_weight="9"
-                android:background="#00000000"
-                android:clickable="false"
                 android:adjustViewBounds="false"
                 android:cropToPadding="false"
                 />

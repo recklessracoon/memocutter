@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_edit"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.roman.audiocuttertest.EditActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="10"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/linearlayout_edit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
+        android:minHeight="@dimen/recycler_margin">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/linearRecycler"
+                android:paddingLeft="@dimen/button_mini_margin"
+                android:paddingRight="@dimen/button_mini_margin"
+                android:layout_weight="2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/edit_seekbar"
+                app:bar_highlight_color="@color/colorAccent"
+                app:left_thumb_color="@color/colorAccent"
+                app:right_thumb_color="@color/colorAccent"
+                app:left_thumb_color_pressed="@color/colorAccentDark"
+                app:right_thumb_color_pressed="@color/colorAccentDark"
+                android:layout_marginTop="@dimen/recycler_widespace"
+                android:layout_marginBottom="@dimen/recycler_widespace"
+                />
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2">
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/edit_lefttime"
+                    android:paddingLeft="@dimen/button_mini_margin"
+                    android:gravity="left"
+                    android:layout_weight="1"
+                    android:textStyle="normal|bold" />
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="right"
+                    android:paddingRight="@dimen/button_mini_margin"
+                    android:id="@+id/edit_righttime"
+                    android:layout_weight="1"
+                    android:textStyle="normal|bold" />
+            </LinearLayout>
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_play_circle_outline_white_24dp"
+                android:id="@+id/edit_playpause"
+                android:layout_weight="9"
+                android:adjustViewBounds="false"
+                android:cropToPadding="false"
+                android:layout_marginTop="@dimen/recycler_widespace"
+                android:layout_marginBottom="@dimen/recycler_widespace"
+                android:layout_marginLeft="@dimen/recycler_widespace"
+                android:layout_marginRight="@dimen/recycler_widespace"
+                android:background="@drawable/roundbutton" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/edit_recycler"
+        android:background="@color/primaryBackground"
+        android:layout_weight="2">
+
+    </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_gravity="bottom|right"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_content_cut_black_24dp"
+        android:id="@+id/edit_floatingActionButton" />
+
+</FrameLayout>

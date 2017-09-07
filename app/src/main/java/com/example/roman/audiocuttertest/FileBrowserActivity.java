@@ -1,12 +1,10 @@
 package com.example.roman.audiocuttertest;
 
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -24,8 +21,11 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.roman.audiocuttertest.adapters.FileBrowserAdapter;
+import com.example.roman.audiocuttertest.decorators.SwipeableDeletableRecyclerViewDecorator;
 import com.example.roman.audiocuttertest.io.AudioDetector;
 import com.example.roman.audiocuttertest.io.AudioDetectorCallback;
+import com.example.roman.audiocuttertest.decorators.AudioFilesSingleton;
+import com.example.roman.audiocuttertest.io.Wrap;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 public class FileBrowserActivity extends AppCompatActivity implements AudioDetectorCallback, SearchView.OnQueryTextListener {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private FileBrowserAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private ProgressBar mProgressBar;
@@ -51,15 +51,11 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_recycle);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        // progress dialog is only confusing the user probably
+        mProgressBar.setVisibility(View.GONE);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -69,17 +65,34 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
             }
         });
 
-        String query = getIntent().getStringExtra(SearchManager.QUERY);
+        initRecyclerView();
         refreshItems();
 
         handleIntent(getIntent());
     }
 
     private void refreshItems(){
-        File parent = new File(MainActivity.getLastFile(this)).getParentFile();
-        Log.d("BROWSE",""+parent.getAbsolutePath());
-        audioDetector = new AudioDetector(this, parent, this);
-        audioDetector.start();
+        ArrayList<Wrap> preloaded = AudioFilesSingleton.getAudioFiles();
+
+        if(preloaded.size() == 0) { // Either not finished or no files
+            File parent = EditActivity.getTemporarySavedFile(this).getParentFile();
+            audioDetector = new AudioDetector(this, parent, this);
+            audioDetector.start();
+        } else { // Directly call success method with preloaded data
+            AudioFilesSingleton.setAudioFiles(new ArrayList<Wrap>());
+            onAudioDetectorSuccess(preloaded);
+        }
+    }
+
+    private void initRecyclerView(){
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
     // Handles pressing the system back button
@@ -107,9 +120,9 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
     }
 
     @Override
-    public void onSuccess(final ArrayList<AudioDetector.Wrap> audioFiles) {
+    public void onAudioDetectorSuccess(final ArrayList<Wrap> audioFiles) {
         // specify an adapter (see also next example)
-
+        final Context context = this;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -121,19 +134,17 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
                 mProgressBar.setVisibility(View.GONE);
 
                 mSwipeRefreshLayout.setRefreshing(false);
+
+                new SwipeableDeletableRecyclerViewDecorator().withContext(context).withRecyclerView(mRecyclerView).withRecyclerViewAdapterWithRemoveOption(mAdapter).apply();
             }
         });
 
     }
 
     @Override
-    public void onFail(Exception e) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
+    public void onAudioDetectorFail(File audioFile, Exception e) {
+        //makeSnackbar(getString(R.string.search_file_load_fail));
+        // TODO decide on what to do with latestFile.dat and stuff
     }
 
     @Override
@@ -177,7 +188,6 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
         FileBrowserAdapter adapter = (FileBrowserAdapter) mRecyclerView.getAdapter();
         adapter.updateWithSearchQuery(newText);
         Log.d("QUERY2",""+newText);
-
         return true;
     }
 
@@ -185,5 +195,15 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
     public boolean onQueryTextChange(String newText){
 
         return false;
+    }
+
+    public void makeSnackbar(String text){
+        /*
+        Toast.makeText(getApplicationContext(),
+                text , Toast.LENGTH_LONG)
+                .show();
+                */
+        Snackbar snackbar1 = Snackbar.make(mRecyclerView, text, Snackbar.LENGTH_SHORT);
+        snackbar1.show();
     }
 }

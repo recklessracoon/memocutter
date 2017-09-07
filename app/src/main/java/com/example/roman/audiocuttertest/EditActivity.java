@@ -1,80 +1,68 @@
 package com.example.roman.audiocuttertest;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
+import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
+import com.example.roman.audiocuttertest.adapters.EditMemoAdapter;
+import com.example.roman.audiocuttertest.adapters.EditMemoAdapterShareCallback;
+import com.example.roman.audiocuttertest.decorators.SwipeableDeletableRecyclerViewDecorator;
 import com.example.roman.audiocuttertest.io.AudioLoader;
-import com.example.roman.audiocuttertest.io.AudioLoaderCallback;
 import com.example.roman.audiocuttertest.io.Cutter;
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
-import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
-import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.example.roman.audiocuttertest.io.CutterCallback;
+import com.example.roman.audiocuttertest.io.CutterImpl;
+import com.example.roman.audiocuttertest.io.Wrap;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static android.os.Environment.getExternalStorageDirectory;
 
-public class EditActivity extends AppCompatActivity implements AudioLoaderCallback {
+public class EditActivity extends AppCompatActivity implements EditMemoAdapterShareCallback, CutterCallback {
 
-    private FFmpeg ffmpeg;
-
-    private MediaPlayer mediaPlayer, mediaPlayerFromCut;
     private Handler mHandler;
-    private SeekBar seekBar, seekBarFromCut;
 
-    private ProgressDialog progressConvert, progressCut;
+    private ProgressDialog progressConvert;
 
-    private ImageButton playpause1, playpause2;
-    private TextView from1, now1, to1, name1, from2, now2, to2;
-
-    private Button markBeginning, markEnd, cut;
-    private TextView beginningTxt, endTxt;
+    private MediaPlayer mediaPlayer;
     private Cutter cutter;
 
-    private boolean triedConversionOnce;
+    private TextView leftTime, rightTime;
+    private ImageButton playPauseButton;
+    private FloatingActionButton floatingCutButton;
+
+    private RecyclerView mRecyclerView;
+    private EditMemoAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    private CrystalRangeSeekbar rangeBar;
 
     private final Runnable updateBar = new Runnable() {
-
         @Override
         public void run() {
             if(mediaPlayer != null){
-                seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                now1.setText(Cutter.formatDurationPrecise(mediaPlayer.getCurrentPosition()));
+                rangeBar.setMinStartValue(rangeBar.getSelectedMinValue().floatValue()).setMaxStartValue(mediaPlayer.getCurrentPosition()).apply();
+                rightTime.setText(Cutter.formatDurationPrecise(mediaPlayer.getCurrentPosition()));
                 if(mediaPlayer.isPlaying())
-                    mHandler.postDelayed(this, 100);
-            }
-        }
-    };
-
-    private final Runnable updateBarFromCut = new Runnable() {
-
-        @Override
-        public void run() {
-            if(mediaPlayerFromCut != null){
-                seekBarFromCut.setProgress(mediaPlayerFromCut.getCurrentPosition());
-                now2.setText(Cutter.formatDurationPrecise(mediaPlayerFromCut.getCurrentPosition()));
-                if(mediaPlayerFromCut.isPlaying())
                     mHandler.postDelayed(this, 100);
             }
         }
@@ -83,21 +71,33 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+        setContentView(R.layout.activity_edit_new);
 
         mHandler = new Handler();
 
         initProgressDialog();
-        initFFMPEG();
 
-        initButtons();
         initTextViews();
-        enqueueMediaPlayerInit();
+        initButtons();
+        initRangeBar();
+        initMediaPlayerAndCutter();
+        initRecyclerView();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
 
-        triedConversionOnce = false;
+    private void initRecyclerView(){
+        mRecyclerView = (RecyclerView) findViewById(R.id.edit_recycler);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new EditMemoAdapter(new ArrayList<Wrap>());
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
+        new SwipeableDeletableRecyclerViewDecorator().withContext(this).withRecyclerView(mRecyclerView).withRecyclerViewAdapterWithRemoveOption(mAdapter).apply();
     }
 
     private void initProgressDialog(){
@@ -105,386 +105,122 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
         progressConvert.setTitle(getString(R.string.edit_wait));
         progressConvert.setMessage(getString(R.string.edit_convert));
         progressConvert.setCancelable(false); // disable dismiss by tapping outside of the dialog
-
-        progressCut = new ProgressDialog(this);
-        progressCut.setTitle(getString(R.string.edit_wait));
-        progressCut.setMessage(getString(R.string.edit_cut));
-        progressCut.setCancelable(false);
     }
 
     private void initTextViews(){
-        from1 = (TextView) findViewById(R.id.from_1);
-        now1 = (TextView) findViewById(R.id.now_1);
-        to1 = (TextView) findViewById(R.id.to_1);
-        name1 = (TextView) findViewById(R.id.name_1);
+        leftTime = (TextView) findViewById(R.id.edit_lefttime);
+        rightTime = (TextView) findViewById(R.id.edit_righttime);
 
-
-        from2 = (TextView) findViewById(R.id.from_2);
-        now2 = (TextView) findViewById(R.id.now_2);
-        to2 = (TextView) findViewById(R.id.to_2);
-
-        beginningTxt = (TextView) findViewById(R.id.edit_begin_txt);
-        endTxt = (TextView) findViewById(R.id.edit_end_txt);
+        leftTime.setText(Cutter.formatDurationPrecise(0));
+        rightTime.setText(Cutter.formatDurationPrecise(0));
     }
 
-    private void initButtons(){
+    private void initButtons() {
+        playPauseButton = (ImageButton) findViewById(R.id.edit_playpause);
+        floatingCutButton = (FloatingActionButton) findViewById(R.id.edit_floatingActionButton);
 
-        playpause1 = (ImageButton) findViewById(R.id.playpause_1);
-        playpause2 = (ImageButton) findViewById(R.id.playpause_2);
-
-        markBeginning = (Button) findViewById(R.id.edit_begin_btn);
-        markEnd = (Button) findViewById(R.id.edit_end_btn);
-
-        cut = (Button) findViewById(R.id.edit_btn_cut);
-
-        playpause1.setOnClickListener(new View.OnClickListener() {
+        playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mediaPlayer != null){
                     if(!mediaPlayer.isPlaying()) {
                         mediaPlayer.start();
-                        EditActivity.this.runOnUiThread(updateBar);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                playpause1.setImageResource(R.drawable.ic_pause_circle_outline_white_24dp);
-                            }
-                        });
+                        mHandler.post(updateBar);
+                        playPauseButton.setImageResource(R.drawable.ic_pause_circle_outline_white_24dp);
                     } else {
                         mediaPlayer.pause();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                playpause1.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
-                            }
-                        });
+                        playPauseButton.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
                     }
                 }
             }
         });
 
-        playpause2.setOnClickListener(new View.OnClickListener() {
+        floatingCutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mediaPlayerFromCut != null){
-                    if(!mediaPlayerFromCut.isPlaying()) {
-                        mediaPlayerFromCut.start();
-                        EditActivity.this.runOnUiThread(updateBarFromCut);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                playpause2.setImageResource(R.drawable.ic_pause_circle_outline_white_24dp);
-                            }
-                        });
-                    } else {
-                        mediaPlayerFromCut.pause();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                playpause2.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
-                            }
-                        });
-                    }
-                }
-            }
-        });
+                cutter.markBeginning(rangeBar.getSelectedMinValue().intValue());
+                cutter.markEnd(rangeBar.getSelectedMaxValue().intValue());
 
-        markBeginning.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                beginningTxt.setText(Cutter.formatDurationPrecise(cutter.markBeginning()));
-            }
-        });
-
-        markEnd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                endTxt.setText(Cutter.formatDurationPrecise(cutter.markEnd()));
-            }
-        });
-
-        cut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 if(cutter.cutAllowed()){
-                    progressCut.show();
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mediaPlayerFromCutFileArrives(cutter.cutWithFFMPEG());
-                        }
-                    }).start();
+                    makeSnackbar(getString(R.string.edit_cut));
+                    cutter.cutWithFFMPEGAsync();
                 } else {
-                    makeToast(getString(R.string.edit_cut_not_allowed));
+                    makeSnackbar(getString(R.string.edit_cut_not_allowed));
                 }
+
             }
         });
     }
 
-    private void enqueueMediaPlayerInit(){
+    private void initRangeBar(){
+        rangeBar = (CrystalRangeSeekbar) findViewById(R.id.edit_seekbar);
 
+        rangeBar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
+            @Override
+            public void valueChanged(Number minValue, Number maxValue) {
+                leftTime.setText(Cutter.formatDurationPrecise(minValue.intValue()));
+                rightTime.setText(Cutter.formatDurationPrecise(maxValue.intValue()));
+                if(mediaPlayer != null)
+                    mediaPlayer.seekTo(maxValue.intValue());
+            }
+        });
+
+    }
+
+    private void initMediaPlayerAndCutter(){
         Bundle extras = getIntent().getExtras();
 
-        final File file = (extras.getSerializable("theFile") == null) ?
+        final File audioFile = (extras.getSerializable("theFile") == null) ?
                 new File((AudioLoader.getRealPathFromURI(this, ((Uri)extras.get("android.intent.extra.STREAM"))))) :
                 ((File) extras.getSerializable("theFile"));
 
+        Uri myUri = Uri.fromFile(audioFile); // initialize Uri here
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-        //Log.d("OPUS","contains opus?"+file.getName()+" "+file.getName().contains(".opus"));
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                playPauseButton.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
+            }
+        });
 
-        for(String s : extras.keySet()){
-            Log.d("INTE",s+" -> "+extras.get(s));
+        cutter = new CutterImpl(this, this, mediaPlayer, audioFile);
+
+        try {
+            mediaPlayer.setDataSource(this, myUri);
+            mediaPlayer.prepare();
+        } catch (IOException e) {
+            //e.printStackTrace();
+            cutter.convertFromOpusToMp3Async();
+            progressConvert.show();
         }
 
-        name1.setText(file.getAbsolutePath());
-        new AudioLoader(this, file, this).start();
-        MainActivity.saveLastFile(this, file.getAbsolutePath());
-    }
-
-    private void initSeekBar(){
-        seekBar = (SeekBar) findViewById(R.id.seekBar_1);
-        seekBarFromCut = (SeekBar) findViewById(R.id.seekBar_2);
-
-        seekBar.setMax(mediaPlayer.getDuration());
-
-        from1.setText(Cutter.formatDuration(0));
-        now1.setText(Cutter.formatDurationPrecise(0));
-        to1.setText(Cutter.formatDuration(mediaPlayer.getDuration()));
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(mediaPlayer != null && fromUser){
-                    mediaPlayer.seekTo(progress);
-                    now1.setText(Cutter.formatDurationPrecise(progress));
-                }
-            }
-        });
-
-        seekBarFromCut.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(mediaPlayerFromCut != null && fromUser){
-                    mediaPlayerFromCut.seekTo(progress);
-                    now2.setText(Cutter.formatDurationPrecise(progress));
-                }
-            }
-        });
+        rangeBar.setMaxValue((float)(mediaPlayer.getDuration()));
+        rangeBar.setMinStartValue(0).setMaxStartValue(0).apply();
     }
 
     public void onPause(){
         super.onPause();
-        if(mediaPlayer != null){
+        if(mediaPlayer != null && mediaPlayer.isPlaying())
             mediaPlayer.pause();
-        }
-        if(mediaPlayerFromCut != null){
-            mediaPlayerFromCut.pause();
-        }
     }
 
-    @Override
-    public void audioLoadSuccess(File audioFile, MediaPlayer mediaPlayer) {
-        this.mediaPlayer = mediaPlayer;
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        playpause1.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
-                    }
-                });
-            }
-        });
-
-        cutter = new Cutter(this, ffmpeg, mediaPlayer, audioFile);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                initSeekBar();
-            }
-        });
-    }
-
-    @Override
-    public void audioLoadFail(final File file, IOException e) {
-
-        if(!triedConversionOnce){ // convert to mp3 first
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    progressConvert.show();
-                }
-            });
-
-            String[] cmd = new String[5];
-            cmd[0] = "-i";
-            cmd[1] = file.getAbsolutePath();
-            cmd[2] = "-acodec";
-            cmd[3] = "libmp3lame";
-
-            final File mypath = EditActivity.getTemporarySavedFile(this);
-
-            cmd[4] = mypath.getAbsolutePath();
-
-            final AudioLoaderCallback tmp = this;
-            final Activity context = this;
-
-            try {
-
-                if(mypath.exists())
-                    mypath.delete();
-
-                ffmpeg.execute(cmd, new FFmpegExecuteResponseHandler() {
-                    @Override
-                    public void onSuccess(String message) {
-                        new AudioLoader(context, mypath, tmp).start();
-                        MainActivity.saveLastFile(context, mypath.getAbsolutePath());
-                    }
-
-                    @Override
-                    public void onProgress(String message) {
-                        Log.d("FFMPEG",message);
-                    }
-
-                    @Override
-                    public void onFailure(String message) {
-                        new AudioLoader(context, file, tmp).start();
-                    }
-
-                    @Override
-                    public void onStart() {
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                name1.setText(file.getAbsolutePath());
-                                progressConvert.dismiss();
-                                triedConversionOnce = true;
-                            }
-                        });
-                    }
-                });
-
-                return;
-
-            } catch (FFmpegCommandAlreadyRunningException ex) {
-                ex.printStackTrace();
-                makeToast("Still running exception");
-            }
-        } else {
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    makeToast(getString(R.string.edit_load_fail));
-                }
-            });
-
-        }
-    }
-
-    private void mediaPlayerFromCutFileArrives(final MediaPlayer mediaPlayerFromCut){
-        this.mediaPlayerFromCut = mediaPlayerFromCut;
-
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        playpause2.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
-                    }
-                });
-            }
-        });
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                from2.setText(Cutter.formatDuration(0));
-                now2.setText(Cutter.formatDurationPrecise(0));
-                to2.setText(Cutter.formatDuration(mediaPlayerFromCut.getDuration()));
-
-                seekBarFromCut.setMax(mediaPlayerFromCut.getDuration());
-
-                progressCut.dismiss();
-            }
-        });
-    }
-
-    public void makeToast(String text){
+    public void makeSnackbar(String text){
+        /*
         Toast.makeText(getApplicationContext(),
                 text , Toast.LENGTH_LONG)
                 .show();
+                */
+        Snackbar snackbar1 = Snackbar.make(mRecyclerView, text, Snackbar.LENGTH_SHORT);
+        snackbar1.show();
     }
 
-    private void initFFMPEG() {
-        ffmpeg = FFmpeg.getInstance(this);
-        try {
-            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
-
-                @Override
-                public void onStart() {
-
-                }
-
-                @Override
-                public void onFailure() {
-                    //makeToast("Could not instantiate FFMPEG");
-                }
-
-                @Override
-                public void onSuccess() {
-                    //makeToast("FFPEG instantiating successful");
-                }
-
-                @Override
-                public void onFinish() {
-
-                }
-
-            });
-        } catch (FFmpegNotSupportedException e) {
-            // Handle if FFmpeg is not supported by device
-        }
-    }
-
-    // Returns path to the last temporary saved file
-    private static File getTemporarySavedFile(Context context){
-        ContextWrapper cw = new ContextWrapper(context);
-
+    // Returns path to the last temporary saved file, used as buffer for conversion
+    public static File getTemporarySavedFile(Context context){
         //File directory = cw.getDir("AudioCutter", Context.MODE_PRIVATE);
         //File directory = new File(cw.getFilesDir(), "AudioCutter");
-        File directory = new File(getExternalStorageDirectory().getAbsolutePath()+"/AudioCutter");
+        File directory = new File(getExternalStorageDirectory().getAbsolutePath()+"/"+context.getString(R.string.folder_name));
 
         if(!directory.exists())
             directory.mkdirs();
@@ -524,29 +260,64 @@ public class EditActivity extends AppCompatActivity implements AudioLoaderCallba
             return true;
         }
 
-        if (id == R.id.mybutton) {
-
-            if(mediaPlayerFromCut == null){
-                makeToast(getString(R.string.other_share_nothing));
-                return true;
-            }
-
-            String sharePath = cutter.getTemporaryCutFileLocation().getAbsolutePath();
-            Uri uri = Uri.parse(sharePath);
-            Intent share = new Intent(Intent.ACTION_SEND);
-            share.setType("audio/*");
-            share.putExtra(Intent.EXTRA_STREAM, uri);
-            startActivity(Intent.createChooser(share, getString(R.string.other_share)));
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
-    // create an action bar button
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.share_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+    public void share(File actualFile) {
+        String sharePath = actualFile.getAbsolutePath();
+        Uri uri = Uri.parse(sharePath);
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("audio/*");
+        share.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(Intent.createChooser(share, getString(R.string.other_share)));
+    }
+
+    @Override
+    public void cutFinished(MediaPlayer mediaPlayer, File location) {
+        mAdapter.addCutFile(new Wrap(location, location.getName(), mediaPlayer));
+    }
+
+    @Override
+    public void cutFailed(Exception e) {
+        makeSnackbar(getString(R.string.edit_cut_fail));
+    }
+
+    @Override
+    public void conversionFinished(MediaPlayer mediaPlayer){
+        this.mediaPlayer = mediaPlayer;
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                playPauseButton.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
+            }
+        });
+
+        rangeBar.setMaxValue((float)(mediaPlayer.getDuration()));
+        rangeBar.setMinStartValue(0).setMaxStartValue(0).apply();
+
+        progressConvert.dismiss();
+    }
+
+    @Override
+    public void conversionFailed(Exception e) {
+        makeSnackbar(getString(R.string.edit_load_fail));
+    }
+
+    @Override
+    public void concatFinished(MediaPlayer mediaPlayer) {
+        //TODO
+    }
+
+    @Override
+    public void concatFailed(Exception e) {
+        //TODO
+    }
+
+    @Override
+    public void ffmpegInitFailed(FFmpegNotSupportedException e) {
+        makeSnackbar(getString(R.string.edit_cut_ffmpeg_fail));
     }
 
 }

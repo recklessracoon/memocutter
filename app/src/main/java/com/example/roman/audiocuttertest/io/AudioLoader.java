@@ -93,7 +93,7 @@ public class AudioLoader extends Thread {
 
         try {
             inputStream = context.getContentResolver().openInputStream(contentUri);
-            File bufferHere = Cutter.getTemporaryCutFileLocationWithName("lastEditedFile.dat"); // .dat
+            File bufferHere = Cutter.getTemporaryCutFileLocationWithName("lastEditedFile.dat"); // .dat? .mp3?
             copyInputStreamToFile(inputStream, bufferHere);
             finalPath = bufferHere.getAbsolutePath();
         } catch (FileNotFoundException e) {
@@ -101,19 +101,5 @@ public class AudioLoader extends Thread {
         }
 
         return finalPath;
-        /*
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        */
     }
 }
