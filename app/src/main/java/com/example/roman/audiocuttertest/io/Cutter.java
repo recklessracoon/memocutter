@@ -82,7 +82,7 @@ public abstract class Cutter {
                                 finalTime)));
     }
 
-    public static String formatDurationPrecise(int l){
+    public static String formatDurationPrecise(long l){
         final long hr = TimeUnit.MILLISECONDS.toHours(l);
         final long min = TimeUnit.MILLISECONDS.toMinutes(l - TimeUnit.HOURS.toMillis(hr));
         final long sec = TimeUnit.MILLISECONDS.toSeconds(l - TimeUnit.HOURS.toMillis(hr) - TimeUnit.MINUTES.toMillis(min));

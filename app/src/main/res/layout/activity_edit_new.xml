@@ -15,25 +15,31 @@
         android:orientation="vertical">
 
 
-
         <LinearLayout
                 android:orientation="vertical"
                 android:id="@+id/linearRecycler"
                 android:paddingLeft="@dimen/button_mini_margin"
                 android:paddingRight="@dimen/button_mini_margin"
                 android:layout_weight="6"
+                android:weightSum="6"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+            <com.example.roman.thesimplerangebar.SimpleRangeBar
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/edit_seekbar"
-                app:bar_highlight_color="@color/colorAccent"
-                app:left_thumb_color="@color/colorAccent"
-                app:right_thumb_color="@color/colorAccent"
-                app:left_thumb_color_pressed="@color/colorAccentDark"
-                app:right_thumb_color_pressed="@color/colorAccentDark"
+                android:layout_weight="2"
+                app:roundCorners="true"
+
+                app:thickness="@dimen/rangebar_thickness"
+                app:padding="@dimen/rangebar_padding"
+                app:radiusThumb="@dimen/rangebar_radius"
+                app:colorRangeBar="@color/primaryBackground"
+                app:colorRange="@color/colorPrimary"
+                app:colorThumb="@color/colorAccent"
+                app:colorThumbPressed="@color/colorAccentDark"
+
                 android:layout_marginTop="@dimen/recycler_widespace"
                 android:layout_marginBottom="@dimen/recycler_widespace"
                 />
@@ -41,7 +47,8 @@
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
                     android:weightSum="2">
 
                 <TextView
@@ -67,7 +74,8 @@
 
             <ImageButton
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
                 app:srcCompat="@drawable/ic_play_circle_outline_white_24dp"
                 android:id="@+id/edit_playpause"
                 android:adjustViewBounds="false"
@@ -97,6 +105,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:layout_gravity="bottom|right"
+        android:background="@color/colorAccent"
         app:fabSize="normal"
         app:srcCompat="@drawable/ic_content_cut_black_24dp"
         android:id="@+id/edit_floatingActionButton" />

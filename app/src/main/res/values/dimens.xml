@@ -10,9 +10,12 @@
     <dimen name="button_mini_margin">4dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-
     <dimen name="recycler_widespace">8dp</dimen>
     <dimen name="recycler_margin_mini">32dp</dimen>
     <dimen name="recycler_minsize">96dp</dimen>
     <dimen name="recycler_margin">128dp</dimen>
+
+    <dimen name="rangebar_radius">15dp</dimen>
+    <dimen name="rangebar_thickness">10dp</dimen>
+    <dimen name="rangebar_padding">20dp</dimen>
 </resources>

@@ -22,9 +22,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
-import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
-import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
 import com.example.roman.audiocuttertest.adapters.EditMemoAdapter;
 import com.example.roman.audiocuttertest.adapters.EditMemoAdapterShareCallback;
 import com.example.roman.audiocuttertest.decorators.SwipeableDeletableRecyclerViewDecorator;
@@ -33,6 +30,8 @@ import com.example.roman.audiocuttertest.io.Cutter;
 import com.example.roman.audiocuttertest.io.CutterCallback;
 import com.example.roman.audiocuttertest.io.CutterImpl;
 import com.example.roman.audiocuttertest.io.Wrap;
+import com.example.roman.thesimplerangebar.SimpleRangeBar;
+import com.example.roman.thesimplerangebar.SimpleRangeBarOnChangeListener;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
 import java.io.File;
@@ -59,7 +58,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
     private EditMemoAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private CrystalRangeSeekbar rangeBar;
+    private SimpleRangeBar rangeBar;
 
     private final Runnable updateBar = new Runnable() {
         @Override
@@ -67,7 +66,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
             if(mediaPlayer != null){
 
                 long time = SystemClock.currentThreadTimeMillis();
-                rangeBar.setMinStartValue(rangeBar.getSelectedMinValue().floatValue()).setMaxStartValue(mediaPlayer.getCurrentPosition()).apply();
+                rangeBar.setThumbValues(rangeBar.getLeftThumbValue(), mediaPlayer.getCurrentPosition());
                 time = SystemClock.currentThreadTimeMillis() - time;
                 Log.d("TIME",""+Cutter.formatDurationPrecise((int)time));
 
@@ -148,8 +147,8 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         floatingCutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cutter.markBeginning(rangeBar.getSelectedMinValue().intValue());
-                cutter.markEnd(rangeBar.getSelectedMaxValue().intValue());
+                cutter.markBeginning((int)rangeBar.getLeftThumbValue());
+                cutter.markEnd((int)rangeBar.getRightThumbValue());
 
                 if(cutter.cutAllowed()){
                     makeSnackbar(getString(R.string.edit_cut));
@@ -163,18 +162,21 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
     }
 
     private void initRangeBar(){
-        rangeBar = (CrystalRangeSeekbar) findViewById(R.id.edit_seekbar);
+        rangeBar = (SimpleRangeBar) findViewById(R.id.edit_seekbar);
 
-        rangeBar.setOnRangeSeekbarChangeListener(new OnRangeSeekbarChangeListener() {
+        rangeBar.setOnSimpleRangeBarChangeListener(new SimpleRangeBarOnChangeListener() {
             @Override
-            public void valueChanged(Number minValue, Number maxValue) {
-                leftTime.setText(Cutter.formatDurationPrecise(minValue.intValue()));
-                rightTime.setText(Cutter.formatDurationPrecise(maxValue.intValue()));
+            public void leftThumbValueChanged(long l) {
+                leftTime.setText(Cutter.formatDurationPrecise(l));
+            }
+
+            @Override
+            public void rightThumbValueChanged(long l) {
+                rightTime.setText(Cutter.formatDurationPrecise(l));
                 if(mediaPlayer != null)
-                    mediaPlayer.seekTo(maxValue.intValue());
+                    mediaPlayer.seekTo((int)l);
             }
         });
-
     }
 
     private void initMediaPlayerAndCutter(){
@@ -194,8 +196,8 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
             public void onCompletion(MediaPlayer mp) {
                 playPauseButton.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
 
-                float min = rangeBar.getSelectedMinValue().floatValue();
-                rangeBar.setMinStartValue(min).setMaxStartValue(min).apply();
+                long min = rangeBar.getLeftThumbValue();
+                rangeBar.setThumbValues(min, min); // let the mediaplayer start from the front
                 //mediaPlayer.seekTo(rangeBar.getSelectedMinValue().intValue());
 
             }
@@ -212,9 +214,8 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
             progressConvert.show();
         }
 
-        rangeBar.setMaxValue((float)(mediaPlayer.getDuration()));
-        rangeBar.setMinStartValue(0).setMaxStartValue(0).apply();
-        //rangeBar.setMinValue(0).setMaxValue(0).apply();
+        rangeBar.setRanges(0, mediaPlayer.getDuration());
+        rangeBar.setThumbValues(0,0);
     }
 
     public void onPause(){
@@ -320,16 +321,15 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
             public void onCompletion(MediaPlayer mp) {
                 playPauseButton.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
 
-                float min = rangeBar.getSelectedMinValue().floatValue();
-                rangeBar.setMinStartValue(min).setMaxStartValue(min).apply();
-
+                long min = rangeBar.getLeftThumbValue();
+                rangeBar.setThumbValues(min, min); // let the mediaplayer start from the front
                 //EditActivity.this.mediaPlayer.seekTo(rangeBar.getSelectedMinValue().intValue());
 
             }
         });
 
-        rangeBar.setMaxValue((float)(mediaPlayer.getDuration()));
-        rangeBar.setMinStartValue(0).setMaxStartValue(0).apply();
+        rangeBar.setRanges(0, mediaPlayer.getDuration());
+        rangeBar.setThumbValues(0,0);
 
         progressConvert.dismiss();
     }
