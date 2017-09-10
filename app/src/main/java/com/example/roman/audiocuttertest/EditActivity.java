@@ -7,13 +7,16 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -21,6 +24,7 @@ import android.widget.TextView;
 
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar;
+import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
 import com.example.roman.audiocuttertest.adapters.EditMemoAdapter;
 import com.example.roman.audiocuttertest.adapters.EditMemoAdapterShareCallback;
 import com.example.roman.audiocuttertest.decorators.SwipeableDeletableRecyclerViewDecorator;
@@ -45,6 +49,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
 
     private MediaPlayer mediaPlayer;
     private Cutter cutter;
+    private File audioFile;
 
     private TextView leftTime, rightTime;
     private ImageButton playPauseButton;
@@ -60,7 +65,12 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         @Override
         public void run() {
             if(mediaPlayer != null){
+
+                long time = SystemClock.currentThreadTimeMillis();
                 rangeBar.setMinStartValue(rangeBar.getSelectedMinValue().floatValue()).setMaxStartValue(mediaPlayer.getCurrentPosition()).apply();
+                time = SystemClock.currentThreadTimeMillis() - time;
+                Log.d("TIME",""+Cutter.formatDurationPrecise((int)time));
+
                 rightTime.setText(Cutter.formatDurationPrecise(mediaPlayer.getCurrentPosition()));
                 if(mediaPlayer.isPlaying())
                     mHandler.postDelayed(this, 100);
@@ -175,6 +185,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
                 ((File) extras.getSerializable("theFile"));
 
         Uri myUri = Uri.fromFile(audioFile); // initialize Uri here
+        this.audioFile = audioFile;
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
@@ -182,6 +193,11 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
             @Override
             public void onCompletion(MediaPlayer mp) {
                 playPauseButton.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
+
+                float min = rangeBar.getSelectedMinValue().floatValue();
+                rangeBar.setMinStartValue(min).setMaxStartValue(min).apply();
+                //mediaPlayer.seekTo(rangeBar.getSelectedMinValue().intValue());
+
             }
         });
 
@@ -198,6 +214,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
 
         rangeBar.setMaxValue((float)(mediaPlayer.getDuration()));
         rangeBar.setMinStartValue(0).setMaxStartValue(0).apply();
+        //rangeBar.setMinValue(0).setMaxValue(0).apply();
     }
 
     public void onPause(){
@@ -260,6 +277,10 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
             return true;
         }
 
+        if (id == R.id.mybutton) {
+            share(audioFile);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -271,6 +292,13 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         share.setType("audio/*");
         share.putExtra(Intent.EXTRA_STREAM, uri);
         startActivity(Intent.createChooser(share, getString(R.string.other_share)));
+    }
+
+    // create an action bar button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.share_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -291,6 +319,12 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
             @Override
             public void onCompletion(MediaPlayer mp) {
                 playPauseButton.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
+
+                float min = rangeBar.getSelectedMinValue().floatValue();
+                rangeBar.setMinStartValue(min).setMaxStartValue(min).apply();
+
+                //EditActivity.this.mediaPlayer.seekTo(rangeBar.getSelectedMinValue().intValue());
+
             }
         });
 

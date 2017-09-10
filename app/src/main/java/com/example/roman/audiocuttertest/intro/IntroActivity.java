@@ -1,9 +1,7 @@
 package com.example.roman.audiocuttertest.intro;
 
 import android.Manifest;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 
@@ -22,7 +20,7 @@ public class IntroActivity extends AppIntro {
         super.onCreate(savedInstanceState);
 
         addSlide(AppIntroFragment.newInstance(getString(R.string.intro_slide1_title), getString(R.string.intro_slide1_text), R.mipmap.ic_launcher_sci, ContextCompat.getColor(this, R.color.colorPrimary)));
-        addSlide(AppIntroFragment.newInstance(getString(R.string.intro_slide2_title), getString(R.string.intro_slide2_text), R.drawable.ic_share_white_24dp, ContextCompat.getColor(this, R.color.colorPrimary)));
+        addSlide(AppIntroFragment.newInstance(getString(R.string.intro_slide2_title), getString(R.string.intro_slide2_text), R.drawable.ic_share_white_128dp, ContextCompat.getColor(this, R.color.colorPrimary)));
         addSlide(AppIntroFragment.newInstance(getString(R.string.intro_slide3_title), getString(R.string.intro_slide3_text), R.drawable.cut_slide, ContextCompat.getColor(this, R.color.colorPrimaryDark)));
         addSlide(AppIntroFragment.newInstance(getString(R.string.intro_slide4_title), getString(R.string.intro_slide4_text), R.drawable.directory_slide, ContextCompat.getColor(this, R.color.colorPrimaryDark)));
 
