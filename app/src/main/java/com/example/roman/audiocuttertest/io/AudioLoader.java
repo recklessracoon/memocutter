@@ -89,7 +89,7 @@ public class AudioLoader extends Thread {
     public static String getRealPathFromURI(Context context, Uri contentUri) {
 
         InputStream inputStream;
-        String finalPath = "";
+        String finalPath = contentUri.getPath();
 
         try {
             inputStream = context.getContentResolver().openInputStream(contentUri);
@@ -97,7 +97,7 @@ public class AudioLoader extends Thread {
             copyInputStreamToFile(inputStream, bufferHere);
             finalPath = bufferHere.getAbsolutePath();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // fnfe: no content provider. ends up here
         }
 
         return finalPath;

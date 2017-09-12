@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- menu group -->
+    <group android:id="@+id/do_stuff">
+        <item android:id="@+id/first_checkbox"
+            android:titleCondensed="@string/first_checkbox_condensed"
+            android:title="@string/first_checkbox"
+            android:checkable="true"/>
+        <item android:id="@+id/do_stuff1"
+            android:title="do_stuff1" />
+        <item android:id="@+id/do_stuff2"
+            android:title="do_stuff2" />
+    </group>
+
+</menu>

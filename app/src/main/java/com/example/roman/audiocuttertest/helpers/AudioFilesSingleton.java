@@ -1,4 +1,4 @@
-package com.example.roman.audiocuttertest.decorators;
+package com.example.roman.audiocuttertest.helpers;
 
 import com.example.roman.audiocuttertest.io.Wrap;
 
@@ -17,8 +17,12 @@ public class AudioFilesSingleton {
 
     public static ArrayList<Wrap> getAudioFiles(){
         if(audioFiles == null)
-            audioFiles = new ArrayList<Wrap>();
+            audioFiles = new ArrayList<>();
 
         return audioFiles;
+    }
+
+    public static void resetAudioFiles(){
+        audioFiles = new ArrayList<>();
     }
 }

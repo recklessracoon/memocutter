@@ -32,4 +32,14 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_gravity="bottom|end"
+        android:background="@color/colorAccent"
+        app:fabSize="normal"
+        app:srcCompat="@drawable/ic_check_black_24dp"
+        android:id="@+id/browse_floatingActionButton" />
+
 </FrameLayout>

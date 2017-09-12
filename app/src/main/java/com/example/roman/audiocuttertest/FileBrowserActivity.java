@@ -5,6 +5,7 @@ import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,7 +25,7 @@ import com.example.roman.audiocuttertest.adapters.FileBrowserAdapter;
 import com.example.roman.audiocuttertest.decorators.SwipeableDeletableRecyclerViewDecorator;
 import com.example.roman.audiocuttertest.io.AudioDetector;
 import com.example.roman.audiocuttertest.io.AudioDetectorCallback;
-import com.example.roman.audiocuttertest.decorators.AudioFilesSingleton;
+import com.example.roman.audiocuttertest.helpers.AudioFilesSingleton;
 import com.example.roman.audiocuttertest.io.Wrap;
 
 import java.io.File;
@@ -32,11 +33,14 @@ import java.util.ArrayList;
 
 public class FileBrowserActivity extends AppCompatActivity implements AudioDetectorCallback, SearchView.OnQueryTextListener {
 
-    private RecyclerView mRecyclerView;
+    private static RecyclerView mRecyclerView;
     private FileBrowserAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private boolean mergeModeOn;
 
     private ProgressBar mProgressBar;
+
+    private FloatingActionButton mCombineButton;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -47,10 +51,16 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_browser);
 
+        handleMergeMode();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar_recycle);
+
+        mCombineButton = (FloatingActionButton) findViewById(R.id.browse_floatingActionButton);
+        if(!mergeModeOn)
+            mCombineButton.setVisibility(View.GONE);
 
         // progress dialog is only confusing the user probably
         mProgressBar.setVisibility(View.GONE);
@@ -71,6 +81,11 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
         handleIntent(getIntent());
     }
 
+    private void handleMergeMode(){
+        mergeModeOn = getIntent().getBooleanExtra("MERGE", false);
+        Log.d("MERGE",""+mergeModeOn);
+    }
+
     private void refreshItems(){
         ArrayList<Wrap> preloaded = AudioFilesSingleton.getAudioFiles();
 
@@ -81,6 +96,7 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
         } else { // Directly call success method with preloaded data
             AudioFilesSingleton.setAudioFiles(new ArrayList<Wrap>());
             onAudioDetectorSuccess(preloaded);
+            AudioFilesSingleton.resetAudioFiles();
         }
     }
 
@@ -126,16 +142,20 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mAdapter = new FileBrowserAdapter(audioFiles);
+                mAdapter = new FileBrowserAdapter(audioFiles, mergeModeOn, mCombineButton);
                 mRecyclerView.setAdapter(mAdapter);
 
                 mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemRangeChanged(0,mAdapter.getItemCount());
+
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
 
                 mSwipeRefreshLayout.setRefreshing(false);
 
-                new SwipeableDeletableRecyclerViewDecorator().withContext(context).withRecyclerView(mRecyclerView).withRecyclerViewAdapterWithRemoveOption(mAdapter).apply();
+                Log.d("DATA",""+mAdapter.getItemCount());
+
+                new SwipeableDeletableRecyclerViewDecorator().withContext(context).withRecyclerView(mRecyclerView).apply();
             }
         });
 
@@ -161,7 +181,7 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
         searchView.setOnQueryTextListener(this);
 
         SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
-        if(searchView != null)
+
         searchView.setSearchableInfo(info);
 
         return true;
@@ -198,12 +218,21 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
     }
 
     public void makeSnackbar(String text){
-        /*
-        Toast.makeText(getApplicationContext(),
-                text , Toast.LENGTH_LONG)
-                .show();
-                */
         Snackbar snackbar1 = Snackbar.make(mRecyclerView, text, Snackbar.LENGTH_SHORT);
         snackbar1.show();
+    }
+
+    public static void makeSnackbarOnRecyclerView(String text){
+        if(mRecyclerView == null)
+            return;
+
+        Snackbar snackbar1 = Snackbar.make(mRecyclerView, text, Snackbar.LENGTH_SHORT);
+        snackbar1.show();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        mAdapter.pauseAll();
     }
 }

@@ -2,23 +2,24 @@ package com.example.roman.audiocuttertest;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
-import com.example.roman.audiocuttertest.decorators.AudioFilesPreloader;
+import com.example.roman.audiocuttertest.helpers.AudioFilesPreloader;
 import com.example.roman.audiocuttertest.intro.IntroActivity;
 import com.example.roman.audiocuttertest.io.AudioLoader;
 import com.google.android.gms.appindexing.Action;
@@ -28,11 +29,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.File;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
 
     private static final int FILE_SELECT_CODE = 0;
 
-    private Button insert, last, another;
+    private Button insert, last, another, merge;
     private CheckBox checkBox;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_new);
 
         initButtons();
-        initCheckbox();
+        //initCheckbox();
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         handleIntro();
     }
 
+    /*
     private void initCheckbox(){
         checkBox = (CheckBox) findViewById(R.id.first_checkbox);
         final Activity activity = this;
@@ -66,11 +68,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    */
 
     private void initButtons(){
         insert = (Button) findViewById(R.id.first_button);
         last = (Button) findViewById(R.id.first_button_last);
         another = (Button) findViewById(R.id.first_button_other_app);
+        merge = (Button) findViewById(R.id.first_button_merge);
 
         insert.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +94,12 @@ public class MainActivity extends AppCompatActivity {
                 otherAppIntent();
             }
         });
+        merge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mergeBrowserIntent();
+            }
+        });
     }
 
     private void handleIntro(){
@@ -102,6 +112,12 @@ public class MainActivity extends AppCompatActivity {
     //opens filebrowser-like activity FileBrowserActivity
     private void fileBrowserIntent(){
         Intent intent = new Intent(this, FileBrowserActivity.class);
+        startActivity(intent);
+    }
+
+    private void mergeBrowserIntent(){
+        Intent intent = new Intent(this, FileBrowserActivity.class);
+        intent.putExtra("MERGE",true);
         startActivity(intent);
     }
 
@@ -122,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showFileChooser() {
 
-        Intent intent = null;
+        Intent intent;
 
         if (Build.MODEL.contains("amsung") || Build.MANUFACTURER.contains("amsung")) {
             intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
@@ -160,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 //intentWithUri(uri);
 
                 // Get the path
-                String path = null;
+                String path;
 
                 path = AudioLoader.getRealPathFromURI(this, uri);
 
@@ -240,4 +256,49 @@ public class MainActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.settings_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.settings_button) {
+
+            PopupMenu popup = new PopupMenu(this, this.findViewById(R.id.settings_button));
+            MenuInflater inflater = popup.getMenuInflater();
+            inflater.inflate(R.menu.settings_menu_items, popup.getMenu());
+            popup.setOnMenuItemClickListener(this);
+            popup.getMenu().getItem(0).setChecked(isIntroActivated(this));
+            popup.show();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.first_checkbox:
+                boolean newState = !isIntroActivated(this);
+                setIntroActivated(this, newState);
+                item.setChecked(newState);
+                return true;
+            case R.id.do_stuff1:
+                makeToast("stuff1");
+                return true;
+            case R.id.do_stuff2:
+                makeToast("stuff2");
+                return true;
+            default:
+                return false;
+        }
+    }
+
 }

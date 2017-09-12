@@ -3,6 +3,7 @@ package com.example.roman.audiocuttertest.decorators;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
@@ -21,7 +22,7 @@ public class RenameableViewDecorator {
     private View view;
     private File actualFile;
     private Renameable renameable;
-    private int position;
+    private RecyclerView.ViewHolder holder;
 
     public RenameableViewDecorator(){
 
@@ -42,13 +43,12 @@ public class RenameableViewDecorator {
         this.renameable = renameable;
         return this;
     }
-
-    public RenameableViewDecorator onPosition(int position){
-        this.position = position;
+    public RenameableViewDecorator withViewHolder(RecyclerView.ViewHolder holder){
+        this.holder = holder;
         return this;
     }
 
-    public void apply(){
+    public RenameableViewDecorator apply(){
         if(context != null && view != null) {
             view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -58,6 +58,8 @@ public class RenameableViewDecorator {
                 }
             });
         }
+
+        return this;
     }
 
     private void alertDialog(){
@@ -68,7 +70,7 @@ public class RenameableViewDecorator {
         final EditText input = new EditText(context);
         input.setText(actualFile.getName().replace(".mp3",""));
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_CLASS_TEXT);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
         // Set up the buttons
@@ -77,7 +79,7 @@ public class RenameableViewDecorator {
             public void onClick(DialogInterface dialog, int which) {
                 String in = input.getText().toString();
 
-                renameable.renameFile(position, actualFile, in);
+                renameable.renameFile(holder.getAdapterPosition(), actualFile, in);
             }
         }).setNegativeButton(context.getString(R.string.search_delete_no), new DialogInterface.OnClickListener() {
             @Override

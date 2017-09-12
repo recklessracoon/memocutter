@@ -63,18 +63,17 @@
         android:layout_weight="1"
         android:textSize="14sp" />
 
-    <CheckBox
-        android:text="@string/first_checkbox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/first_checkbox"
-        android:layout_weight="1"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_gravity="center"
-        android:textAllCaps="true"
-        android:checked="true" />
+        <Button
+            android:text="@string/first_button_merge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/first_button_merge"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/roundbutton"
+            android:layout_weight="1"
+            android:textSize="14sp" />
 
     </LinearLayout>
-
 
 </RelativeLayout>

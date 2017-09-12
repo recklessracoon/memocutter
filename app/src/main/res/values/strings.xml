@@ -3,23 +3,23 @@
 
     <!--> First Activity </-->
     <string name="first_button_last">Last cut audio files</string>
+    <string name="first_button_merge">Cut audios together</string>
     <string name="first_button">Search folders</string>
-    <string name="first_text">Insert the sound file manually or open by sharing from another App</string>
     <string name="first_select_file">Select a file</string>
     <string name="first_no_file_manager">You dont have a file manager installed</string>
-    <string name="first_file_load_error">An error occurred while loading</string>
     <string name="first_checkbox">Show intro after start of app</string>
+    <string name="first_checkbox_condensed">Show intro</string>
     <string name="first_button_other_app">Share from another app</string>
 
     <!--> Edit Activity </-->
     <string name="edit_load_fail">Could not load the sound file</string>
     <string name="edit_wait">Please wait..</string>
+    <string name="edit_concat">Concatenating audio files...</string>
+    <string name="edit_concat_success">Concatenation was successful</string>
+    <string name="edit_concat_fail">Unexpected error while concatenating</string>
     <string name="edit_convert">Converting to .mp3</string>
     <string name="edit_cut">Cutting the audio file...</string>
     <string name="edit_cut_fail">A problem occurred while cutting</string>
-    <string name="edit_start_tag">Mark beginning</string>
-    <string name="edit_end_tag">Mark end</string>
-    <string name="edit_btn_cut">Cut Audio</string>
     <string name="edit_cut_not_allowed">You must set a valid beginning and end time</string>
     <string name="edit_cut_ffmpeg_fail">Could not initialize FFMPEG, a normally a pre-installed library. Try downloading it to resolve this issue.</string>
 
@@ -29,7 +29,6 @@
     <string name="search_delete_yes">Remove</string>
     <string name="search_delete_no">Cancel</string>
     <string name="search_delete_confirm">Confirm</string>
-    <string name="search_file_load_fail">Could not load files.</string>
     <string name="search_rename_title">Rename:</string>
 
     <!--> AppIntro </-->
@@ -41,16 +40,13 @@
     <string name="intro_slide3_text">Use the range bar to define which part of the file you want to cut out. Press the bottom right button to cut out. Now you can instantly share your new audio files!</string>
     <string name="intro_slide4_title">Audio files</string>
     <string name="intro_slide4_text">The app gives you an overview over your audio files. You can delete a file by swiping it to the left. You can rename a file by long clicking an item. For your information, they are stored in the folder /AudioCutter.</string>
+    <string name="intro_slide5_title">Combine audios</string>
+    <string name="intro_slide5_text">Long click on the items you want to combine. Order is relevant. Then click the bottom right button.</string>
 
     <!--> Other </-->
-    <string name="other_prefs_last" translatable="false">lastFile</string>
-    <string name="other_content_playpause1">Plays the sound file you want to edit</string>
-    <string name="other_content_playpause2">Plays the edited sound file</string>
     <string name="other_share">Share audio via</string>
-    <string name="other_share_nothing">There is nothing you can share</string>
-    <string name="title_activity_file_browser">FileBrowserActivity</string>
-    <string name="folder_name">AudioCutter</string>
+    <string name="folder_name" translatable="false">AudioCutter</string>
 
-
+    <string name="combine_not_possible">You must first choose at least 2 items</string>
 
 </resources>

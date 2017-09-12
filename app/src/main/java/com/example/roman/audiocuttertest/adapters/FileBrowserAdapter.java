@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +15,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.roman.audiocuttertest.EditActivity;
+import com.example.roman.audiocuttertest.FileBrowserActivity;
 import com.example.roman.audiocuttertest.R;
+import com.example.roman.audiocuttertest.decorators.Invalidateable;
+import com.example.roman.audiocuttertest.decorators.Mergeable;
+import com.example.roman.audiocuttertest.decorators.MergeableViewDecorator;
 import com.example.roman.audiocuttertest.decorators.RecyclerViewAdapterWithRemoveOption;
 import com.example.roman.audiocuttertest.decorators.Renameable;
 import com.example.roman.audiocuttertest.decorators.RenameableViewDecorator;
@@ -30,9 +34,16 @@ import java.util.Iterator;
  * Created by Roman on 03.09.2017.
  */
 
-public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.ViewHolder> implements RecyclerViewAdapterWithRemoveOption, Renameable {
+public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.ViewHolder> implements RecyclerViewAdapterWithRemoveOption, Renameable, Mergeable, Invalidateable {
 
     private ArrayList<Wrap> mDataset;
+
+    private static boolean mergeModeOn;
+    private static ArrayList<File> enqueued;
+
+    private ArrayList<Invalidateable> invalidateables;
+
+    private FloatingActionButton mCombineButton;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -41,13 +52,16 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
         // each data item is just a string in this case
         public TextView mTextView, mTextViewTime;
         public SeekBar mSeekBar;
-        public ImageButton mPlay;
+        public ImageButton mPlay, mChevron;
 
         public MediaPlayer mediaPlayer;
         public Handler mHandler;
 
         public File actualFile;
         public View view;
+
+        public MergeableViewDecorator mergeableViewDecorator;
+        public RenameableViewDecorator renameableViewDecorator;
 
         public final Runnable updateBar = new Runnable() {
             @Override
@@ -64,15 +78,23 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
         public ViewHolder(View view) {
             super(view);
             this.view = view;
+
             // Handle click on a card in RecycleView
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), EditActivity.class);
-                    Bundle b = new Bundle();
-                    b.putSerializable("theFile", actualFile);
-                    intent.putExtras(b); //Put your id to your next Intent
-                    v.getContext().startActivity(intent);
+                    if(!mergeModeOn) {
+                        Intent intent = new Intent(v.getContext(), EditActivity.class);
+                        Bundle b = new Bundle();
+
+                        b.putSerializable("theFile", actualFile);
+                        if (getEnqueued().size() > 1) { // user wants to concat audios, also put the list in
+                            b.putSerializable("filesList", getEnqueued());
+                        }
+
+                        intent.putExtras(b); //Put your id to your next Intent
+                        v.getContext().startActivity(intent);
+                    }
                 }
             });
 
@@ -80,6 +102,8 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
             mSeekBar = (SeekBar) view.findViewById(R.id.seekBarRecycler);
             mPlay = (ImageButton) view.findViewById(R.id.imageButtonRecycler);
             mTextViewTime = (TextView) view.findViewById(R.id.nowRecycler);
+
+            mChevron = (ImageButton) view.findViewById(R.id.imageButtonRecyclerChevron);
 
             mHandler = new Handler();
 
@@ -114,18 +138,43 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
                             mPlay.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
                         } else {
                             mediaPlayer.pause();
-                                    mPlay.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+                            mPlay.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
                         }
                     }
                 }
             });
+
         }
 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public FileBrowserAdapter(ArrayList<Wrap> myDataset) {
+    public FileBrowserAdapter(ArrayList<Wrap> myDataset, boolean mergeModeOn, final FloatingActionButton mCombineButton) {
         mDataset = myDataset;
+        this.mergeModeOn = mergeModeOn;
+        enqueued = new ArrayList<>();
+        invalidateables = new ArrayList<>();
+        this.mCombineButton = mCombineButton;
+
+        mCombineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(getEnqueued().size() < 2){ //no
+                    FileBrowserActivity.makeSnackbarOnRecyclerView(mCombineButton.getContext().getString(R.string.combine_not_possible));
+                    return;
+                }
+
+                Intent intent = new Intent(v.getContext(), EditActivity.class);
+                Bundle b = new Bundle();
+
+                b.putSerializable("theFile", getEnqueued().get(0));
+                b.putSerializable("filesList", getEnqueued());
+
+                intent.putExtras(b); //Put your id to your next Intent
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
     // Create new views (invoked by the layout manager)
@@ -136,9 +185,16 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_item, parent, false);
 
-        ViewHolder vh = new ViewHolder(v);
+        ViewHolder holder = new ViewHolder(v);
 
-        return vh;
+        if(mergeModeOn) {
+            holder.mergeableViewDecorator = new MergeableViewDecorator();
+            invalidateables.add(holder.mergeableViewDecorator);
+        }else {
+            holder.renameableViewDecorator = new RenameableViewDecorator();
+        }
+
+        return holder;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -159,10 +215,33 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
         });
 
         holder.mTextViewTime.setText(Cutter.formatDurationPrecise(0));
-
         holder.actualFile = mDataset.get(position).actualFile;
 
-        new RenameableViewDecorator().onView(holder.view).withFile(holder.actualFile).withRenameable(this).onPosition(position).apply();
+        holder.itemView.setSelected(mDataset.get(position).isSelected);
+
+        //Log.d("HOLDER","pos: "+position+" is marked as: "+mDataset.get(position).isSelected+" enqueued:"+enqueued.toString());
+
+        if(holder.mediaPlayer.isPlaying()) {
+            holder.mPlay.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
+            holder.mSeekBar.setProgress(holder.mediaPlayer.getCurrentPosition());
+            holder.mHandler.post(holder.updateBar);
+        } else {
+            holder.mPlay.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+        }
+
+        if(mergeModeOn){
+            holder.mChevron.setVisibility(View.INVISIBLE);
+            holder.mergeableViewDecorator.onView(holder.view).withViewHolder(holder).withWrap(mDataset.get(position)).withMergeable(this).apply();
+        } else {
+            holder.renameableViewDecorator.onView(holder.view).withViewHolder(holder).withFile(holder.actualFile).withRenameable(this).apply();
+        }
+
+        /* // dont create new objects here
+        if(mergeModeOn)
+            invalidateables.add(new MergeableViewDecorator().onView(holder.view).withViewHolder(holder).withWrap(mDataset.get(position)).withMergeable(this).apply());
+        else
+            new RenameableViewDecorator().onView(holder.view).withViewHolder(holder).withFile(holder.actualFile).withRenameable(this).apply();
+            */
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -174,7 +253,7 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
     public void updateWithSearchQuery(String query){
         Iterator<Wrap> iterator = mDataset.iterator();
 
-        Log.d("SIZE",""+mDataset.size());
+        //Log.d("SIZE",""+mDataset.size());
         Wrap wrap;
 
         while(iterator.hasNext()){
@@ -184,12 +263,15 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
             }
         }
 
-        Log.d("SIZE",""+mDataset.size());
+        //Log.d("SIZE",""+mDataset.size());
         notifyDataSetChanged();
     }
 
     public void removeCutFile(int position){
         final Wrap wrap = mDataset.get(position);
+
+        if(wrap.mediaPlayer != null && wrap.mediaPlayer.isPlaying())
+            wrap.mediaPlayer.pause();
 
         new Thread(new Runnable() {
             @Override
@@ -199,15 +281,21 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
         }).start();
 
         mDataset.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeRemoved(position, mDataset.size());
+    }
+
+    public void notifyItemNotRemoved(int position){
+        //notifyItemRemoved(position + 1);
+        notifyItemRangeChanged(position, getItemCount());
         notifyDataSetChanged();
     }
 
     @Override
     public void renameFile(int position, File actualFile, String in){
-        boolean re;
         File newFile;
 
-        re = actualFile.renameTo(newFile = new File(actualFile.getParentFile(), in+".mp3"));
+        actualFile.renameTo(newFile = new File(actualFile.getParentFile(), in+".mp3"));
 
         Wrap wrap = mDataset.get(position);
         wrap.name = newFile.getName();
@@ -215,4 +303,42 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
 
         notifyItemChanged(position);
     }
+
+    @Override
+    public void enqueueMerge(int position, File actualFile) {
+        //Log.d("MERGE","enqueued "+position+" "+actualFile.getAbsolutePath());
+        getEnqueued().add(actualFile);
+    }
+
+    @Override
+    public void dequeueMerge(int position, File actualFile) {
+        //Log.d("MERGE","dequeued "+position+" "+actualFile.getAbsolutePath());
+        getEnqueued().remove(actualFile);
+    }
+
+    private static ArrayList<File> getEnqueued(){
+        if(enqueued == null)
+            enqueued = new ArrayList<>();
+        return enqueued;
+    }
+
+    private static void resetEnqueued(){
+        getEnqueued().clear();
+    }
+
+    public void pauseAll(){
+        for(Wrap wrap : mDataset)
+            if(wrap.mediaPlayer.isPlaying())
+                wrap.mediaPlayer.pause();
+
+    }
+
+    public void invalidate(){
+        resetEnqueued();
+        for(Wrap wrap : mDataset)
+            wrap.isSelected = false;
+        for(Invalidateable invalidateable : invalidateables)
+            invalidateable.invalidate();
+    }
+
 }

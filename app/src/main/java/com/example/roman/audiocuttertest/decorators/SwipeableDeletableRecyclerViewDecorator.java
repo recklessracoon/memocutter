@@ -15,11 +15,9 @@ import com.example.roman.audiocuttertest.R;
 public class SwipeableDeletableRecyclerViewDecorator implements SwipeableDeletable {
 
     private RecyclerView mRecyclerView;
-    private RecyclerViewAdapterWithRemoveOption mAdapter;
     private Context context;
 
     public SwipeableDeletableRecyclerViewDecorator(){
-
     }
 
     public SwipeableDeletableRecyclerViewDecorator withContext(Context context){
@@ -32,13 +30,8 @@ public class SwipeableDeletableRecyclerViewDecorator implements SwipeableDeletab
         return this;
     }
 
-    public SwipeableDeletableRecyclerViewDecorator withRecyclerViewAdapterWithRemoveOption(RecyclerViewAdapterWithRemoveOption mAdapter){
-        this.mAdapter = mAdapter;
-        return this;
-    }
-
     public void apply(){
-        if(context != null && mRecyclerView != null && mAdapter != null)
+        if(context != null && mRecyclerView != null)
             initRecycleViewRemover();
     }
 
@@ -52,7 +45,6 @@ public class SwipeableDeletableRecyclerViewDecorator implements SwipeableDeletab
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                final int position = viewHolder.getAdapterPosition(); //get position which is swipe
 
                 if (direction == ItemTouchHelper.LEFT) {    //if swipe left
 
@@ -62,13 +54,16 @@ public class SwipeableDeletableRecyclerViewDecorator implements SwipeableDeletab
                     builder.setPositiveButton(context.getString(R.string.search_delete_yes), new DialogInterface.OnClickListener() { //when click on DELETE
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mAdapter.removeCutFile(position);
+                            ((RecyclerViewAdapterWithRemoveOption)mRecyclerView.getAdapter()).removeCutFile(viewHolder.getAdapterPosition());
+                            ((Invalidateable)mRecyclerView.getAdapter()).invalidate();
                         }
                     }).setNegativeButton(context.getString(R.string.search_delete_no), new DialogInterface.OnClickListener() {  //not removing items if cancel is done
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mAdapter.notifyItemRemoved(position + 1);    //notifies the RecyclerView Adapter that data in adapter has been removed at a particular position.
-                            mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());   //notifies the RecyclerView Adapter that positions of element in adapter has been changed from position(removed element index to end of list), please update it.
+                            //mAdapter.notifyItemRemoved(position + 1);    //notifies the RecyclerView Adapter that data in adapter has been removed at a particular position.
+                            //mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());   //notifies the RecyclerView Adapter that positions of element in adapter has been changed from position(removed element index to end of list), please update it.
+                            ((RecyclerViewAdapterWithRemoveOption)mRecyclerView.getAdapter()).notifyItemNotRemoved(viewHolder.getAdapterPosition());
+                            ((Invalidateable)mRecyclerView.getAdapter()).invalidate();
                         }
                     }).show();  //show alert dialog
                 }

@@ -44,7 +44,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
 
     private Handler mHandler;
 
-    private ProgressDialog progressConvert;
+    private ProgressDialog progressConvert, progressConcat;
 
     private MediaPlayer mediaPlayer;
     private Cutter cutter;
@@ -65,14 +65,18 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         public void run() {
             if(mediaPlayer != null){
 
-                long time = SystemClock.currentThreadTimeMillis();
-                rangeBar.setThumbValues(rangeBar.getLeftThumbValue(), mediaPlayer.getCurrentPosition());
-                time = SystemClock.currentThreadTimeMillis() - time;
-                Log.d("TIME",""+Cutter.formatDurationPrecise((int)time));
+                if(mediaPlayer.isPlaying()) {
 
-                rightTime.setText(Cutter.formatDurationPrecise(mediaPlayer.getCurrentPosition()));
-                if(mediaPlayer.isPlaying())
-                    mHandler.postDelayed(this, 100);
+                    //long time = SystemClock.currentThreadTimeMillis();
+                    rangeBar.setThumbValues(rangeBar.getLeftThumbValue(), mediaPlayer.getCurrentPosition());
+                    //time = SystemClock.currentThreadTimeMillis() - time;
+                    //Log.d("TIME", "" + Cutter.formatDurationPrecise((int) time));
+
+                    rightTime.setText(Cutter.formatDurationPrecise(mediaPlayer.getCurrentPosition()));
+
+                    mHandler.postDelayed(this, 50);
+                }
+
             }
         }
     };
@@ -94,6 +98,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
     }
 
     private void initRecyclerView(){
@@ -106,7 +111,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
-        new SwipeableDeletableRecyclerViewDecorator().withContext(this).withRecyclerView(mRecyclerView).withRecyclerViewAdapterWithRemoveOption(mAdapter).apply();
+        new SwipeableDeletableRecyclerViewDecorator().withContext(this).withRecyclerView(mRecyclerView).apply();
     }
 
     private void initProgressDialog(){
@@ -114,6 +119,11 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         progressConvert.setTitle(getString(R.string.edit_wait));
         progressConvert.setMessage(getString(R.string.edit_convert));
         progressConvert.setCancelable(false); // disable dismiss by tapping outside of the dialog
+
+        progressConcat = new ProgressDialog(this);
+        progressConcat.setTitle(getString(R.string.edit_wait));
+        progressConcat.setMessage(getString(R.string.edit_concat));
+        progressConcat.setCancelable(false); // disable dismiss by tapping outside of the dialog
     }
 
     private void initTextViews(){
@@ -133,6 +143,10 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
             public void onClick(View v) {
                 if(mediaPlayer != null){
                     if(!mediaPlayer.isPlaying()) {
+
+                        if(mediaPlayer != null)
+                            mediaPlayer.seekTo((int)rangeBar.getRightThumbValue());
+
                         mediaPlayer.start();
                         mHandler.post(updateBar);
                         playPauseButton.setImageResource(R.drawable.ic_pause_circle_outline_white_24dp);
@@ -173,10 +187,16 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
             @Override
             public void rightThumbValueChanged(long l) {
                 rightTime.setText(Cutter.formatDurationPrecise(l));
-                if(mediaPlayer != null)
-                    mediaPlayer.seekTo((int)l);
             }
         });
+    }
+
+    private void handleConcatIntent(ArrayList<File> toConcat){
+        if(toConcat == null) // nothing to do
+            return;
+
+        progressConcat.show();
+        cutter.concatWithFFMPEGAsync(toConcat);
     }
 
     private void initMediaPlayerAndCutter(){
@@ -199,7 +219,6 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
                 long min = rangeBar.getLeftThumbValue();
                 rangeBar.setThumbValues(min, min); // let the mediaplayer start from the front
                 //mediaPlayer.seekTo(rangeBar.getSelectedMinValue().intValue());
-
             }
         });
 
@@ -208,20 +227,24 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         try {
             mediaPlayer.setDataSource(this, myUri);
             mediaPlayer.prepare();
-        } catch (IOException e) {
+        } catch (IOException e) { // could not load, no supported format, try converting to mp3
             //e.printStackTrace();
-            cutter.convertFromOpusToMp3Async();
             progressConvert.show();
+            cutter.convertFromOpusToMp3Async();
         }
 
         rangeBar.setRanges(0, mediaPlayer.getDuration());
         rangeBar.setThumbValues(0,0);
+
+        ArrayList<File> toConcat = (ArrayList<File>) extras.getSerializable("filesList");
+        handleConcatIntent(toConcat);
     }
 
     public void onPause(){
         super.onPause();
         if(mediaPlayer != null && mediaPlayer.isPlaying())
             mediaPlayer.pause();
+        mAdapter.pauseAll();
     }
 
     public void makeSnackbar(String text){
@@ -314,6 +337,36 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
 
     @Override
     public void conversionFinished(MediaPlayer mediaPlayer){
+        handleNewMediaPlayerArrival(mediaPlayer);
+        progressConvert.dismiss();
+    }
+
+    @Override
+    public void conversionFailed(Exception e) {
+        makeSnackbar(getString(R.string.edit_load_fail));
+        progressConvert.dismiss();
+    }
+
+    @Override
+    public void concatFinished(MediaPlayer mediaPlayer) {
+        handleNewMediaPlayerArrival(mediaPlayer);
+        progressConcat.dismiss();
+        makeSnackbar(getString(R.string.edit_concat_success));
+    }
+
+    @Override
+    public void concatFailed(Exception e) {
+        //TODO handle exception ?
+        progressConcat.dismiss();
+        makeSnackbar(getString(R.string.edit_concat_fail));
+    }
+
+    @Override
+    public void ffmpegInitFailed(FFmpegNotSupportedException e) {
+        makeSnackbar(getString(R.string.edit_cut_ffmpeg_fail));
+    }
+
+    private void handleNewMediaPlayerArrival(MediaPlayer mediaPlayer){
         this.mediaPlayer = mediaPlayer;
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -324,34 +377,11 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
                 long min = rangeBar.getLeftThumbValue();
                 rangeBar.setThumbValues(min, min); // let the mediaplayer start from the front
                 //EditActivity.this.mediaPlayer.seekTo(rangeBar.getSelectedMinValue().intValue());
-
             }
         });
 
         rangeBar.setRanges(0, mediaPlayer.getDuration());
         rangeBar.setThumbValues(0,0);
-
-        progressConvert.dismiss();
-    }
-
-    @Override
-    public void conversionFailed(Exception e) {
-        makeSnackbar(getString(R.string.edit_load_fail));
-    }
-
-    @Override
-    public void concatFinished(MediaPlayer mediaPlayer) {
-        //TODO
-    }
-
-    @Override
-    public void concatFailed(Exception e) {
-        //TODO
-    }
-
-    @Override
-    public void ffmpegInitFailed(FFmpegNotSupportedException e) {
-        makeSnackbar(getString(R.string.edit_cut_ffmpeg_fail));
     }
 
 }

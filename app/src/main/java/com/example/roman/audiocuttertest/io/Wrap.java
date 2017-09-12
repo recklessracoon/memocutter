@@ -12,6 +12,7 @@ public class Wrap {
     public MediaPlayer mediaPlayer;
     public String name;
     public File actualFile;
+    public boolean isSelected;
 
     public Wrap(File actualFile, String name, MediaPlayer mediaPlayer){
         this.mediaPlayer = mediaPlayer;

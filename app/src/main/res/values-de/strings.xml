@@ -1,29 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MemoCutter</string>
-    <string name="edit_btn_cut">Bereich ausschneiden</string>
     <string name="edit_convert">Konvertiere zu .mp3</string>
     <string name="edit_cut">Schneide die Audiodatei...</string>
     <string name="edit_cut_not_allowed">Zuerst muss ein gültiger Zeitbereich ausgewählt sein</string>
-    <string name="edit_end_tag">Ende markieren</string>
     <string name="edit_load_fail">Konnte die Datei nicht laden</string>
-    <string name="edit_start_tag">Anfang markieren</string>
     <string name="edit_wait">Bitte warten..</string>
     <string name="first_button">Ordner durchsuchen</string>
     <string name="first_button_last">Geschnittene Audios</string>
-    <string name="first_file_load_error">Ein Fehler trat auf beim Laden</string>
     <string name="first_no_file_manager">Es ist kein File Browser installiert</string>
     <string name="first_select_file">Datei wählen</string>
-    <string name="first_text">Audiodatei entweder manuell auswählen, oder aus einer anderen App teilen</string>
-    <string name="other_content_playpause1">Spielt die zu bearbeitende Audiodatei</string>
-    <string name="other_content_playpause2">Spielt die bearbeitete Audiodatei</string>
     <string name="other_share">Teilen via</string>
-    <string name="other_share_nothing">Es gibt nichts zu teilen</string>
     <string name="search_search">suchen</string>
     <string name="search_delete">Diese Datei löschen?</string>
     <string name="search_delete_yes">Löschen</string>
     <string name="search_delete_no">Abbruch</string>
-    <string name="search_file_load_fail">Konnte Audiodateien nicht laden.</string>
     <string name="edit_cut_fail">Es tauchte ein Problem beim Schneiden auf</string>
     <string name="edit_cut_ffmpeg_fail">Konnte FFMPEG, eine normalerweise vorinstallierte Bibliothek, nicht finden. Downloaden dieser behebt das Problem.</string>
     <string name="intro_slide1_title">MemoCutter</string>
@@ -38,4 +29,12 @@
     <string name="first_button_other_app">Aus einer anderen App teilen</string>
     <string name="search_delete_confirm">Bestätigen</string>
     <string name="search_rename_title">Umbenennen:</string>
+    <string name="first_checkbox_condensed">Intro zeigen</string>
+    <string name="first_button_merge">Audios kombinieren</string>
+    <string name="edit_concat">Schneide Audios zusammen...</string>
+    <string name="edit_concat_fail">Ein unerwarteter Fehler ist während des Zusammenschneidens aufgetaucht</string>
+    <string name="edit_concat_success">Die Audios wurden zusammengeschnitten</string>
+    <string name="intro_slide5_title">Audios kombinieren</string>
+    <string name="intro_slide5_text">Lange klicken bis eine Audio ausgewählt ist. Zum Bestätigen dann auf den Button unten rechts. Die Reihenfolge der Auswahl ist relevant.</string>
+    <string name="combine_not_possible">Zuerst müssen mindestens 2 Audios ausgewählt sein.</string>
 </resources>

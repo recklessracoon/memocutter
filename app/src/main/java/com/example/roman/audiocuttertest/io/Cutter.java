@@ -5,11 +5,11 @@ import android.util.Log;
 
 import com.example.roman.audiocuttertest.R;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
-import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -36,7 +36,7 @@ public abstract class Cutter {
     public abstract boolean cutAllowed();
 
     public abstract void cutWithFFMPEGAsync();
-    public abstract void concatWithFFMPEGAsync();
+    public abstract void concatWithFFMPEGAsync(ArrayList<File> toConcat);
     public abstract void convertFromOpusToMp3Async();
 
     private void initFFMPEG() {

@@ -8,15 +8,12 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.example.roman.audiocuttertest.R;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.Semaphore;
-
-import static android.os.Environment.getExternalStorageDirectory;
+import java.util.ArrayList;
 
 /**
  * Created by Roman on 05.09.2017.
@@ -121,8 +118,73 @@ public class CutterImpl extends Cutter {
     }
 
     @Override
-    public void concatWithFFMPEGAsync() {
-        // TODO
+    public void concatWithFFMPEGAsync(ArrayList<File> toConcat) {
+        final File newDestination = getTemporaryCutFileLocationWithName();
+
+        ArrayList<String> commands = new ArrayList<>();
+        commands.add("-i");
+
+        // build concat command with given files
+        String allFiles = "concat:";
+
+        for(File f : toConcat){
+            allFiles = allFiles+f.getAbsolutePath()+"|";
+        }
+
+        // remove last "|"
+        allFiles = allFiles.substring(0, allFiles.length()-1);
+
+        commands.add(allFiles);
+
+        commands.add("-acodec");
+        commands.add("copy");
+        commands.add(newDestination.getAbsolutePath());
+
+        String[] cmd = commands.toArray(new String[commands.size()]);
+
+        for(int i=0;i<cmd.length;i++)
+            Log.d("TOCONCAT",""+cmd[i]);
+
+        try {
+            fFmpeg.execute(cmd, new FFmpegExecuteResponseHandler() {
+                @Override
+                public void onSuccess(String message) {
+                    fileOfDisplayedMedia = newDestination;
+
+                    try {
+                        displayedMedia = prepareMediaPlayer(fileOfDisplayedMedia);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        callback.concatFailed(e);
+                        return;
+                    }
+
+                    callback.concatFinished(displayedMedia);
+                }
+
+                @Override
+                public void onProgress(String message) {
+                    Log.d("CONCAT",""+message);
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    callback.concatFailed(new Exception(message));
+                }
+
+                @Override
+                public void onStart() {
+
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            });
+        } catch (FFmpegCommandAlreadyRunningException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -145,20 +207,15 @@ public class CutterImpl extends Cutter {
                     fileOfDisplayedMedia = newDestination;
 
                     // Create a mediaplayer from converted file
-                    MediaPlayer mediaPlayer;
-                    Uri myUri = Uri.fromFile(fileOfDisplayedMedia); // initialize Uri here
-                    mediaPlayer = new MediaPlayer();
-                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     try {
-                        mediaPlayer.setDataSource(context, myUri);
-                        mediaPlayer.prepare();
+                        displayedMedia = prepareMediaPlayer(fileOfDisplayedMedia);
                     } catch (IOException e) {
                         e.printStackTrace();
                         callback.conversionFailed(e);
+                        return;
                     }
 
-                    displayedMedia = mediaPlayer;
-                    callback.conversionFinished(mediaPlayer);
+                    callback.conversionFinished(displayedMedia);
                 }
 
                 @Override
@@ -220,6 +277,18 @@ public class CutterImpl extends Cutter {
         edit.apply();
 
         return out;
+    }
+
+    private MediaPlayer prepareMediaPlayer(File fileOfDisplayedMedia) throws IOException {
+        MediaPlayer mediaPlayer;
+        Uri myUri = Uri.fromFile(fileOfDisplayedMedia); // initialize Uri here
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+        mediaPlayer.setDataSource(context, myUri);
+        mediaPlayer.prepare();
+
+        return mediaPlayer;
     }
 
 }

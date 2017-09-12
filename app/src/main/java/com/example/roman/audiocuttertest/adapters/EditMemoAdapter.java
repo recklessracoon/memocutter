@@ -6,8 +6,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.roman.audiocuttertest.R;
+import com.example.roman.audiocuttertest.decorators.Invalidateable;
 import com.example.roman.audiocuttertest.decorators.RecyclerViewAdapterWithRemoveOption;
 import com.example.roman.audiocuttertest.decorators.Renameable;
 import com.example.roman.audiocuttertest.decorators.RenameableViewDecorator;
@@ -29,9 +28,10 @@ import java.util.ArrayList;
  * Created by Roman on 05.09.2017.
  */
 
-public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHolder> implements RecyclerViewAdapterWithRemoveOption, Renameable {
+public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHolder> implements RecyclerViewAdapterWithRemoveOption, Renameable, Invalidateable {
 
     private ArrayList<Wrap> mDataset;
+
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -47,6 +47,8 @@ public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHo
 
         public File actualFile;
         public View view;
+
+        public RenameableViewDecorator renameableViewDecorator;
 
         public final Runnable updateBar = new Runnable() {
             @Override
@@ -145,9 +147,11 @@ public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHo
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.edit_recycler_view_item, parent, false);
 
-        ViewHolder vh = new ViewHolder(v);
+        ViewHolder viewHolder = new ViewHolder(v);
 
-        return vh;
+        viewHolder.renameableViewDecorator = new RenameableViewDecorator();
+
+        return viewHolder;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -168,10 +172,19 @@ public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHo
         });
 
         holder.mTextViewTime.setText(Cutter.formatDurationPrecise(0));
-
         holder.actualFile = mDataset.get(position).actualFile;
 
-        new RenameableViewDecorator().onView(holder.view).withFile(holder.actualFile).withRenameable(this).onPosition(position).apply();
+        holder.itemView.setSelected(mDataset.get(position).isSelected);
+
+        if(holder.mediaPlayer.isPlaying()) {
+            holder.mPlay.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
+            holder.mSeekBar.setProgress(holder.mediaPlayer.getCurrentPosition());
+            holder.mHandler.post(holder.updateBar);
+        } else {
+            holder.mPlay.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+        }
+
+        holder.renameableViewDecorator.onView(holder.view).withViewHolder(holder).withFile(holder.actualFile).withRenameable(this).apply();
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -182,7 +195,9 @@ public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHo
 
     public void addCutFile(Wrap wrap){
         mDataset.add(wrap);
-        notifyDataSetChanged();
+        notifyItemInserted(mDataset.size()-1);
+        notifyItemRangeInserted(mDataset.size()-1, mDataset.size());
+        //notifyDataSetChanged();
     }
 
     public void removeCutFile(int position){
@@ -196,15 +211,21 @@ public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHo
         }).start();
 
         mDataset.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeRemoved(position, mDataset.size());
+    }
+
+    public void notifyItemNotRemoved(int position){
+        //notifyItemRemoved(position + 1);
+        notifyItemRangeChanged(position, getItemCount());
         notifyDataSetChanged();
     }
 
     @Override
     public void renameFile(int position, File actualFile, String newName) {
-        boolean re;
         File newFile;
 
-        re = actualFile.renameTo(newFile = new File(actualFile.getParentFile(), newName+".mp3"));
+        actualFile.renameTo(newFile = new File(actualFile.getParentFile(), newName+".mp3"));
 
         Wrap wrap = mDataset.get(position);
         wrap.name = newFile.getName();
@@ -213,4 +234,14 @@ public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHo
         notifyItemChanged(position);
     }
 
+    public void pauseAll(){
+        for(Wrap wrap : mDataset)
+            if(wrap.mediaPlayer.isPlaying())
+                wrap.mediaPlayer.pause();
+    }
+
+    @Override
+    public void invalidate() {
+
+    }
 }

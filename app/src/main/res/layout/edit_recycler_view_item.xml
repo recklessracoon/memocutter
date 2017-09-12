@@ -60,20 +60,20 @@
                         android:weightSum="2">
 
                     <TextView
-                        android:text="TextView"
+                        android:text=""
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/nowRecycler"
                         android:paddingLeft="@dimen/button_mini_margin"
-                        android:gravity="left"
+                        android:gravity="start"
                         android:layout_weight="1"
                         android:textStyle="normal|bold" />
 
                     <TextView
-                        android:text="TextView"
+                        android:text=""
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="right"
+                        android:gravity="end"
                         android:paddingRight="@dimen/button_mini_margin"
                         android:id="@+id/textViewRecycler"
                         android:layout_weight="1"
