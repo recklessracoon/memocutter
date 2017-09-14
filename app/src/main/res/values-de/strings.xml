@@ -25,7 +25,7 @@
     <string name="intro_slide3_text">Die Range-Bar definiert den Bereich der ausgeschnitten wird. Der Button rechts unten startet den Vorgang. Geschnittene Memos können von hier aus direkt geteilt werden!</string>
     <string name="intro_slide4_title">Audio Dateien</string>
     <string name="intro_slide4_text">Die App gibt eine Übersicht über alle entstandenen Audios. Per Wisch nach links kann eine gelöscht werden. Lange drücken zum umbenennen. Audios werden im Ordner /AudioCutter gespeichert.</string>
-    <string name="first_checkbox">Intro nach Appstart anzeigen</string>
+    <string name="first_checkbox">Appintro immer anzeigen</string>
     <string name="first_button_other_app">Aus einer anderen App teilen</string>
     <string name="search_delete_confirm">Bestätigen</string>
     <string name="search_rename_title">Umbenennen:</string>
@@ -37,4 +37,16 @@
     <string name="intro_slide5_title">Audios kombinieren</string>
     <string name="intro_slide5_text">Lange klicken bis eine Audio ausgewählt ist. Zum Bestätigen dann auf den Button unten rechts. Die Reihenfolge der Auswahl ist relevant.</string>
     <string name="combine_not_possible">Zuerst müssen mindestens 2 Audios ausgewählt sein.</string>
+
+    <string name="background_standard_txt">Simpler Style</string>
+    <string name="background_white_txt">Weißer style</string>
+    <string name="background_glitter_gold_txt">Goldener Style</string>
+    <string name="background_glitter_pink_txt">Pinker Style</string>
+    <string name="background_glitter_blue_txt">Blauer Style</string>
+
+    <string name="background_standard_sel">Simplistischer Style aktiv. Der Lieblingsstyle der meisten Steuerfachangsestellten.</string>
+    <string name="background_white_sel">Weißer Style aktiv. Man sagt, dass dieser Style in Harlem nicht besonders beliebt ist.</string>
+    <string name="background_glitter_gold_sel">Gold Style aktiv. Ka ching bling bling.</string>
+    <string name="background_glitter_pink_sel">Pink Style aktiv. Ohne Worte.</string>
+    <string name="background_glitter_blue_sel">Blue Style aktiv. Egal wie Blau du bist, der Captain war Blau-Bär. Tihi.</string>
 </resources>

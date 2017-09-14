@@ -2,15 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- menu group -->
-    <group android:id="@+id/do_stuff">
+    <group android:id="@+id/intro_group">
         <item android:id="@+id/first_checkbox"
             android:titleCondensed="@string/first_checkbox_condensed"
             android:title="@string/first_checkbox"
             android:checkable="true"/>
-        <item android:id="@+id/do_stuff1"
-            android:title="do_stuff1" />
-        <item android:id="@+id/do_stuff2"
-            android:title="do_stuff2" />
+    </group>
+
+    <group android:id="@+id/background_group"
+        android:checkableBehavior="single">
+        <item android:id="@+id/background_standard"
+            android:title="@string/background_standard_txt"/>
+        <item android:id="@+id/background_white"
+            android:title="@string/background_white_txt"/>
+        <item android:id="@+id/background_glitter_gold"
+            android:title="@string/background_glitter_gold_txt"/>
+        <item android:id="@+id/background_glitter_pink"
+            android:title="@string/background_glitter_pink_txt"/>
+        <item android:id="@+id/background_glitter_blue"
+            android:title="@string/background_glitter_blue_txt"/>
     </group>
 
 </menu>

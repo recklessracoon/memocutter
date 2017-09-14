@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import com.example.roman.audiocuttertest.adapters.FileBrowserAdapter;
@@ -27,6 +28,7 @@ import com.example.roman.audiocuttertest.io.AudioDetector;
 import com.example.roman.audiocuttertest.io.AudioDetectorCallback;
 import com.example.roman.audiocuttertest.helpers.AudioFilesSingleton;
 import com.example.roman.audiocuttertest.io.Wrap;
+import com.example.roman.audiocuttertest.theming.BackgroundStyle;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -79,6 +81,11 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
         refreshItems();
 
         handleIntent(getIntent());
+
+        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.activity_edit);
+        frameLayout.setBackground(BackgroundStyle.getBackgroundDrawable(this));
+
+        mRecyclerView.setBackground(BackgroundStyle.getBackgroundDrawable(this));
     }
 
     private void handleMergeMode(){

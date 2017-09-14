@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ import com.example.roman.audiocuttertest.decorators.Renameable;
 import com.example.roman.audiocuttertest.decorators.RenameableViewDecorator;
 import com.example.roman.audiocuttertest.io.Cutter;
 import com.example.roman.audiocuttertest.io.Wrap;
+import com.example.roman.audiocuttertest.theming.BackgroundStyle;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -143,7 +145,6 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
                     }
                 }
             });
-
         }
 
     }

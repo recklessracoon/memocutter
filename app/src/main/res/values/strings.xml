@@ -7,7 +7,7 @@
     <string name="first_button">Search folders</string>
     <string name="first_select_file">Select a file</string>
     <string name="first_no_file_manager">You dont have a file manager installed</string>
-    <string name="first_checkbox">Show intro after start of app</string>
+    <string name="first_checkbox">Always show Appintro</string>
     <string name="first_checkbox_condensed">Show intro</string>
     <string name="first_button_other_app">Share from another app</string>
 
@@ -48,5 +48,18 @@
     <string name="folder_name" translatable="false">AudioCutter</string>
 
     <string name="combine_not_possible">You must first choose at least 2 items</string>
+
+    <!--> Menu </-->
+    <string name="background_standard_txt">Simplistic</string>
+    <string name="background_white_txt">Tainted white</string>
+    <string name="background_glitter_gold_txt">Special gold</string>
+    <string name="background_glitter_pink_txt">Special pink</string>
+    <string name="background_glitter_blue_txt">Special blue</string>
+
+    <string name="background_standard_sel">Simplistic style selected. The favourite style of most tax consultants.</string>
+    <string name="background_white_sel">White style selected. I heard this style is not very popular with Harlem\'s residents.</string>
+    <string name="background_glitter_gold_sel">Gold style selected. Bling bling.</string>
+    <string name="background_glitter_pink_sel">Pink style selected. You sure about this one?</string>
+    <string name="background_glitter_blue_sel">Blue style selected. </string>
 
 </resources>

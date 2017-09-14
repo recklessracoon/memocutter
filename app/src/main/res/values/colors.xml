@@ -8,4 +8,6 @@
     <color name="primaryBackground">#dfdfdf</color>
 
     <color name="colorWhite">#ffffff</color>
+
+    <color name="colorTransparent">#00ffffff</color>
 </resources>

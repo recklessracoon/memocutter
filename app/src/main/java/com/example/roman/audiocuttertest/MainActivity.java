@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
@@ -16,12 +17,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.roman.audiocuttertest.helpers.AudioFilesPreloader;
 import com.example.roman.audiocuttertest.intro.IntroActivity;
 import com.example.roman.audiocuttertest.io.AudioLoader;
+import com.example.roman.audiocuttertest.theming.BackgroundStyle;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -34,7 +36,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private static final int FILE_SELECT_CODE = 0;
 
     private Button insert, last, another, merge;
-    private CheckBox checkBox;
+
+    private RelativeLayout relativeLayout;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -46,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_new);
 
+        relativeLayout = (RelativeLayout) findViewById(R.id.activity_main);
+        handleNewStyle();
+
         initButtons();
         //initCheckbox();
 
@@ -55,20 +61,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         handleIntro();
     }
 
-    /*
-    private void initCheckbox(){
-        checkBox = (CheckBox) findViewById(R.id.first_checkbox);
-        final Activity activity = this;
-
-        checkBox.setChecked(isIntroActivated(activity));
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                setIntroActivated(activity, isChecked);
-            }
-        });
+    private void handleNewStyle(){
+        relativeLayout.setBackground(BackgroundStyle.getBackgroundDrawable(this));
     }
-    */
 
     private void initButtons(){
         insert = (Button) findViewById(R.id.first_button);
@@ -186,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 if (file.exists()) {
                     intentWithFile(file);
                 } else {
-                    makeToast("");
+                    makeSnackbar(getString(R.string.edit_load_fail));
                 }
 
                 break;
@@ -202,10 +197,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         startActivity(intent);
     }
 
-    public void makeToast(String text) {
-        Toast.makeText(getApplicationContext(),
-                text, Toast.LENGTH_LONG)
-                .show();
+    public void makeSnackbar(String text) {
+        Snackbar snackbar1 = Snackbar.make(relativeLayout, text, Snackbar.LENGTH_SHORT);
+        snackbar1.show();
     }
 
     public static boolean isIntroActivated(Activity activity) {
@@ -274,6 +268,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             inflater.inflate(R.menu.settings_menu_items, popup.getMenu());
             popup.setOnMenuItemClickListener(this);
             popup.getMenu().getItem(0).setChecked(isIntroActivated(this));
+
+            int current = BackgroundStyle.getCurrentMenuSelection(this);
+            popup.getMenu().getItem(current).setChecked(true);
+
             popup.show();
 
             return true;
@@ -290,12 +288,44 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 setIntroActivated(this, newState);
                 item.setChecked(newState);
                 return true;
-            case R.id.do_stuff1:
-                makeToast("stuff1");
+
+            case R.id.background_standard:
+                BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_BACKGROUND);
+                BackgroundStyle.setCurrentMenuSelection(this, 1);
+                handleNewStyle();
+                makeSnackbar(getString(R.string.background_standard_sel));
                 return true;
-            case R.id.do_stuff2:
-                makeToast("stuff2");
+
+            case R.id.background_white:
+                BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_WHITE);
+                BackgroundStyle.setCurrentMenuSelection(this, 2);
+                handleNewStyle();
+                makeSnackbar(getString(R.string.background_white_sel));
                 return true;
+
+            case R.id.background_glitter_gold:
+                BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_GLITTER_GOLD);
+                BackgroundStyle.setCurrentMenuSelection(this, 3);
+                handleNewStyle();
+                makeSnackbar(getString(R.string.background_glitter_gold_sel));
+                return true;
+
+            case R.id.background_glitter_pink:
+                BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_GLITTER_PINK);
+                BackgroundStyle.setCurrentMenuSelection(this, 4);
+                handleNewStyle();
+                makeSnackbar(getString(R.string.background_glitter_pink_sel));
+                return true;
+
+            case R.id.background_glitter_blue:
+                BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_GLITTER_BLUE);
+                BackgroundStyle.setCurrentMenuSelection(this, 5);
+                handleNewStyle();
+                makeSnackbar(getString(R.string.background_glitter_blue_sel));
+                return true;
+
+            //TODO set custom style pic per file browser intent f.e.
+
             default:
                 return false;
         }

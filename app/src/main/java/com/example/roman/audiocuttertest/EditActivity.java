@@ -7,14 +7,12 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +28,7 @@ import com.example.roman.audiocuttertest.io.Cutter;
 import com.example.roman.audiocuttertest.io.CutterCallback;
 import com.example.roman.audiocuttertest.io.CutterImpl;
 import com.example.roman.audiocuttertest.io.Wrap;
+import com.example.roman.audiocuttertest.theming.BackgroundStyle;
 import com.example.roman.thesimplerangebar.SimpleRangeBar;
 import com.example.roman.thesimplerangebar.SimpleRangeBarOnChangeListener;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
@@ -99,6 +98,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        mRecyclerView.setBackground(BackgroundStyle.getBackgroundDrawable(this));
     }
 
     private void initRecyclerView(){
