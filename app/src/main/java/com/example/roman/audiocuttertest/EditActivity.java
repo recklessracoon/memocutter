@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -269,12 +270,13 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         final File mypath = new File(directory,"temp.mp3");
 
         if(mypath.getParentFile() != null && !mypath.getParentFile().exists())
-            mypath.getParentFile().mkdirs();
+            Log.d("CREATEFILE",""+mypath.getParentFile().mkdirs());
 
         try {
             mypath.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
+            //mypath.mkdirs();
         }
 
         return mypath;
@@ -363,7 +365,8 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
 
     @Override
     public void ffmpegInitFailed(FFmpegNotSupportedException e) {
-        makeSnackbar(getString(R.string.edit_cut_ffmpeg_fail));
+        //makeSnackbar(getString(R.string.edit_cut_ffmpeg_fail));
+        makeSnackbar(getString(R.string.edit_cut_fail));
     }
 
     private void handleNewMediaPlayerArrival(MediaPlayer mediaPlayer){

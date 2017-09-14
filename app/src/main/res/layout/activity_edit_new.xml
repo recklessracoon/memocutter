@@ -13,22 +13,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="10">
-
+        android:weightSum="4">
 
         <LinearLayout
                 android:orientation="vertical"
                 android:id="@+id/linearRecycler"
                 android:paddingLeft="@dimen/button_mini_margin"
                 android:paddingRight="@dimen/button_mini_margin"
-                android:layout_weight="7"
+                android:weightSum="10"
+                android:layout_weight="3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
             <com.example.roman.thesimplerangebar.SimpleRangeBar
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/rangebar"
+                android:layout_height="match_parent"
                 android:id="@+id/edit_seekbar"
+                android:layout_weight="3"
                 app:roundCorners="true"
 
                 app:thickness="@dimen/rangebar_thickness"
@@ -46,7 +47,8 @@
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
                     android:weightSum="2">
 
                 <TextView
@@ -72,8 +74,8 @@
 
             <ImageButton
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
                 app:srcCompat="@drawable/ic_play_circle_outline_white_24dp"
                 android:id="@+id/edit_playpause"
                 android:adjustViewBounds="false"

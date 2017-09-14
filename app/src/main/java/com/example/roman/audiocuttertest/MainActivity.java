@@ -1,9 +1,11 @@
 package com.example.roman.audiocuttertest;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -57,8 +59,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        new AudioFilesPreloader().withContext(this).withDirectory(EditActivity.getTemporarySavedFile(this).getParentFile()).apply();
+        if(isPermissionGranted())
+            new AudioFilesPreloader().withContext(this).withDirectory(EditActivity.getTemporarySavedFile(this).getParentFile()).apply();
         handleIntro();
+    }
+
+    private boolean isPermissionGranted() {
+        int result = checkCallingOrSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        return result == PackageManager.PERMISSION_GRANTED;
     }
 
     private void handleNewStyle(){

@@ -19,9 +19,8 @@
     <string name="edit_concat_fail">Unexpected error while concatenating</string>
     <string name="edit_convert">Converting to .mp3</string>
     <string name="edit_cut">Cutting the audio file...</string>
-    <string name="edit_cut_fail">A problem occurred while cutting</string>
+    <string name="edit_cut_fail">Error occurred. There might be compatibility issues between FFMPEG and the current android OS.</string>
     <string name="edit_cut_not_allowed">You must set a valid beginning and end time</string>
-    <string name="edit_cut_ffmpeg_fail">Could not initialize FFMPEG, a normally a pre-installed library. Try downloading it to resolve this issue.</string>
 
     <!--> Search activity </-->
     <string name="search_search">search</string>
@@ -33,7 +32,7 @@
 
     <!--> AppIntro </-->
     <string name="intro_slide1_title">MemoCutter</string>
-    <string name="intro_slide1_text">An easy way to cut and resend audio memos and audio files.</string>
+    <string name="intro_slide1_text">An easy way to cut and resend audio memos and audio files. We need the WRITE_EXTERNAL_STORAGE permission to be able to cut audios.</string>
     <string name="intro_slide2_title">How to load a file</string>
     <string name="intro_slide2_text">Look out for the share symbol over an audio file and choose this app as the target. Alternatively, you can browse your folders to choose a file manually.</string>
     <string name="intro_slide3_title">How to cut a file</string>

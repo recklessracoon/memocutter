@@ -15,10 +15,9 @@
     <string name="search_delete">Diese Datei löschen?</string>
     <string name="search_delete_yes">Löschen</string>
     <string name="search_delete_no">Abbruch</string>
-    <string name="edit_cut_fail">Es tauchte ein Problem beim Schneiden auf</string>
-    <string name="edit_cut_ffmpeg_fail">Konnte FFMPEG, eine normalerweise vorinstallierte Bibliothek, nicht finden. Downloaden dieser behebt das Problem.</string>
+    <string name="edit_cut_fail">Fehler beim Vorgang. Mögliches Kompatibilitätsproblem zwischen FFMPEG und dem benutzten Android Betriebssystem</string>
     <string name="intro_slide1_title">MemoCutter</string>
-    <string name="intro_slide1_text">Eine einfache Möglichkeit um Memos und Audio Dateien zu schneiden.</string>
+    <string name="intro_slide1_text">Eine einfache Möglichkeit um Memos und Audio Dateien zu schneiden. Audios werden auf dem Gerät zwischengespeichert, wir benötigen daher das Recht zum Zugriff auf den Gerätespeicher.</string>
     <string name="intro_slide2_title">Eine Memo laden</string>
     <string name="intro_slide2_text">Benutze die Teilen-Funktion und wähle diese App als Ziel. Alternativ ist es möglich manuell nach Audios zu suchen.</string>
     <string name="intro_slide3_title">Eine Memo schneiden</string>

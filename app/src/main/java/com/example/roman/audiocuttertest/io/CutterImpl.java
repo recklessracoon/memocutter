@@ -57,6 +57,42 @@ public class CutterImpl extends Cutter {
     @Override
     public void cutWithFFMPEGAsync() {
 
+        /*
+        String[] c = new String[1];
+        c[0] = "-version";
+
+        try {
+            fFmpeg.execute(c, new FFmpegExecuteResponseHandler() {
+                @Override
+                public void onSuccess(String message) {
+                    Log.d("VERSION",""+message);
+                }
+
+                @Override
+                public void onProgress(String message) {
+                    Log.d("VERSION",""+message);
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    Log.d("VERSION",""+message);
+                }
+
+                @Override
+                public void onStart() {
+
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+            });
+        } catch (FFmpegCommandAlreadyRunningException e) {
+            e.printStackTrace();
+        }
+        */
+
         final File resultLocation = getTemporaryCutFileLocationWithName();
 
         String[] cmd = new String[9];
