@@ -55,10 +55,14 @@
     <string name="background_glitter_pink_txt">Special pink</string>
     <string name="background_glitter_blue_txt">Special blue</string>
 
-    <string name="background_standard_sel">Simplistic style selected. The favourite style of most tax consultants.</string>
-    <string name="background_white_sel">White style selected. I heard this style is not very popular with Harlem\'s residents.</string>
-    <string name="background_glitter_gold_sel">Gold style selected. Bling bling.</string>
-    <string name="background_glitter_pink_sel">Pink style selected. You sure about this one?</string>
+    <string name="background_standard_sel">Simplistic style selected.</string>
+    <string name="background_white_sel">White style selected.</string>
+    <string name="background_glitter_gold_sel">Gold style selected. </string>
+    <string name="background_glitter_pink_sel">Pink style selected. </string>
     <string name="background_glitter_blue_sel">Blue style selected. </string>
+
+    <string name="background_custom">Custom style</string>
+
+    <string name="background_custom_txt">Custom style selected. Individuality is for hipsters.</string>
 
 </resources>

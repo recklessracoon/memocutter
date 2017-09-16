@@ -21,6 +21,8 @@
             android:title="@string/background_glitter_pink_txt"/>
         <item android:id="@+id/background_glitter_blue"
             android:title="@string/background_glitter_blue_txt"/>
+        <item android:id="@+id/background_custom"
+            android:title="@string/background_custom"/>
     </group>
 
 </menu>

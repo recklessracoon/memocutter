@@ -38,7 +38,7 @@
     <string name="combine_not_possible">Zuerst müssen mindestens 2 Audios ausgewählt sein.</string>
 
     <string name="background_standard_txt">Simpler Style</string>
-    <string name="background_white_txt">Weißer style</string>
+    <string name="background_white_txt">Weißer Style</string>
     <string name="background_glitter_gold_txt">Goldener Style</string>
     <string name="background_glitter_pink_txt">Pinker Style</string>
     <string name="background_glitter_blue_txt">Blauer Style</string>
@@ -46,6 +46,9 @@
     <string name="background_standard_sel">Simplistischer Style aktiv. Der Lieblingsstyle der meisten Steuerfachangsestellten.</string>
     <string name="background_white_sel">Weißer Style aktiv. Man sagt, dass dieser Style in Harlem nicht besonders beliebt ist.</string>
     <string name="background_glitter_gold_sel">Gold Style aktiv. Ka ching bling bling.</string>
-    <string name="background_glitter_pink_sel">Pink Style aktiv. Ohne Worte.</string>
+    <string name="background_glitter_pink_sel">Pink Style aktiv. Am Boden der Tatsachen liegt eindeutig zu wenig Glitzer.</string>
     <string name="background_glitter_blue_sel">Blue Style aktiv. Egal wie Blau du bist, der Captain war Blau-Bär. Tihi.</string>
+
+    <string name="background_custom">Individueller Style</string>
+    <string name="background_custom_txt">Individueller Style aktiv. Hipster sind auch individuell.</string>
 </resources>

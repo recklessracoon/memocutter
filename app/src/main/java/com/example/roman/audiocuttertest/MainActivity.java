@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -32,10 +33,12 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
 
     private static final int FILE_SELECT_CODE = 0;
+    private static final int IMAGE_PICK_CODE = 1;
 
     private Button insert, last, another, merge;
 
@@ -193,6 +196,19 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 }
 
                 break;
+
+            case IMAGE_PICK_CODE:
+                if(data == null)
+                    return;
+
+                Uri img = data.getData();
+
+                BackgroundStyle.setCurrentMenuSelection(this, 6);
+                BackgroundStyle.setBackground(this, img);
+                handleNewStyle();
+                makeSnackbar(getString(R.string.background_custom_txt));
+
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -332,11 +348,20 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 makeSnackbar(getString(R.string.background_glitter_blue_sel));
                 return true;
 
-            //TODO set custom style pic per file browser intent f.e.
+            case R.id.background_custom:
+                sendImagePickIntent();
+                return true;
 
             default:
                 return false;
         }
+    }
+
+    private void sendImagePickIntent(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.background_custom)), IMAGE_PICK_CODE);
     }
 
 }
