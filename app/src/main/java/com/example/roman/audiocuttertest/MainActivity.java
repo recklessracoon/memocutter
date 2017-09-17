@@ -6,7 +6,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -27,13 +26,8 @@ import com.example.roman.audiocuttertest.helpers.AudioFilesPreloader;
 import com.example.roman.audiocuttertest.intro.IntroActivity;
 import com.example.roman.audiocuttertest.io.AudioLoader;
 import com.example.roman.audiocuttertest.theming.BackgroundStyle;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
 
@@ -43,11 +37,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private Button insert, last, another, merge;
 
     private RelativeLayout relativeLayout;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +49,9 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         initButtons();
         //initCheckbox();
 
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
         if(isPermissionGranted())
             new AudioFilesPreloader().withContext(this).withDirectory(EditActivity.getTemporarySavedFile(this).getParentFile()).apply();
+
         handleIntro();
     }
 
@@ -206,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 BackgroundStyle.setCurrentMenuSelection(this, 6);
                 BackgroundStyle.setBackground(this, img);
                 handleNewStyle();
-                makeSnackbar(getString(R.string.background_custom_txt));
+                //makeSnackbar(getString(R.string.background_custom_txt));
 
                 break;
         }
@@ -222,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     public void makeSnackbar(String text) {
-        Snackbar snackbar1 = Snackbar.make(relativeLayout, text, Snackbar.LENGTH_SHORT);
+        Snackbar snackbar1 = Snackbar.make(relativeLayout, text, Snackbar.LENGTH_LONG);
         snackbar1.show();
     }
 
@@ -237,42 +225,6 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
         edit.putBoolean("INTRO", value);
         edit.apply();
-    }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Main Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
     }
 
     @Override
@@ -317,35 +269,35 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_BACKGROUND);
                 BackgroundStyle.setCurrentMenuSelection(this, 1);
                 handleNewStyle();
-                makeSnackbar(getString(R.string.background_standard_sel));
+                //makeSnackbar(getString(R.string.background_standard_sel));
                 return true;
 
             case R.id.background_white:
                 BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_WHITE);
                 BackgroundStyle.setCurrentMenuSelection(this, 2);
                 handleNewStyle();
-                makeSnackbar(getString(R.string.background_white_sel));
+                //makeSnackbar(getString(R.string.background_white_sel));
                 return true;
 
             case R.id.background_glitter_gold:
                 BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_GLITTER_GOLD);
                 BackgroundStyle.setCurrentMenuSelection(this, 3);
                 handleNewStyle();
-                makeSnackbar(getString(R.string.background_glitter_gold_sel));
+                //makeSnackbar(getString(R.string.background_glitter_gold_sel));
                 return true;
 
             case R.id.background_glitter_pink:
                 BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_GLITTER_PINK);
                 BackgroundStyle.setCurrentMenuSelection(this, 4);
                 handleNewStyle();
-                makeSnackbar(getString(R.string.background_glitter_pink_sel));
+                //makeSnackbar(getString(R.string.background_glitter_pink_sel));
                 return true;
 
             case R.id.background_glitter_blue:
                 BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_GLITTER_BLUE);
                 BackgroundStyle.setCurrentMenuSelection(this, 5);
                 handleNewStyle();
-                makeSnackbar(getString(R.string.background_glitter_blue_sel));
+                //makeSnackbar(getString(R.string.background_glitter_blue_sel));
                 return true;
 
             case R.id.background_custom:

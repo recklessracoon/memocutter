@@ -63,6 +63,6 @@
 
     <string name="background_custom">Custom style</string>
 
-    <string name="background_custom_txt">Custom style selected. Individuality is for hipsters.</string>
+    <string name="background_custom_txt">Custom style selected.</string>
 
 </resources>

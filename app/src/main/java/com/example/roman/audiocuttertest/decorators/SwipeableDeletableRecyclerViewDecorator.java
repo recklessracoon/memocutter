@@ -65,6 +65,12 @@ public class SwipeableDeletableRecyclerViewDecorator implements SwipeableDeletab
                             ((RecyclerViewAdapterWithRemoveOption)mRecyclerView.getAdapter()).notifyItemNotRemoved(viewHolder.getAdapterPosition());
                             ((Invalidateable)mRecyclerView.getAdapter()).invalidate();
                         }
+                    }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) { // same dismiss
+                            ((RecyclerViewAdapterWithRemoveOption)mRecyclerView.getAdapter()).notifyItemNotRemoved(viewHolder.getAdapterPosition());
+                            ((Invalidateable)mRecyclerView.getAdapter()).invalidate();
+                        }
                     }).show();  //show alert dialog
                 }
             }

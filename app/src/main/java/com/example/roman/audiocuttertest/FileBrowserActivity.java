@@ -225,7 +225,7 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
     }
 
     public void makeSnackbar(String text){
-        Snackbar snackbar1 = Snackbar.make(mRecyclerView, text, Snackbar.LENGTH_SHORT);
+        Snackbar snackbar1 = Snackbar.make(mRecyclerView, text, Snackbar.LENGTH_LONG);
         snackbar1.show();
     }
 
@@ -233,7 +233,7 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
         if(mRecyclerView == null)
             return;
 
-        Snackbar snackbar1 = Snackbar.make(mRecyclerView, text, Snackbar.LENGTH_SHORT);
+        Snackbar snackbar1 = Snackbar.make(mRecyclerView, text, Snackbar.LENGTH_LONG);
         snackbar1.show();
     }
 

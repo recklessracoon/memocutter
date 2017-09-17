@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/first_button_other_app"
             android:layout_marginBottom="@dimen/fab_margin"
+            android:visibility="gone"
             android:textColor="@color/colorWhite"
             android:background="@drawable/roundbutton"
             android:layout_weight="1"

@@ -254,7 +254,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
                 text , Toast.LENGTH_LONG)
                 .show();
                 */
-        Snackbar snackbar1 = Snackbar.make(mRecyclerView, text, Snackbar.LENGTH_SHORT);
+        Snackbar snackbar1 = Snackbar.make(mRecyclerView, text, Snackbar.LENGTH_LONG);
         snackbar1.show();
     }
 
@@ -358,7 +358,6 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
 
     @Override
     public void concatFailed(Exception e) {
-        //TODO handle exception ?
         progressConcat.dismiss();
         makeSnackbar(getString(R.string.edit_concat_fail));
     }
