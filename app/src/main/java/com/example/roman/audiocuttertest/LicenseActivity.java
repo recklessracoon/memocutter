@@ -1,11 +1,12 @@
 package com.example.roman.audiocuttertest;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
@@ -19,14 +20,16 @@ public class LicenseActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         TextView textView = new TextView(this);
-        textView.setVerticalScrollBarEnabled(true);
-        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
-        textView.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
 
         textView.setText(getIntent().getStringExtra("LICENSE"));
         textView.setGravity(View.TEXT_ALIGNMENT_CENTER);
 
-        setContentView(textView);
+        ScrollView scroll = new ScrollView(this);
+        scroll.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
+                ActionBar.LayoutParams.MATCH_PARENT));
+        scroll.addView(textView);
+
+        setContentView(scroll);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

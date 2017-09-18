@@ -188,7 +188,7 @@ public class CutterImpl extends Cutter {
                     fileOfDisplayedMedia = newDestination;
 
                     try {
-                        displayedMedia = prepareMediaPlayer(fileOfDisplayedMedia);
+                        displayedMedia = loadMediaPlayer(fileOfDisplayedMedia);
                     } catch (IOException e) {
                         e.printStackTrace();
                         callback.concatFailed(e);
@@ -244,14 +244,22 @@ public class CutterImpl extends Cutter {
 
                     // Create a mediaplayer from converted file
                     try {
-                        displayedMedia = prepareMediaPlayer(fileOfDisplayedMedia);
+                        displayedMedia = loadMediaPlayer(fileOfDisplayedMedia);
+                        displayedMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mp) {
+                                callback.conversionFinished(mp);
+                            }
+                        });
+                        displayedMedia.prepare();
+
                     } catch (IOException e) {
                         e.printStackTrace();
                         callback.conversionFailed(e);
                         return;
                     }
 
-                    callback.conversionFinished(displayedMedia);
+                    //callback.conversionFinished(displayedMedia);
                 }
 
                 @Override
@@ -315,17 +323,13 @@ public class CutterImpl extends Cutter {
         return out;
     }
 
-    private MediaPlayer prepareMediaPlayer(File fileOfDisplayedMedia) throws IOException {
+    private MediaPlayer loadMediaPlayer(File fileOfDisplayedMedia) throws IOException {
         MediaPlayer mediaPlayer;
         Uri myUri = Uri.fromFile(fileOfDisplayedMedia); // initialize Uri here
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         mediaPlayer.setDataSource(context, myUri);
-        mediaPlayer.prepare();
-
-        mediaPlayer.start(); // otherwise it will not start saying error (-38,0)
-        mediaPlayer.pause();
 
         return mediaPlayer;
     }
