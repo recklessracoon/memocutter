@@ -324,6 +324,9 @@ public class CutterImpl extends Cutter {
         mediaPlayer.setDataSource(context, myUri);
         mediaPlayer.prepare();
 
+        mediaPlayer.start(); // otherwise it will not start saying error (-38,0)
+        mediaPlayer.pause();
+
         return mediaPlayer;
     }
 

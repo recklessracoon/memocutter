@@ -384,6 +384,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
 
         rangeBar.setRanges(0, mediaPlayer.getDuration());
         rangeBar.setThumbValues(0,0);
+        mediaPlayer.seekTo(0);
     }
 
 }
