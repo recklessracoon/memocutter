@@ -29,6 +29,9 @@ import com.example.roman.audiocuttertest.theming.BackgroundStyle;
 
 import java.io.File;
 
+import mehdi.sakout.aboutpage.AboutPage;
+import mehdi.sakout.aboutpage.Element;
+
 public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
 
     private static final int FILE_SELECT_CODE = 0;
@@ -304,6 +307,10 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 sendImagePickIntent();
                 return true;
 
+            case R.id.about_page:
+                handleAboutPageCall();
+                return true;
+
             default:
                 return false;
         }
@@ -314,6 +321,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, getString(R.string.background_custom)), IMAGE_PICK_CODE);
+    }
+
+    private void handleAboutPageCall(){
+        Intent intent = new Intent(this, AboutPageActivity.class);
+        startActivity(intent);
     }
 
 }

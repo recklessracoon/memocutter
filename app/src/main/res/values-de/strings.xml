@@ -51,4 +51,6 @@
 
     <string name="background_custom">Individueller Style</string>
     <string name="background_custom_txt">Individueller Style aktiv. Hipster sind auch individuell.</string>
+
+    <string name="about_page_txt">About</string>
 </resources>

@@ -7,8 +7,8 @@ android {
         applicationId "com.example.roman.audiocuttertest"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -32,6 +32,7 @@ dependencies {
     compile 'com.writingminds:FFmpegAndroid:0.3.2'
     compile 'com.github.apl-devs:appintro:v4.2.2'
     compile 'com.github.recklessracoon:SimpleRangeBar-Android:0.1.1'
+    compile 'com.github.medyo:android-about-page:1.2.1'
 
     testCompile 'junit:junit:4.12'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'

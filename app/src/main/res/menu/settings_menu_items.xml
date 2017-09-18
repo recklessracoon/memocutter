@@ -25,4 +25,7 @@
             android:title="@string/background_custom"/>
     </group>
 
+    <item android:id="@+id/about_page"
+        android:title="@string/about_page_txt"/>
+
 </menu>
