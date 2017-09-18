@@ -8,7 +8,12 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ExpandableListAdapter;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
@@ -31,18 +36,25 @@ public class AboutPageActivity extends AppCompatActivity {
                 //.addWebsite("http://medyo.github.io/")
                 //.addFacebook("the.medy")
                 //.addTwitter("medyo80")
-                //.addYoutube("UCdPQtdWIsg7_pi4mrRu46vA")
                 //.addPlayStore("com.ideashower.readitlater.pro")
-                //.addEmail("elmehdi.sakout@gmail.com")
                 .addGroup(getString(R.string.about_page_connect)) // my contact details
-                .addGitHub(getString(R.string.about_page_connect_git_name))
+                //.addYoutube("UCdPQtdWIsg7_pi4mrRu46vA")
+                //.addGitHub(getString(R.string.about_page_connect_git_name))
+                .addEmail(getString(R.string.about_page_email))
+                .addItem(getGithubContact())
+                .addItem(getLicenseGPL3())
                 .addGroup(getString(R.string.about_page_credits)) // credits
+                .addItem(getIconCredit())
                 .addItem(getBackgroundCredit())
                 .addGroup(getString(R.string.about_page_credits_libraries)) // used libraries
                 .addItem(getFFMPEGCredit())
+                .addItem(getLicenseGPL3())
                 .addItem(getAppIntroCredit())
+                .addItem(getLicenseApache())
                 .addItem(getAboutPageCredit())
+                .addItem(getLicenseApache())
                 .addItem(getRangeBarCredit())
+                .addItem(getLicenseApache())
                 //.addItem(getCopyRightsElement())
                 .create();
 
@@ -68,6 +80,62 @@ public class AboutPageActivity extends AppCompatActivity {
             }
         });
         return copyRightsElement;
+    }
+
+    private Element getIconCredit(){
+        Element credit = new Element();
+        credit.setTitle(getString(R.string.about_page_icons));
+        //credit.setIconDrawable(R.drawable.about_icon_github);
+        credit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startWebIntent(getString(R.string.about_page_icons_link));
+            }
+        });
+
+        return credit;
+    }
+
+    private Element getGithubContact(){
+        Element credit = new Element();
+        credit.setTitle(getString(R.string.about_page_git_project));
+        credit.setIconDrawable(R.drawable.about_icon_github);
+        credit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startWebIntent(getString(R.string.about_page_git_project_link));
+            }
+        });
+
+        return credit;
+    }
+
+    private Element getLicenseApache(){
+        Element credit = new Element();
+        credit.setTitle(getString(R.string.about_page_license));
+        credit.setIconDrawable(R.drawable.ic_format_list_numbered_black_24dp);
+        credit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLicenseIntent(getApacheLicenseFromText());
+            }
+        });
+
+        return credit;
+    }
+
+    private Element getLicenseGPL3(){
+        Element credit = new Element();
+        credit.setTitle(getString(R.string.about_page_license));
+        credit.setIconDrawable(R.drawable.ic_format_list_numbered_black_24dp);
+        credit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLicenseIntent(getGPL3LicenseFromText());
+            }
+        });
+
+        return credit;
     }
 
     private Element getVersionElement(){
@@ -151,6 +219,36 @@ public class AboutPageActivity extends AppCompatActivity {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
+    }
+
+    private void startLicenseIntent(String license){
+        Intent intent = new Intent(this, LicenseActivity.class);
+        intent.putExtra("LICENSE", license);
+        startActivity(intent);
+    }
+
+    private String getApacheLicenseFromText(){
+        return getTextFromRaw(R.raw.licenseapache);
+    }
+
+    private String getGPL3LicenseFromText(){
+        return getTextFromRaw(R.raw.licensegpl);
+    }
+
+    private String getTextFromRaw(int resId){
+        BufferedReader br = new BufferedReader(new InputStreamReader(getResources().openRawResource(resId)));
+        String line;
+        StringBuilder text = new StringBuilder();
+        try {
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return text.toString();
     }
 
     // Handles pressing the system back button

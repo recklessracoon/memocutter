@@ -67,15 +67,19 @@
     <string name="about_page_txt">About</string>
 
     <string name="about_page_description">MemoCutter: Contact, credits, licenses \nNote that this project is open source and can be viewed with its perspective license in the "Connect with us" section</string>
-    <string name="about_page_version">Version 0.9</string>
+    <string name="about_page_version" translatable="false">Version 0.9</string>
 
     <string name="about_page_git_project">This project on GitHub</string>
-    <string name="about_page_git_project_link">About</string>
+    <string name="about_page_git_project_link" translatable="false">https://github.com/recklessracoon/memocutter</string>
+    <string name="about_page_email" translatable="false">conditioncontagious@gmail.com</string>
 
     <string name="about_page_credits">Credits</string>
 
-    <string name="about_page_bg">Gold,pink,blue backgrounds designed by kjpargeter/Freepik</string>
-    <string name="about_page_bg_link">http://www.freepik.com</string>
+    <string name="about_page_icons">Icons created with Android Studio\'s Image Asset Studio</string>
+    <string name="about_page_icons_link" translatable="false">https://creativecommons.org/licenses/by/4.0/</string>
+
+    <string name="about_page_bg" translatable="false">Gold,pink,blue backgrounds designed by kjpargeter/Freepik</string>
+    <string name="about_page_bg_link" translatable="false">http://www.freepik.com</string>
 
     <string name="about_page_credits_libraries">Used libraries</string>
 
@@ -84,12 +88,14 @@
     <string name="about_page_lib_aboutpage">android-about-page on GitHub</string>
     <string name="about_page_lib_rangebar">SimpleRangeBar on GitHub</string>
 
-    <string name="about_page_lib_ffmpeg_link">https://github.com/WritingMinds/ffmpeg-android-java/</string>
-    <string name="about_page_lib_appintro_link">https://github.com/apl-devs/AppIntro</string>
-    <string name="about_page_lib_aboutpage_link">https://github.com/medyo/android-about-page/blob/master/README.md</string>
-    <string name="about_page_lib_rangebar_link">https://github.com/recklessracoon/simplerangebar-android</string>
+    <string name="about_page_lib_ffmpeg_link" translatable="false">https://github.com/WritingMinds/ffmpeg-android-java/</string>
+    <string name="about_page_lib_appintro_link" translatable="false">https://github.com/apl-devs/AppIntro</string>
+    <string name="about_page_lib_aboutpage_link" translatable="false">https://github.com/medyo/android-about-page/blob/master/README.md</string>
+    <string name="about_page_lib_rangebar_link" translatable="false">https://github.com/recklessracoon/simplerangebar-android</string>
 
     <string name="about_page_connect">Connect with us</string>
-    <string name="about_page_connect_git_name">recklessracoon</string>
+    <string name="about_page_connect_git_name" translatable="false">recklessracoon</string>
+
+    <string name="about_page_license">View respective license</string>
 
 </resources>
