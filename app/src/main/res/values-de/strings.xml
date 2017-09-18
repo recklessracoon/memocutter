@@ -19,7 +19,7 @@
     <string name="intro_slide1_title">MemoCutter</string>
     <string name="intro_slide1_text">Eine einfache Möglichkeit um Memos und Audio Dateien zu schneiden. Audios werden auf dem Gerät zwischengespeichert, wir benötigen daher das Recht zum Zugriff auf den Gerätespeicher.</string>
     <string name="intro_slide2_title">Eine Memo laden</string>
-    <string name="intro_slide2_text">Benutze die Teilen-Funktion und wähle diese App als Ziel. Alternativ ist es möglich manuell nach Audios zu suchen.</string>
+    <string name="intro_slide2_text">Benutze die Teilen-Funktion und wähle diese App als Ziel. Alternativ ist es möglich manuell in den Verzeichnissen nach Audios zu suchen.</string>
     <string name="intro_slide3_title">Eine Memo schneiden</string>
     <string name="intro_slide3_text">Die Range-Bar definiert den Bereich der ausgeschnitten wird. Der Button rechts unten startet den Vorgang. Geschnittene Memos können von hier aus direkt geteilt werden!</string>
     <string name="intro_slide4_title">Audio Dateien</string>
