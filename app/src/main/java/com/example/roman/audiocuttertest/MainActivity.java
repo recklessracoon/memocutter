@@ -194,10 +194,11 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
                 Uri img = data.getData();
 
-                BackgroundStyle.setCurrentMenuSelection(this, 6);
+                BackgroundStyle.setCurrentMenuSelection(this, 7);
                 BackgroundStyle.setBackground(this, img);
                 handleNewStyle();
-                //makeSnackbar(getString(R.string.background_custom_txt));
+                if(isPatterActivated(this))
+                    makeSnackbar(getString(R.string.background_custom_txt));
 
                 break;
         }
@@ -230,6 +231,19 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         edit.apply();
     }
 
+    public static boolean isPatterActivated(Activity activity) {
+        SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        return sh.getBoolean("PATTER", true);
+    }
+
+    public static void setPatterActivated(Activity activity, boolean value) {
+        SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        SharedPreferences.Editor edit = sh.edit();
+
+        edit.putBoolean("PATTER", value);
+        edit.apply();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.settings_menu, menu);
@@ -247,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             inflater.inflate(R.menu.settings_menu_items, popup.getMenu());
             popup.setOnMenuItemClickListener(this);
             popup.getMenu().getItem(0).setChecked(isIntroActivated(this));
+            popup.getMenu().getItem(1).setChecked(isPatterActivated(this));
 
             int current = BackgroundStyle.getCurrentMenuSelection(this);
             popup.getMenu().getItem(current).setChecked(true);
@@ -268,39 +283,50 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 item.setChecked(newState);
                 return true;
 
+            case R.id.first_patterbox:
+                boolean newState2 = !isPatterActivated(this);
+                setPatterActivated(this, newState2);
+                item.setChecked(newState2);
+                return true;
+
             case R.id.background_standard:
                 BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_BACKGROUND);
-                BackgroundStyle.setCurrentMenuSelection(this, 1);
+                BackgroundStyle.setCurrentMenuSelection(this, 2);
                 handleNewStyle();
-                //makeSnackbar(getString(R.string.background_standard_sel));
+                if(isPatterActivated(this))
+                    makeSnackbar(getString(R.string.background_standard_sel));
                 return true;
 
             case R.id.background_white:
                 BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_WHITE);
-                BackgroundStyle.setCurrentMenuSelection(this, 2);
+                BackgroundStyle.setCurrentMenuSelection(this, 3);
                 handleNewStyle();
-                //makeSnackbar(getString(R.string.background_white_sel));
+                if(isPatterActivated(this))
+                    makeSnackbar(getString(R.string.background_white_sel));
                 return true;
 
             case R.id.background_glitter_gold:
                 BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_GLITTER_GOLD);
-                BackgroundStyle.setCurrentMenuSelection(this, 3);
+                BackgroundStyle.setCurrentMenuSelection(this, 4);
                 handleNewStyle();
-                //makeSnackbar(getString(R.string.background_glitter_gold_sel));
+                if(isPatterActivated(this))
+                    makeSnackbar(getString(R.string.background_glitter_gold_sel));
                 return true;
 
             case R.id.background_glitter_pink:
                 BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_GLITTER_PINK);
-                BackgroundStyle.setCurrentMenuSelection(this, 4);
+                BackgroundStyle.setCurrentMenuSelection(this, 5);
                 handleNewStyle();
-                //makeSnackbar(getString(R.string.background_glitter_pink_sel));
+                if(isPatterActivated(this))
+                    makeSnackbar(getString(R.string.background_glitter_pink_sel));
                 return true;
 
             case R.id.background_glitter_blue:
                 BackgroundStyle.setBackground(this, BackgroundStyle.STANDARD_GLITTER_BLUE);
-                BackgroundStyle.setCurrentMenuSelection(this, 5);
+                BackgroundStyle.setCurrentMenuSelection(this, 6);
                 handleNewStyle();
-                //makeSnackbar(getString(R.string.background_glitter_blue_sel));
+                if(isPatterActivated(this))
+                    makeSnackbar(getString(R.string.background_glitter_blue_sel));
                 return true;
 
             case R.id.background_custom:

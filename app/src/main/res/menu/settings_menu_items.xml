@@ -7,6 +7,9 @@
             android:titleCondensed="@string/first_checkbox_condensed"
             android:title="@string/first_checkbox"
             android:checkable="true"/>
+        <item android:id="@+id/first_patterbox"
+            android:title="@string/first_patterbox"
+            android:checkable="true"/>
     </group>
 
     <group android:id="@+id/background_group"

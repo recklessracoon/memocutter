@@ -64,6 +64,8 @@
     <string name="background_custom">Custom style</string>
     <string name="background_custom_txt">Custom style selected.</string>
 
+    <string name="first_patterbox">Activate patter</string>
+
     <string name="about_page_txt">About</string>
 
     <string name="about_page_description">MemoCutter: Contact, credits, licenses \nNote that this project is open source and can be viewed with its perspective license in the "Connect with us" section</string>

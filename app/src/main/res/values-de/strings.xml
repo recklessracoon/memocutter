@@ -56,7 +56,7 @@
     <string name="about_page_credits_libraries">Benutzte Bibliotheken</string>
     <string name="about_page_credits">Danksagung</string>
     <string name="about_page_connect">Kontakt</string>
-    <string name="about_page_description">MemoCutter: Kontakt, Danksagung, Lizenzen\nDieses Projekt ist open source, die zugehörige GitHub Seite kann unter Kontakt eingesehen werden</string>
+    <string name="about_page_description">MemoCutter: Kontakt, Danksagung, Lizenzen\nDieses Projekt ist open source, die zugehörige GitHub Seite kann unter "Kontakt" eingesehen werden</string>
     <string name="about_page_git_project">Dieses Projekt auf GitHub</string>
     <string name="about_page_icons">Icons erstellt mit Android Studio\'s Image Asset Studio</string>
     <string name="about_page_lib_aboutpage">android-about-page auf GitHub</string>
@@ -64,4 +64,5 @@
     <string name="about_page_license">Zeige zugehörige Lizenz</string>
     <string name="about_page_lib_ffmpeg">ffmpeg-android-java auf GitHub</string>
     <string name="about_page_lib_rangebar">SimpleRangeBar auf GitHub</string>
+    <string name="first_patterbox">Sprüche aktivieren</string>
 </resources>
