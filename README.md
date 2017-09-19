@@ -2,7 +2,7 @@
 
 MemoCutter is a fast and easy way to cut out unwanted sound parts from voice messages received via common instant messaging services and resend the result. 
 
-# Features include
+# Features
 
 -AppIntro: Short manual on how to use
 -overview over edited audios
@@ -39,7 +39,7 @@ Cut audios together
 - Opens another activity, see "Overview 2"
 
 # Overview
-![alt text](https://imgur.com/c5JDWpP)
+![alt text](https://i.imgur.com/c5JDWpP.png)
 
 - Gives an overview over all edited audios
 - Search by name possible
@@ -49,7 +49,7 @@ Cut audios together
 - Swipe left to delete
 
 # Overview 2
-![alt text](https://imgur.com/Q342qV1)
+![alt text](https://i.imgur.com/Q342qV1.png)
 
 - Gives an overview over all edited audios
 - Search by name possible
@@ -59,7 +59,7 @@ Cut audios together
 - Swipe left to delete
 
 # Edit
-![alt text](https://imgur.com/ac0Mtaq)
+![alt text](https://i.imgur.com/ac0Mtaq.png)
 
 - Lets you replay the audio by pressing play button
 - Top right share button
