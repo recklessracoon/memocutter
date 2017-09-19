@@ -81,7 +81,7 @@ Material design icons provided by Android Studio's Image Asset Studio
 
 # Used libraries
 
-Wrapper for ffmpeg, a linux command line tool to edit audio and video files
+Wrapper for ffmpeg, a linux command line tool to edit audio and video files\n
 https://github.com/WritingMinds/ffmpeg-android-java
 
 Easy way to include an AppIntro in your android project
