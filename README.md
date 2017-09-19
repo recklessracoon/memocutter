@@ -2,6 +2,8 @@
 
 MemoCutter is a fast and easy way to cut out unwanted sound parts from voice messages received via common instant messaging services and resend the result. 
 
+https://play.google.com/store/apps/details?id=com.recklessracoon.roman.audiocuttertest&hl=en
+
 # Features
 
 -AppIntro: Short manual on how to use
