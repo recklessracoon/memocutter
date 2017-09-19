@@ -82,13 +82,13 @@ Material design icons provided by Android Studio's Image Asset Studio
 # Used libraries
 
 - Wrapper for ffmpeg, a linux command line tool to edit audio and video files
-https://github.com/WritingMinds/ffmpeg-android-java
+- https://github.com/WritingMinds/ffmpeg-android-java
 
 - Easy way to include an AppIntro in your android project
-https://github.com/apl-devs/AppIntro
+- https://github.com/apl-devs/AppIntro
 
 - Easy way to include an about page in your android project
-https://github.com/medyo/android-about-page
+- https://github.com/medyo/android-about-page
 
 - Customizable RangeBar for android
-https://github.com/recklessracoon/simplerangebar-android
+- https://github.com/recklessracoon/simplerangebar-android
