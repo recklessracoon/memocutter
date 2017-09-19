@@ -75,7 +75,7 @@ Cut audios together
 # Credits
 
 Gold, Pink, Blue backgrounds designed by kjpargeter / Freepik
-http://www.freepik.com
+- http://www.freepik.com
 
 Material design icons provided by Android Studio's Image Asset Studio
 
