@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primaryBackground"
-    tools:context="com.example.roman.audiocuttertest.FileBrowserActivity">
+    tools:context="com.example.roman.audiocuttertest.com.recklessracoon.roman.audiocuttertest.FileBrowserActivity">
 
     <ProgressBar
         android:id="@+id/progress_bar_recycle"
