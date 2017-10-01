@@ -57,7 +57,14 @@ public class CutterImpl extends Cutter {
     @Override
     public void cutWithFFMPEGAsync() {
 
-        /*
+        try {
+            Log.d("FFMPEGDEVICE",""+fFmpeg.getDeviceFFmpegVersion());
+            Log.d("FFMPEGLIBRARY",""+fFmpeg.getLibraryFFmpegVersion());
+        } catch (FFmpegCommandAlreadyRunningException e) {
+            e.printStackTrace();
+        }
+
+
         String[] c = new String[1];
         c[0] = "-version";
 
@@ -91,7 +98,6 @@ public class CutterImpl extends Cutter {
         } catch (FFmpegCommandAlreadyRunningException e) {
             e.printStackTrace();
         }
-        */
 
         final File resultLocation = getTemporaryCutFileLocationWithName();
 
@@ -189,13 +195,21 @@ public class CutterImpl extends Cutter {
 
                     try {
                         displayedMedia = loadMediaPlayer(fileOfDisplayedMedia);
+                        displayedMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mp) {
+                                callback.concatFinished(displayedMedia);
+                            }
+                        });
+
+                        displayedMedia.prepare();
+
                     } catch (IOException e) {
                         e.printStackTrace();
                         callback.concatFailed(e);
                         return;
                     }
 
-                    callback.concatFinished(displayedMedia);
                 }
 
                 @Override

@@ -155,6 +155,9 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
                 mAdapter.notifyDataSetChanged();
                 mAdapter.notifyItemRangeChanged(0,mAdapter.getItemCount());
 
+                if(mAdapter.getItemCount() == 0)
+                    makeSnackbar(getString(R.string.edit_no_files));
+
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
 
@@ -170,7 +173,7 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
 
     @Override
     public void onAudioDetectorFail(File audioFile, Exception e) {
-        //makeSnackbar(getString(R.string.search_file_load_fail));
+        makeSnackbar(getString(R.string.search_file_load_fail));
         // TODO decide on what to do with latestFile.dat and stuff
     }
 
@@ -201,6 +204,9 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
 
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            if(mAdapter == null)
+                return;
+
             String query = intent.getStringExtra(SearchManager.QUERY);
 
             FileBrowserAdapter adapter = (FileBrowserAdapter) mRecyclerView.getAdapter();
@@ -212,9 +218,12 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
 
     @Override
     public boolean onQueryTextSubmit(String newText) {
+        if(mAdapter == null)
+            return false;
+
         FileBrowserAdapter adapter = (FileBrowserAdapter) mRecyclerView.getAdapter();
         adapter.updateWithSearchQuery(newText);
-        Log.d("QUERY2",""+newText);
+        //Log.d("QUERY2",""+newText);
         return true;
     }
 
@@ -240,6 +249,7 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
     @Override
     public void onPause(){
         super.onPause();
-        mAdapter.pauseAll();
+        if(mAdapter != null && mAdapter.getItemCount() > 0)
+            mAdapter.pauseAll();
     }
 }

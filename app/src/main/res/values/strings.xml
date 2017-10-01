@@ -100,4 +100,7 @@
 
     <string name="about_page_license">View respective license</string>
 
+    <string name="search_file_load_fail">Problem loading audios. The external storage permission is probably missing.</string>
+    <string name="edit_no_files">You didn\'t cut any audios yet. Cut audios and all .mp3 files in /AudioCutter folder will be shown here.</string>
+
 </resources>

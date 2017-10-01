@@ -33,29 +33,35 @@ public class AudioDetector extends Thread {
 
         Log.d("BROWSE","started");
 
-        for(File audioFile : audioCutterDirectory.listFiles()){
-            if(audioFile.getName().contains("mp3")){
-                Log.d("BROWSE","ABS: "+audioFile.getAbsolutePath());
+        try {
+            for (File audioFile : audioCutterDirectory.listFiles()) {
+                if (audioFile.getName().contains("mp3")) {
+                    Log.d("BROWSE", "ABS: " + audioFile.getAbsolutePath());
 
-                MediaPlayer mediaPlayer;
-                Uri myUri = Uri.fromFile(audioFile); // initialize Uri here
-                mediaPlayer = new MediaPlayer();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                try {
-                    mediaPlayer.setDataSource(context, myUri);
-                    mediaPlayer.prepare();
+                    MediaPlayer mediaPlayer;
+                    Uri myUri = Uri.fromFile(audioFile); // initialize Uri here
+                    mediaPlayer = new MediaPlayer();
+                    mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    try {
+                        mediaPlayer.setDataSource(context, myUri);
+                        mediaPlayer.prepare();
 
-                    audioFiles.add(new Wrap(audioFile, audioFile.getName(), mediaPlayer));
+                        audioFiles.add(new Wrap(audioFile, audioFile.getName(), mediaPlayer));
 
-                } catch (IOException e) {
-                    callback.onAudioDetectorFail(audioFile, e);
-                    Log.d("BROWSE","FAIL"+e.toString());
+                    } catch (IOException e) {
+                        callback.onAudioDetectorFail(audioFile, e);
+                        Log.d("BROWSE", "FAIL" + e.toString());
+                    }
+
                 }
+            } //endfor
 
-            }
-        } //endfor
+            callback.onAudioDetectorSuccess(audioFiles);
 
-        callback.onAudioDetectorSuccess(audioFiles);
+        }catch (NullPointerException e){
+            callback.onAudioDetectorFail(audioCutterDirectory, e);
+        }
+
     }
 
 }

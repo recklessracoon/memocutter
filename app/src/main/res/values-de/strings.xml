@@ -65,4 +65,8 @@
     <string name="about_page_lib_ffmpeg">ffmpeg-android-java auf GitHub</string>
     <string name="about_page_lib_rangebar">SimpleRangeBar auf GitHub</string>
     <string name="first_patterbox">Sprüche aktivieren</string>
+
+    <string name="search_file_load_fail">Problem beim Laden von audios. Das Recht zum Zugriff auf den Datenspeicher fehlt wahrscheinlich.</string>
+    <string name="edit_no_files">Bis jetzt wurden keine Audios geschnitten. Geschnittene Audios und alle .mp3 Dateien im /AudioCutter Ordner werden hier angezeigt.</string>
+
 </resources>

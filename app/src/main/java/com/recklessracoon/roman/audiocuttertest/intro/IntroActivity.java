@@ -31,8 +31,7 @@ public class IntroActivity extends AppIntro {
         setFadeAnimation();
 
         askForPermissions(new String[]{
-                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
-
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
     }
 
     public void onDonePressed(Fragment currentFragment) {

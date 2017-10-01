@@ -145,8 +145,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
                 if(mediaPlayer != null){
                     if(!mediaPlayer.isPlaying()) {
 
-                        if(mediaPlayer != null)
-                            mediaPlayer.seekTo((int)rangeBar.getRightThumbValue());
+                        mediaPlayer.seekTo((int)rangeBar.getLeftThumbValue());
 
                         mediaPlayer.start();
                         mHandler.post(updateBar);
@@ -225,13 +224,21 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
 
         cutter = new CutterImpl(this, this, mediaPlayer, audioFile);
 
+        //Log.d("OPUS",audioFile.getName());
+
+        if(audioFile.getName().contains(".dat")) { // not sure which extension, bc received just the outputstream of the file via share function
+            //Log.d("OPUS","im here");
+            progressConvert.show();
+            cutter.convertFromOpusToMp3Async();
+        }
+
         try {
             mediaPlayer.setDataSource(this, myUri);
             mediaPlayer.prepare();
         } catch (IOException e) { // could not load, no supported format, try converting to mp3
-            //e.printStackTrace();
-            progressConvert.show();
-            cutter.convertFromOpusToMp3Async();
+            e.printStackTrace();
+            //progressConvert.show();
+            //cutter.convertFromOpusToMp3Async();
         }
 
         rangeBar.setRanges(0, mediaPlayer.getDuration());
@@ -368,7 +375,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         makeSnackbar(getString(com.recklessracoon.roman.audiocuttertest.R.string.edit_cut_fail));
     }
 
-    private void handleNewMediaPlayerArrival(MediaPlayer mediaPlayer){
+    private void handleNewMediaPlayerArrival(final MediaPlayer mediaPlayer){
         this.mediaPlayer = mediaPlayer;
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -379,12 +386,14 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
                 long min = rangeBar.getLeftThumbValue();
                 rangeBar.setThumbValues(min, min); // let the mediaplayer start from the front
                 //EditActivity.this.mediaPlayer.seekTo(rangeBar.getSelectedMinValue().intValue());
+                mediaPlayer.seekTo((int)min);
             }
         });
 
         rangeBar.setRanges(0, mediaPlayer.getDuration());
         rangeBar.setThumbValues(0,0);
         mediaPlayer.seekTo(0);
+        //Log.d("VALUES",""+rangeBar.getLeftThumbValue()+" "+rangeBar.getRightThumbValue());
     }
 
 }

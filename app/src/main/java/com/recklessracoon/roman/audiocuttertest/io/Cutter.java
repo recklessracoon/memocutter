@@ -3,6 +3,7 @@ package com.recklessracoon.roman.audiocuttertest.io;
 import android.content.Context;
 import android.util.Log;
 
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.recklessracoon.roman.audiocuttertest.R;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
@@ -41,6 +42,7 @@ public abstract class Cutter {
 
     private void initFFMPEG() {
         fFmpeg = FFmpeg.getInstance(context);
+
         try {
             fFmpeg.loadBinary(new LoadBinaryResponseHandler() {
 
@@ -68,6 +70,14 @@ public abstract class Cutter {
         } catch (FFmpegNotSupportedException e) {
             callback.ffmpegInitFailed(e);
         }
+
+        try {
+            Log.d("FFMPEGDEVICE",""+fFmpeg.getDeviceFFmpegVersion());
+            Log.d("FFMPEGLIBRARY",""+fFmpeg.getLibraryFFmpegVersion());
+        } catch (FFmpegCommandAlreadyRunningException e) {
+            e.printStackTrace();
+        }
+
     }
 
     protected File getMemoCutterLocation(){
