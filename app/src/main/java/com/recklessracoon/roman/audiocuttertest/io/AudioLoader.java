@@ -1,9 +1,12 @@
 package com.recklessracoon.roman.audiocuttertest.io;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -86,14 +89,34 @@ public class AudioLoader extends Thread {
         }
     }
 
-    public static String getRealPathFromURI(Context context, Uri contentUri) {
+    public static String getRealPathFromURI(Context context, Uri contentUri, int flags) {
 
         InputStream inputStream;
         String finalPath = contentUri.getPath();
 
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            try {
+                context.grantUriPermission(context.getPackageName(), contentUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                final int takeFlags = flags & (Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                context.getContentResolver().takePersistableUriPermission(contentUri, takeFlags);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String bufferPath = "lastEditedFile.dat"; // .dat? .mp3?
+        Log.d("CURI",""+contentUri.getPath());
+
+        try {
+            if(contentUri.getPath().contains("mp3") || contentUri.getPath().contains("audio/"))
+                bufferPath = "lastEditedFile.mp3";
+        } catch (Exception e){
+
+        }
+
         try {
             inputStream = context.getContentResolver().openInputStream(contentUri);
-            File bufferHere = Cutter.getTemporaryCutFileLocationWithName("lastEditedFile.dat"); // .dat? .mp3?
+            File bufferHere = Cutter.getTemporaryCutFileLocationWithName(bufferPath);
             copyInputStreamToFile(inputStream, bufferHere);
             finalPath = bufferHere.getAbsolutePath();
         } catch (FileNotFoundException e) {

@@ -1,14 +1,18 @@
 package com.recklessracoon.roman.audiocuttertest;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +45,8 @@ import java.util.ArrayList;
 import static android.os.Environment.getExternalStorageDirectory;
 
 public class EditActivity extends AppCompatActivity implements EditMemoAdapterShareCallback, CutterCallback {
+
+    private final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 420;
 
     private Handler mHandler;
 
@@ -100,6 +106,38 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mRecyclerView.setBackground(BackgroundStyle.getBackgroundDrawable(this));
+
+        checkPermissions();
+    }
+
+    private void checkPermissions(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+
+            makeSnackbar(getString(R.string.permission_explain));
+
+                ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    makeSnackbar(getString(R.string.permission_granted));
+                } else {
+                    makeSnackbar(getString(R.string.permission_denied));
+                }
+                return;
+            }
+
+        }
     }
 
     private void initRecyclerView(){
@@ -203,7 +241,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         Bundle extras = getIntent().getExtras();
 
         final File audioFile = (extras.getSerializable("theFile") == null) ?
-                new File((AudioLoader.getRealPathFromURI(this, ((Uri)extras.get("android.intent.extra.STREAM"))))) :
+                new File((AudioLoader.getRealPathFromURI(this, ((Uri)extras.get("android.intent.extra.STREAM")), getIntent().getFlags()))) :
                 ((File) extras.getSerializable("theFile"));
 
         Uri myUri = Uri.fromFile(audioFile); // initialize Uri here

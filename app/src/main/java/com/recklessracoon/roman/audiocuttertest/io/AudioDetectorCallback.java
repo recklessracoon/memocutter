@@ -2,6 +2,7 @@ package com.recklessracoon.roman.audiocuttertest.io;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -11,4 +12,6 @@ import java.util.ArrayList;
 public interface AudioDetectorCallback {
     void onAudioDetectorSuccess(ArrayList<Wrap> audioFiles);
     void onAudioDetectorFail(File audioFile, Exception e);
+
+    void onParticularAudioLoadFail(File audioFile, IOException e);
 }

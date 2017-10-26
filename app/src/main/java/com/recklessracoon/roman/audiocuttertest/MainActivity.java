@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 // Get the path
                 String path;
 
-                path = AudioLoader.getRealPathFromURI(this, uri);
+                path = AudioLoader.getRealPathFromURI(this, uri, data.getFlags());
 
                 Log.d("CHOOSE", "File Path: " + path);
                 File file = new File(path);

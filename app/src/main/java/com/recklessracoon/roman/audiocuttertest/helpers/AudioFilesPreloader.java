@@ -8,6 +8,7 @@ import com.recklessracoon.roman.audiocuttertest.io.AudioDetectorCallback;
 import com.recklessracoon.roman.audiocuttertest.io.Wrap;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -51,6 +52,11 @@ public class AudioFilesPreloader implements AudioDetectorCallback {
     @Override
     public void onAudioDetectorFail(File audioFile, Exception e) {
         // TODO handle preload fail. Maybe just not visible for user?
-        Log.d("PRELOAD","fail: "+audioFile.getAbsolutePath()+e.toString());
+        //Log.d("PRELOAD","fail: "+audioFile.getAbsolutePath()+e.toString());
+    }
+
+    @Override
+    public void onParticularAudioLoadFail(File audioFile, IOException e) {
+        //Log.d("PRELOAD","fail: "+audioFile.getAbsolutePath()+e.toString());
     }
 }

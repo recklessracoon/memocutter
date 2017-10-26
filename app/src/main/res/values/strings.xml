@@ -32,7 +32,7 @@
 
     <!--> AppIntro </-->
     <string name="intro_slide1_title">MemoCutter</string>
-    <string name="intro_slide1_text">An easy way to cut and resend audio memos and audio files. We need the WRITE_EXTERNAL_STORAGE permission to be able to cut audios.</string>
+    <string name="intro_slide1_text">An easy way to cut and resend audio memos and audio files. Most functionality depends on reading and writing files in the /AudioCutter folder, thus we need the corresponding permission.</string>
     <string name="intro_slide2_title">How to load a file</string>
     <string name="intro_slide2_text">Look out for the share symbol over an audio file and choose this app as the target. Alternatively, you can browse your folders to choose a file manually.</string>
     <string name="intro_slide3_title">How to cut a file</string>
@@ -101,6 +101,10 @@
     <string name="about_page_license">View respective license</string>
 
     <string name="search_file_load_fail">Problem loading audios. The external storage permission is probably missing.</string>
+    <string name="search_particular_file_load_fail">Could not load particular file</string>
     <string name="edit_no_files">You didn\'t cut any audios yet. Cut audios and all .mp3 files in /AudioCutter folder will be shown here.</string>
 
+    <string name="permission_explain">Most functionality depends on reading and writing files in the /AudioCutter folder, thus we need the corresponding permission.</string>
+    <string name="permission_granted">Permission granted. You might need to restart the app.</string>
+    <string name="permission_denied">Permission denied. Most functionality is not possible.</string>
 </resources>

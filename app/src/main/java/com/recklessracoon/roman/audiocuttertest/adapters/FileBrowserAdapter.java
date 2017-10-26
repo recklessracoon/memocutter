@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -200,6 +201,11 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
+
+        for(Wrap wrap : mDataset){
+            Log.d("WRAPS",""+wrap.toString());
+        }
+
         holder.mTextView.setText(mDataset.get(position).name);
         holder.mediaPlayer = mDataset.get(position).mediaPlayer;
 

@@ -1,12 +1,16 @@
 package com.recklessracoon.roman.audiocuttertest;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -31,9 +35,12 @@ import com.recklessracoon.roman.audiocuttertest.io.Wrap;
 import com.recklessracoon.roman.audiocuttertest.theming.BackgroundStyle;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class FileBrowserActivity extends AppCompatActivity implements AudioDetectorCallback, SearchView.OnQueryTextListener {
+
+    private final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 420;
 
     private static RecyclerView mRecyclerView;
     private FileBrowserAdapter mAdapter;
@@ -86,6 +93,8 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
         frameLayout.setBackground(BackgroundStyle.getBackgroundDrawable(this));
 
         mRecyclerView.setBackground(BackgroundStyle.getBackgroundDrawable(this));
+
+        checkPermissions();
     }
 
     private void handleMergeMode(){
@@ -94,6 +103,8 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
     }
 
     private void refreshItems(){
+
+        /*
         ArrayList<Wrap> preloaded = AudioFilesSingleton.getAudioFiles();
 
         if(preloaded.size() == 0) { // Either not finished or no files
@@ -101,10 +112,15 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
             audioDetector = new AudioDetector(this, parent, this);
             audioDetector.start();
         } else { // Directly call success method with preloaded data
-            AudioFilesSingleton.setAudioFiles(new ArrayList<Wrap>());
             onAudioDetectorSuccess(preloaded);
             AudioFilesSingleton.resetAudioFiles();
         }
+        */
+
+        // always refresh, audiodetector algorithm stops when there are no new files
+        File parent = EditActivity.getTemporarySavedFile(this).getParentFile();
+        audioDetector = new AudioDetector(this, parent, this);
+        audioDetector.start();
     }
 
     private void initRecyclerView(){
@@ -146,16 +162,20 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
     public void onAudioDetectorSuccess(final ArrayList<Wrap> audioFiles) {
         // specify an adapter (see also next example)
         final Context context = this;
+
+        final boolean hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 mAdapter = new FileBrowserAdapter(audioFiles, mergeModeOn, mCombineButton);
                 mRecyclerView.setAdapter(mAdapter);
 
                 mAdapter.notifyDataSetChanged();
                 mAdapter.notifyItemRangeChanged(0,mAdapter.getItemCount());
 
-                if(mAdapter.getItemCount() == 0)
+                if(mAdapter.getItemCount() == 0 && hasPermission)
                     makeSnackbar(getString(R.string.edit_no_files));
 
                 mRecyclerView.setVisibility(View.VISIBLE);
@@ -169,12 +189,49 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
             }
         });
 
+        //AudioFilesSingleton.setAudioFiles(audioFiles);
+    }
+
+    private void checkPermissions(){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+
+            makeSnackbar(getString(R.string.permission_explain));
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    makeSnackbar(getString(R.string.permission_granted));
+                } else {
+                    makeSnackbar(getString(R.string.permission_denied));
+                }
+                return;
+            }
+
+        }
     }
 
     @Override
     public void onAudioDetectorFail(File audioFile, Exception e) {
         makeSnackbar(getString(R.string.search_file_load_fail));
         // TODO decide on what to do with latestFile.dat and stuff
+    }
+
+    @Override
+    public void onParticularAudioLoadFail(File audioFile, IOException e) {
+        if(audioFile != null && !audioFile.getName().contains(".dat") && !audioFile.getName().contains("temp.mp3"))
+            makeSnackbar(getString(R.string.search_particular_file_load_fail)+" : "+audioFile.getName());
     }
 
     @Override
