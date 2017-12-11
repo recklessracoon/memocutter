@@ -77,7 +77,8 @@ public class CutterImpl extends Cutter {
 
                 @Override
                 public void onProgress(String message) {
-                    Log.d("VERSION",""+message);
+                    //Log.d("VERSION",""+message);
+                    callback.onProgress(message);
                 }
 
                 @Override
@@ -134,7 +135,8 @@ public class CutterImpl extends Cutter {
 
                 @Override
                 public void onProgress(String message) {
-                    Log.d("FFMPEG",message);
+                    //Log.d("FFMPEG",message);
+                    callback.onProgress(message);
                 }
 
                 @Override
@@ -214,7 +216,8 @@ public class CutterImpl extends Cutter {
 
                 @Override
                 public void onProgress(String message) {
-                    Log.d("CONCAT",""+message);
+                    //Log.d("CONCAT",""+message);
+                    callback.onProgress(message);
                 }
 
                 @Override
@@ -269,7 +272,7 @@ public class CutterImpl extends Cutter {
 
                     } catch (IOException e) {
                         e.printStackTrace();
-                        callback.conversionFailed(e);
+                        //callback.conversionFailed(e); // TODO check whether this solves problem on android 7 for not being able to load audios after converting
                         return;
                     }
 
@@ -278,7 +281,7 @@ public class CutterImpl extends Cutter {
 
                 @Override
                 public void onProgress(String message) {
-
+                    callback.onProgress(message);
                 }
 
                 @Override

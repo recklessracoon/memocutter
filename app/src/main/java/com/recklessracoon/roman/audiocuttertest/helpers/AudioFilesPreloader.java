@@ -44,6 +44,10 @@ public class AudioFilesPreloader implements AudioDetectorCallback {
         }
     }
 
+    public Thread getThreadReference(){
+        return audioDetector;
+    }
+
     @Override
     public void onAudioDetectorSuccess(ArrayList<Wrap> audioFiles) {
         AudioFilesSingleton.setAudioFiles(audioFiles);

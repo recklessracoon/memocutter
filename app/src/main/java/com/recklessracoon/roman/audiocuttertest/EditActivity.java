@@ -240,9 +240,16 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
     private void initMediaPlayerAndCutter(){
         Bundle extras = getIntent().getExtras();
 
-        final File audioFile = (extras.getSerializable("theFile") == null) ?
-                new File((AudioLoader.getRealPathFromURI(this, ((Uri)extras.get("android.intent.extra.STREAM")), getIntent().getFlags()))) :
-                ((File) extras.getSerializable("theFile"));
+        File audioFile = null;
+
+        try {
+            audioFile = (extras.getSerializable("theFile") == null) ?
+                    new File((AudioLoader.getRealPathFromURI(this, ((Uri) extras.get("android.intent.extra.STREAM")), getIntent().getFlags()))) :
+                    ((File) extras.getSerializable("theFile"));
+        } catch (NullPointerException e){
+            makeSnackbar(getString(R.string.edit_load_fail));
+            return;
+        }
 
         Uri myUri = Uri.fromFile(audioFile); // initialize Uri here
         this.audioFile = audioFile;
@@ -261,6 +268,8 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         });
 
         cutter = new CutterImpl(this, this, mediaPlayer, audioFile);
+
+        Log.d("CURI2",""+audioFile.getAbsolutePath());
 
         //Log.d("OPUS",audioFile.getName());
 
@@ -383,27 +392,64 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
     }
 
     @Override
+    public void onProgress(String message){
+        if(progressConvert != null && progressConvert.isShowing()){
+            progressConvert.setMessage(message);
+        }
+
+        if(progressConcat != null && progressConcat.isShowing()){
+            progressConcat.setMessage(message);
+        }
+    }
+
+    @Override
     public void conversionFinished(MediaPlayer mediaPlayer){
         handleNewMediaPlayerArrival(mediaPlayer);
-        progressConvert.dismiss();
+
+        if (EditActivity.this.isDestroyed()) {
+            return;
+        }
+
+        if (progressConvert != null && progressConvert.isShowing()) {
+            progressConvert.dismiss();
+        }
     }
 
     @Override
     public void conversionFailed(Exception e) {
         makeSnackbar(getString(com.recklessracoon.roman.audiocuttertest.R.string.edit_load_fail));
-        progressConvert.dismiss();
+
+        if (EditActivity.this.isDestroyed()) {
+            return;
+        }
+
+        if (progressConvert != null && progressConvert.isShowing()) {
+            progressConvert.dismiss();
+        }
     }
 
     @Override
     public void concatFinished(MediaPlayer mediaPlayer) {
         handleNewMediaPlayerArrival(mediaPlayer);
-        progressConcat.dismiss();
+        if (EditActivity.this.isDestroyed()) {
+            return;
+        }
+
+        if (progressConcat != null && progressConcat.isShowing()) {
+            progressConcat.dismiss();
+        }
         makeSnackbar(getString(com.recklessracoon.roman.audiocuttertest.R.string.edit_concat_success));
     }
 
     @Override
     public void concatFailed(Exception e) {
-        progressConcat.dismiss();
+        if (EditActivity.this.isDestroyed()) {
+            return;
+        }
+
+        if (progressConcat != null && progressConcat.isShowing()) {
+            progressConcat.dismiss();
+        }
         makeSnackbar(getString(com.recklessracoon.roman.audiocuttertest.R.string.edit_concat_fail));
     }
 
@@ -431,7 +477,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         rangeBar.setRanges(0, mediaPlayer.getDuration());
         rangeBar.setThumbValues(0,0);
         mediaPlayer.seekTo(0);
-        //Log.d("VALUES",""+rangeBar.getLeftThumbValue()+" "+rangeBar.getRightThumbValue());
+        Log.d("VALUES","(handled new mediaplayer)"+rangeBar.getLeftThumbValue()+" "+rangeBar.getRightThumbValue());
     }
 
 }

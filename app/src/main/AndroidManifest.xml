@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.recklessracoon.roman.audiocuttertest" android:versionCode="5" android:versionName="0.9.2">
+    package="com.recklessracoon.roman.audiocuttertest" android:versionCode="5" android:versionName="0.9.3">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -13,11 +13,7 @@
         <activity
             android:name="com.recklessracoon.roman.audiocuttertest.MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity android:name="com.recklessracoon.roman.audiocuttertest.FileBrowserActivity" android:screenOrientation="portrait">
@@ -56,6 +52,14 @@
             android:name="com.recklessracoon.roman.audiocuttertest.LicenseActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
+        </activity>
+
+        <activity android:name=".SplashActivity" android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
 
         <meta-data

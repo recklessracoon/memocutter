@@ -17,6 +17,8 @@ public interface CutterCallback {
     void conversionFinished(MediaPlayer mediaPlayer);
     void conversionFailed(Exception e);
 
+    void onProgress(String message);
+
     void concatFinished(MediaPlayer mediaPlayer);
     void concatFailed(Exception e);
 
