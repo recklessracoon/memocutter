@@ -99,8 +99,8 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         initTextViews();
         initButtons();
         initRangeBar();
-        initMediaPlayerAndCutter();
         initRecyclerView();
+        initMediaPlayerAndCutter();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
