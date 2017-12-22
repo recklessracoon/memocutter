@@ -73,4 +73,6 @@
     <string name="permission_explain">Lesen und schreiben im /AudioCutter Ordner ist essentiell für die meiste Funktionalität, daher benötigen wir die entsprechende Berechtigung.</string>
     <string name="permission_granted">Berechtigung genehmigt. App muss möglicherweise neu gestartet werden.</string>
     <string name="permission_denied">Berechtigung verweigert. Ohne ist die Funktionalität stark eingeschränkt.</string>
+
+    <string name="need_to_reload">Zuviele media player aktiv, lade neu..</string>
 </resources>

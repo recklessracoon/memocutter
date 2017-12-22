@@ -47,6 +47,7 @@
     <string name="folder_name" translatable="false">AudioCutter</string>
 
     <string name="combine_not_possible">You must first choose at least 2 items</string>
+    <string name="need_to_reload">Too many media players active, reloading..</string>
 
     <!--> Menu </-->
     <string name="background_standard_txt">Simplistic</string>
@@ -69,7 +70,7 @@
     <string name="about_page_txt">About</string>
 
     <string name="about_page_description">MemoCutter: Contact, credits, licenses \nNote that this project is open source and can be viewed with its perspective license in the "Connect with us" section</string>
-    <string name="about_page_version" translatable="false">Version 0.9.3</string>
+    <string name="about_page_version" translatable="false">Version 0.9.4</string>
 
     <string name="about_page_git_project">This project on GitHub</string>
     <string name="about_page_git_project_link" translatable="false">https://github.com/recklessracoon/memocutter</string>

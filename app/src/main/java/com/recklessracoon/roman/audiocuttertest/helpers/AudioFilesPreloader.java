@@ -1,6 +1,7 @@
 package com.recklessracoon.roman.audiocuttertest.helpers;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.recklessracoon.roman.audiocuttertest.io.AudioDetector;
@@ -62,5 +63,10 @@ public class AudioFilesPreloader implements AudioDetectorCallback {
     @Override
     public void onParticularAudioLoadFail(File audioFile, IOException e) {
         //Log.d("PRELOAD","fail: "+audioFile.getAbsolutePath()+e.toString());
+    }
+
+    @Override
+    public void onMediaPlayerThrowsError(MediaPlayer mp, int what, int flag) {
+
     }
 }

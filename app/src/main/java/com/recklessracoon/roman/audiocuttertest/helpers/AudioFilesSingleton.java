@@ -1,5 +1,7 @@
 package com.recklessracoon.roman.audiocuttertest.helpers;
 
+import android.media.MediaPlayer;
+
 import com.recklessracoon.roman.audiocuttertest.io.Wrap;
 
 import java.util.ArrayList;
@@ -22,7 +24,28 @@ public class AudioFilesSingleton {
         return audioFiles;
     }
 
+    public static void applyOnErrorListener(MediaPlayer.OnErrorListener onErrorListener){
+        ArrayList<Wrap> audioFiles = AudioFilesSingleton.getAudioFiles();
+        try {
+            for (Wrap w : audioFiles) {
+                w.mediaPlayer.setOnErrorListener(onErrorListener);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static void resetAudioFiles(){
+        if(audioFiles != null) {
+            for (Wrap w : audioFiles) {
+                try {
+                    w.mediaPlayer.pause();
+                    w.mediaPlayer.stop();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
         audioFiles = new ArrayList<>();
     }
 }

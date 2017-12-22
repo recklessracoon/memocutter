@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
 
+import com.recklessracoon.roman.audiocuttertest.helpers.AudioFilesPreloader;
 import com.recklessracoon.roman.audiocuttertest.helpers.AudioFilesSingleton;
 
 import java.io.File;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by Roman on 03.09.2017.
@@ -44,8 +46,18 @@ public class AudioDetector extends Thread {
             return;
         }
 
+        final File first = directory[0];
+
         audioFiles = new ArrayList<>();
         HashMap<String, Wrap> oldAudioFiles = new HashMap<>();
+
+        MediaPlayer.OnErrorListener onErrorListener = new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                callback.onMediaPlayerThrowsError(mp, what, extra);
+                return false;
+            }
+        };
 
         for(Wrap wrap : AudioFilesSingleton.getAudioFiles()){
             oldAudioFiles.put(wrap.actualFile.getAbsolutePath(), wrap);
@@ -69,6 +81,7 @@ public class AudioDetector extends Thread {
                         Uri myUri = Uri.fromFile(audioFile); // initialize Uri here
                         mediaPlayer = new MediaPlayer();
                         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        mediaPlayer.setOnErrorListener(onErrorListener);
                         try {
                             mediaPlayer.setDataSource(context, myUri);
                             mediaPlayer.prepare();

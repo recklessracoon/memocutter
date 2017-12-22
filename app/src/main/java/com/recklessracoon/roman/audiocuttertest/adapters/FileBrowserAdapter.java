@@ -218,7 +218,7 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
             }
         });
 
-        holder.mTextViewTime.setText(Cutter.formatDurationPrecise(0));
+        //holder.mTextViewTime.setText(Cutter.formatDurationPrecise(0));
         holder.actualFile = mDataset.get(position).actualFile;
 
         holder.itemView.setSelected(mDataset.get(position).isSelected);
@@ -227,11 +227,13 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
 
         if(holder.mediaPlayer.isPlaying()) {
             holder.mPlay.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
-            holder.mSeekBar.setProgress(holder.mediaPlayer.getCurrentPosition());
             holder.mHandler.post(holder.updateBar);
         } else {
             holder.mPlay.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
         }
+
+        holder.mTextViewTime.setText(Cutter.formatDurationPrecise(holder.mediaPlayer.getCurrentPosition()));
+        holder.mSeekBar.setProgress(holder.mediaPlayer.getCurrentPosition());
 
         if(mergeModeOn){
             holder.mChevron.setVisibility(View.INVISIBLE);
@@ -256,13 +258,14 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
 
     public void updateWithSearchQuery(String query){
         Iterator<Wrap> iterator = mDataset.iterator();
+        query = query.toLowerCase(); //no case sensitivity
 
         //Log.d("SIZE",""+mDataset.size());
         Wrap wrap;
 
         while(iterator.hasNext()){
             wrap = iterator.next();
-            if(!wrap.name.contains(query)){
+            if(!wrap.name.toLowerCase().contains(query)){
                 iterator.remove();
             }
         }

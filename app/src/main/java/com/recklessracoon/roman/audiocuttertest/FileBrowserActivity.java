@@ -6,6 +6,7 @@ import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -37,6 +38,7 @@ import com.recklessracoon.roman.audiocuttertest.theming.BackgroundStyle;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 public class FileBrowserActivity extends AppCompatActivity implements AudioDetectorCallback, SearchView.OnQueryTextListener {
 
@@ -55,11 +57,14 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
 
     private AudioDetector audioDetector;
 
+    private Semaphore refreshing;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.recklessracoon.roman.audiocuttertest.R.layout.activity_file_browser);
 
+        refreshing = new Semaphore(1);
         handleMergeMode();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -80,12 +85,22 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
             @Override
             public void onRefresh() {
                 // Refresh items
-                refreshItems();
+                refreshItems(false);
             }
         });
 
         initRecyclerView();
-        refreshItems();
+
+        MediaPlayer.OnErrorListener onErrorListener = new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                onMediaPlayerThrowsError(mp, what, extra);
+                return false;
+            }
+        };
+
+        AudioFilesSingleton.applyOnErrorListener(onErrorListener); // hook-in this callbacks onError listener onto preloaded files
+        refreshItems(false);
 
         handleIntent(getIntent());
 
@@ -102,25 +117,22 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
         Log.d("MERGE",""+mergeModeOn);
     }
 
-    private void refreshItems(){
-
-        /*
-        ArrayList<Wrap> preloaded = AudioFilesSingleton.getAudioFiles();
-
-        if(preloaded.size() == 0) { // Either not finished or no files
+    private void refreshItems(boolean resetBeforeRefresh){
+        if(refreshing.tryAcquire()) {
+            mSwipeRefreshLayout.setRefreshing(true);
             File parent = EditActivity.getTemporarySavedFile(this).getParentFile();
             audioDetector = new AudioDetector(this, parent, this);
+            if (resetBeforeRefresh)
+                AudioFilesSingleton.resetAudioFiles();
             audioDetector.start();
-        } else { // Directly call success method with preloaded data
-            onAudioDetectorSuccess(preloaded);
-            AudioFilesSingleton.resetAudioFiles();
         }
-        */
+    }
 
-        // always refresh, audiodetector algorithm stops when there are no new files
-        File parent = EditActivity.getTemporarySavedFile(this).getParentFile();
-        audioDetector = new AudioDetector(this, parent, this);
-        audioDetector.start();
+    @Override
+    public void onMediaPlayerThrowsError(MediaPlayer mp, int what, int flag){
+        //Log.d("ONHEAPOVER", "refreshing..");
+        makeSnackbar(getString(R.string.need_to_reload));
+        refreshItems(true);
     }
 
     private void initRecyclerView(){
@@ -181,11 +193,15 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
 
-                mSwipeRefreshLayout.setRefreshing(false);
-
                 Log.d("DATA",""+mAdapter.getItemCount());
 
                 new SwipeableDeletableRecyclerViewDecorator().withContext(context).withRecyclerView(mRecyclerView).apply();
+
+                if(mSwipeRefreshLayout.isRefreshing())
+                    mSwipeRefreshLayout.setRefreshing(false);
+
+                AudioFilesSingleton.setAudioFiles(audioFiles);
+                refreshing.release();
             }
         });
 
@@ -224,7 +240,10 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
 
     @Override
     public void onAudioDetectorFail(File audioFile, Exception e) {
+        if(mSwipeRefreshLayout.isRefreshing())
+            mSwipeRefreshLayout.setRefreshing(false);
         makeSnackbar(getString(R.string.search_file_load_fail));
+        refreshing.release();
         // TODO decide on what to do with latestFile.dat and stuff
     }
 
@@ -279,6 +298,9 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
             return false;
 
         FileBrowserAdapter adapter = (FileBrowserAdapter) mRecyclerView.getAdapter();
+
+        pauseAll();
+
         adapter.updateWithSearchQuery(newText);
         //Log.d("QUERY2",""+newText);
         return true;
@@ -306,6 +328,10 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
     @Override
     public void onPause(){
         super.onPause();
+        pauseAll();
+    }
+
+    private void pauseAll(){
         if(mAdapter != null && mAdapter.getItemCount() > 0)
             mAdapter.pauseAll();
     }

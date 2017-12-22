@@ -203,6 +203,9 @@ public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHo
     public void removeCutFile(int position){
         final Wrap wrap = mDataset.get(position);
 
+        if(wrap.mediaPlayer != null && wrap.mediaPlayer.isPlaying())
+            wrap.mediaPlayer.pause();
+
         new Thread(new Runnable() {
             @Override
             public void run() {

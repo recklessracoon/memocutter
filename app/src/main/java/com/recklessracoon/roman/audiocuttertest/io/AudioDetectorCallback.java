@@ -1,6 +1,8 @@
 package com.recklessracoon.roman.audiocuttertest.io;
 
 
+import android.media.MediaPlayer;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,4 +16,6 @@ public interface AudioDetectorCallback {
     void onAudioDetectorFail(File audioFile, Exception e);
 
     void onParticularAudioLoadFail(File audioFile, IOException e);
+
+    void onMediaPlayerThrowsError(MediaPlayer mp, int what, int flag);
 }
