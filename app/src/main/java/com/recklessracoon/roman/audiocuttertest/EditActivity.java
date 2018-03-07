@@ -273,7 +273,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
 
         //Log.d("OPUS",audioFile.getName());
 
-        if(audioFile.getName().contains(".dat")) { // not sure which extension, bc received just the outputstream of the file via share function
+        if(audioFile.getName().contains(".dat") || audioFile.getName().contains(".opus")) { // not sure which extension, bc received just the outputstream of the file via share function
             //Log.d("OPUS","im here");
             progressConvert.show();
             cutter.convertFromOpusToMp3Async();

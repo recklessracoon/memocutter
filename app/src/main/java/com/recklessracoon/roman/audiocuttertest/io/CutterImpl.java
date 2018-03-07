@@ -57,6 +57,7 @@ public class CutterImpl extends Cutter {
     @Override
     public void cutWithFFMPEGAsync() {
 
+        /*
         try {
             Log.d("FFMPEGDEVICE",""+fFmpeg.getDeviceFFmpegVersion());
             Log.d("FFMPEGLIBRARY",""+fFmpeg.getLibraryFFmpegVersion());
@@ -99,6 +100,7 @@ public class CutterImpl extends Cutter {
         } catch (FFmpegCommandAlreadyRunningException e) {
             e.printStackTrace();
         }
+        */
 
         final File resultLocation = getTemporaryCutFileLocationWithName();
 

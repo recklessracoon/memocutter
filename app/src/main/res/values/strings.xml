@@ -70,7 +70,7 @@
     <string name="about_page_txt">About</string>
 
     <string name="about_page_description">MemoCutter: Contact, credits, licenses \nNote that this project is open source and can be viewed with its perspective license in the "Connect with us" section</string>
-    <string name="about_page_version" translatable="false">Version 0.9.4</string>
+    <string name="about_page_version" translatable="false">Version 0.9.5</string>
 
     <string name="about_page_git_project">This project on GitHub</string>
     <string name="about_page_git_project_link" translatable="false">https://github.com/recklessracoon/memocutter</string>
@@ -108,4 +108,7 @@
     <string name="permission_explain">Most functionality depends on reading and writing files in the /AudioCutter folder, thus we need the corresponding permission.</string>
     <string name="permission_granted">Permission granted. You might need to restart the app.</string>
     <string name="permission_denied">Permission denied. Most functionality is not possible.</string>
+
+    <string name="list_files_cannot_browse_no_permission">We need a permission to view all your folders and audio files.</string>
+    <string name="list_files_cannot_browse_no_permission_given">Permissions seem to be granted, but there still is an unexpected error. Try to restart the app.</string>
 </resources>

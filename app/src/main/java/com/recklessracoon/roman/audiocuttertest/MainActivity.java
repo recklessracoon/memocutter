@@ -130,16 +130,20 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     private void showFileChooser() {
 
+        Intent intent = new Intent(this, ListFileActivity.class);
+        startActivity(intent);
+
+        /*
         Intent intent;
 
         if (Build.MODEL.contains("amsung") || Build.MANUFACTURER.contains("amsung")) {
             intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
-            intent.putExtra("CONTENT_TYPE", "*/*");
+            intent.putExtra("CONTENT_TYPE", "");
             intent.addCategory(Intent.CATEGORY_DEFAULT);
         } else {
             intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("*/*");
+            intent.setType("");
         }
 
         try {
@@ -151,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
             Toast.makeText(this, getString(com.recklessracoon.roman.audiocuttertest.R.string.first_no_file_manager),
                     Toast.LENGTH_LONG).show();
         }
+        */
+
     }
 
     @Override
