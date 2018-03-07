@@ -77,5 +77,5 @@
     <string name="need_to_reload">Zuviele media player aktiv, lade neu..</string>
 
     <string name="list_files_cannot_browse_no_permission">Wir brauchen enstsprechende Rechte um Ordner und Audios anzuzeigen.</string>
-    <string name="list_files_cannot_browse_no_permission_given">Rechte sind gegeben, aber es trat ein unerwarteter Fehler auf. Versuche die App neu zu starten.</string>
+    <string name="list_files_cannot_browse_no_permission_given">Rechte sind gegeben, aber die App muss neu gestartet werden.</string>
 </resources>

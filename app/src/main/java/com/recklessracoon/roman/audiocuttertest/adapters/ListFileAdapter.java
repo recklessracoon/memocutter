@@ -92,7 +92,7 @@ public class ListFileAdapter extends BaseAdapter {
         final File current = mFiles.get(position);
 
         if(!current.isDirectory()) { //change descriptions
-            imageView.setImageResource(R.drawable.ic_music_video_black_24dp);
+            imageView.setImageResource(R.drawable.ic_library_music_black_24dp);
             //explanation.setText(R.string.list_files_audio);
         }
 

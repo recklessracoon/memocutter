@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.recklessracoon.roman.audiocuttertest.adapters.EditMemoAdapter;
@@ -66,6 +67,8 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
 
     private SimpleRangeBar rangeBar;
 
+    private LinearLayout mLinear;
+
     private final Runnable updateBar = new Runnable() {
         @Override
         public void run() {
@@ -105,7 +108,10 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        mRecyclerView.setBackground(BackgroundStyle.getBackgroundDrawable(this));
+        getSupportActionBar().setTitle(audioFile.getName());
+
+        mLinear = (LinearLayout) findViewById(R.id.activity_edit_linear);
+        mLinear.setBackground(BackgroundStyle.getBackgroundDrawable(this));
 
         checkPermissions();
     }

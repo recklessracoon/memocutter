@@ -66,6 +66,9 @@ public class BackgroundStyle {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             yourDrawable = ContextCompat.getDrawable(context, STANDARD_BACKGROUND);
+        } catch (Exception e){
+            e.printStackTrace();
+            yourDrawable = ContextCompat.getDrawable(context, STANDARD_BACKGROUND);
         }
 
         return yourDrawable;

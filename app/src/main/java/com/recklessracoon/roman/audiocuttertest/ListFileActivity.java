@@ -9,18 +9,18 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.recklessracoon.roman.audiocuttertest.adapters.ListFileAdapter;
+import com.recklessracoon.roman.audiocuttertest.theming.BackgroundStyle;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Roman on 01.03.2018.
@@ -32,6 +32,8 @@ public class ListFileActivity extends AppCompatActivity implements AdapterView.O
 
     private ListView mListView;
     private ListFileAdapter mAdapter;
+
+    private FrameLayout mFrame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +54,17 @@ public class ListFileActivity extends AppCompatActivity implements AdapterView.O
         ArrayList<File> data = new ArrayList<>();
         data.add(Environment.getExternalStorageDirectory());
 
-        getSupportActionBar().setTitle(data.get(0).getName());
+        try {
+            getSupportActionBar().setTitle(data.get(0).getParentFile().getName());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         mAdapter = new ListFileAdapter(this, data);
         mListView.setAdapter(mAdapter);
+
+        mFrame = (FrameLayout) findViewById(R.id.activity_edit_list_files);
+        mFrame.setBackground(BackgroundStyle.getBackgroundDrawable(this));
     }
 
     private void folderOpened(File folder){
@@ -135,6 +144,11 @@ public class ListFileActivity extends AppCompatActivity implements AdapterView.O
 
             if(resultUndo){
                 mAdapter.notifyDataSetChanged();
+                try {
+                    getSupportActionBar().setTitle(((File) mAdapter.getItem(0)).getParentFile().getName());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             } else {
                 onBackPressed();
                 finish();

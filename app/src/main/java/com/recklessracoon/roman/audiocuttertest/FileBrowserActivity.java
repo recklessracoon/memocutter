@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -104,8 +105,8 @@ public class FileBrowserActivity extends AppCompatActivity implements AudioDetec
 
         handleIntent(getIntent());
 
-        FrameLayout frameLayout = (FrameLayout) findViewById(com.recklessracoon.roman.audiocuttertest.R.id.activity_edit);
-        frameLayout.setBackground(BackgroundStyle.getBackgroundDrawable(this));
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(com.recklessracoon.roman.audiocuttertest.R.id.activity_edit);
+        coordinatorLayout.setBackground(BackgroundStyle.getBackgroundDrawable(this));
 
         mRecyclerView.setBackground(BackgroundStyle.getBackgroundDrawable(this));
 

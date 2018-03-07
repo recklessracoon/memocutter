@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
+        android:background="#7EFFFFFF"
         android:weightSum="23"
         tools:layout_editor_absoluteX="8dp">
 
@@ -19,7 +20,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:background="?attr/selectableItemBackground"
-                app:srcCompat="@drawable/ic_folder_open_black_24dp" />
+                app:srcCompat="@drawable/ic_folder_black_24dp" />
 
             <TextView
                 android:id="@+id/list_files_item_name"
