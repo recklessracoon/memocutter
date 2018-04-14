@@ -84,7 +84,7 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             @Override
-            public void concatFinished(MediaPlayer mediaPlayer) {
+            public void concatFinished(MediaPlayer mediaPlayer, File file) {
 
             }
 

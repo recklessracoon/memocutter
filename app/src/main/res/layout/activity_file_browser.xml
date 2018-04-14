@@ -43,7 +43,7 @@
         android:layout_gravity="bottom|end"
         android:background="@color/colorAccent"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_check_black_24dp"
+        app:srcCompat="@drawable/ic_done_all_white_24dp"
         android:id="@+id/browse_floatingActionButton" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -67,14 +67,34 @@ public class ListFileActivity extends AppCompatActivity implements AdapterView.O
         mFrame.setBackground(BackgroundStyle.getBackgroundDrawable(this));
     }
 
-    private void folderOpened(File folder){
+    private void folderOpened(final File folder){
         mAdapter.doClearData();
         for(File f : folder.listFiles()){
             if(isAllowedFolder(f) || isAllowedAudio(f))
                 mAdapter.addFile(f);
         }
-        mAdapter.notifyDataSetChanged();
-        getSupportActionBar().setTitle(folder.getName());
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(50); // Waits for ripple animation to finish..
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                updateListAndTitle(folder);
+            }
+        }).start();
+    }
+
+    private void updateListAndTitle(final File folder){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.notifyDataSetChanged();
+                getSupportActionBar().setTitle(folder.getName());
+            }
+        });
     }
 
     private void audioOpened(File audio){

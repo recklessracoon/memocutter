@@ -19,7 +19,7 @@ public interface CutterCallback {
 
     void onProgress(String message);
 
-    void concatFinished(MediaPlayer mediaPlayer);
+    void concatFinished(MediaPlayer mediaPlayer, File file);
     void concatFailed(Exception e);
 
     void ffmpegInitFailed(FFmpegNotSupportedException e);

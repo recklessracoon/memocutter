@@ -73,19 +73,21 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         @Override
         public void run() {
             if(mediaPlayer != null){
+                try {
+                    if (mediaPlayer.isPlaying()) {
 
-                if(mediaPlayer.isPlaying()) {
+                        //long time = SystemClock.currentThreadTimeMillis();
+                        rangeBar.setThumbValues(rangeBar.getLeftThumbValue(), mediaPlayer.getCurrentPosition());
+                        //time = SystemClock.currentThreadTimeMillis() - time;
+                        //Log.d("TIME", "" + Cutter.formatDurationPrecise((int) time));
 
-                    //long time = SystemClock.currentThreadTimeMillis();
-                    rangeBar.setThumbValues(rangeBar.getLeftThumbValue(), mediaPlayer.getCurrentPosition());
-                    //time = SystemClock.currentThreadTimeMillis() - time;
-                    //Log.d("TIME", "" + Cutter.formatDurationPrecise((int) time));
+                        rightTime.setText(Cutter.formatDurationPrecise(mediaPlayer.getCurrentPosition()));
 
-                    rightTime.setText(Cutter.formatDurationPrecise(mediaPlayer.getCurrentPosition()));
-
-                    mHandler.postDelayed(this, 50);
+                        mHandler.postDelayed(this, 50);
+                    }
+                } catch (IllegalStateException e){
+                    e.printStackTrace();
                 }
-
             }
         }
     };
@@ -186,18 +188,22 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         playPauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mediaPlayer != null){
-                    if(!mediaPlayer.isPlaying()) {
+                try {
+                    if (mediaPlayer != null) {
+                        if (!mediaPlayer.isPlaying()) {
 
-                        mediaPlayer.seekTo((int)rangeBar.getLeftThumbValue());
+                            mediaPlayer.seekTo((int) rangeBar.getRightThumbValue());
 
-                        mediaPlayer.start();
-                        mHandler.post(updateBar);
-                        playPauseButton.setImageResource(com.recklessracoon.roman.audiocuttertest.R.drawable.ic_pause_circle_outline_white_24dp);
-                    } else {
-                        mediaPlayer.pause();
-                        playPauseButton.setImageResource(com.recklessracoon.roman.audiocuttertest.R.drawable.ic_play_circle_outline_white_24dp);
+                            mediaPlayer.start();
+                            mHandler.post(updateBar);
+                            playPauseButton.setImageResource(com.recklessracoon.roman.audiocuttertest.R.drawable.ic_pause_circle_outline_black_24dp);
+                        } else {
+                            mediaPlayer.pause();
+                            playPauseButton.setImageResource(com.recklessracoon.roman.audiocuttertest.R.drawable.ic_play_circle_outline_black_24dp);
+                        }
                     }
+                } catch (IllegalStateException e){
+                    e.printStackTrace();
                 }
             }
         });
@@ -265,7 +271,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                playPauseButton.setImageResource(com.recklessracoon.roman.audiocuttertest.R.drawable.ic_play_circle_outline_white_24dp);
+                playPauseButton.setImageResource(com.recklessracoon.roman.audiocuttertest.R.drawable.ic_play_circle_outline_black_24dp);
 
                 long min = rangeBar.getLeftThumbValue();
                 rangeBar.setThumbValues(min, min); // let the mediaplayer start from the front
@@ -435,7 +441,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
     }
 
     @Override
-    public void concatFinished(MediaPlayer mediaPlayer) {
+    public void concatFinished(MediaPlayer mediaPlayer, File file) {
         handleNewMediaPlayerArrival(mediaPlayer);
         if (EditActivity.this.isDestroyed()) {
             return;
@@ -445,6 +451,9 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
             progressConcat.dismiss();
         }
         makeSnackbar(getString(com.recklessracoon.roman.audiocuttertest.R.string.edit_concat_success));
+
+        audioFile = file;
+        getSupportActionBar().setTitle(audioFile.getName());
     }
 
     @Override
@@ -471,7 +480,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                playPauseButton.setImageResource(com.recklessracoon.roman.audiocuttertest.R.drawable.ic_play_circle_outline_white_24dp);
+                playPauseButton.setImageResource(com.recklessracoon.roman.audiocuttertest.R.drawable.ic_play_circle_outline_black_24dp);
 
                 long min = rangeBar.getLeftThumbValue();
                 rangeBar.setThumbValues(min, min); // let the mediaplayer start from the front

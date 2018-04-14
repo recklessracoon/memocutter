@@ -3,6 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="cards_bottom_margin">2dp</dimen>
     <dimen name="button_mini_margin">4dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
@@ -12,6 +13,6 @@
 
     <dimen name="rangebar">64dp</dimen>
     <dimen name="rangebar_radius">15dp</dimen>
-    <dimen name="rangebar_thickness">10dp</dimen>
+    <dimen name="rangebar_thickness">5dp</dimen>
     <dimen name="rangebar_padding">20dp</dimen>
 </resources>

@@ -70,7 +70,7 @@
     <string name="about_page_txt">About</string>
 
     <string name="about_page_description">MemoCutter: Contact, credits, licenses \nNote that this project is open source and can be viewed with its perspective license in the "Connect with us" section</string>
-    <string name="about_page_version" translatable="false">Version 0.9.5</string>
+    <string name="about_page_version" translatable="false">Version 0.9.6</string>
 
     <string name="about_page_git_project">This project on GitHub</string>
     <string name="about_page_git_project_link" translatable="false">https://github.com/recklessracoon/memocutter</string>

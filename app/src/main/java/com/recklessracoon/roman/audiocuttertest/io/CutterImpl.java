@@ -202,7 +202,7 @@ public class CutterImpl extends Cutter {
                         displayedMedia.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
                             public void onPrepared(MediaPlayer mp) {
-                                callback.concatFinished(displayedMedia);
+                                callback.concatFinished(displayedMedia, fileOfDisplayedMedia);
                             }
                         });
 

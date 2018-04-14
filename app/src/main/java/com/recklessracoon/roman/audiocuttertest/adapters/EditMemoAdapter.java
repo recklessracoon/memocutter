@@ -53,11 +53,15 @@ public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHo
         public final Runnable updateBar = new Runnable() {
             @Override
             public void run() {
-                if(mediaPlayer != null){
-                    mSeekBar.setProgress(mediaPlayer.getCurrentPosition());
-                    mTextViewTime.setText(Cutter.formatDurationPrecise(mediaPlayer.getCurrentPosition()));
-                    if(mediaPlayer.isPlaying())
-                        mHandler.postDelayed(this, 50);
+                try {
+                    if (mediaPlayer != null) {
+                        mSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+                        mTextViewTime.setText(Cutter.formatDurationPrecise(mediaPlayer.getCurrentPosition()));
+                        if (mediaPlayer.isPlaying())
+                            mHandler.postDelayed(this, 50);
+                    }
+                }catch (IllegalStateException e){
+                    e.printStackTrace();
                 }
             }
         };
@@ -159,6 +163,8 @@ public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
+        try{
+
         holder.mTextView.setText(mDataset.get(position).name);
         holder.mediaPlayer = mDataset.get(position).mediaPlayer;
 
@@ -185,6 +191,10 @@ public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHo
         }
 
         holder.renameableViewDecorator.onView(holder.view).withViewHolder(holder).withFile(holder.actualFile).withRenameable(this).apply();
+
+        } catch (IllegalStateException e){
+            e.printStackTrace();
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -209,6 +219,8 @@ public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHo
         new Thread(new Runnable() {
             @Override
             public void run() {
+                wrap.mediaPlayer.stop();
+                wrap.mediaPlayer.release();
                 wrap.actualFile.delete();
             }
         }).start();

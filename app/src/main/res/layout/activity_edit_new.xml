@@ -5,7 +5,6 @@
     android:id="@+id/activity_edit_new"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:context="com.example.roman.audiocuttertest.EditActivity"
     android:orientation="vertical">
 
@@ -19,7 +18,7 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_content_cut_black_24dp"
+        app:srcCompat="@drawable/ic_content_cut_white_24dp"
         android:id="@+id/edit_floatingActionButton" />
 
     <LinearLayout
@@ -34,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:background="#7EFFFFFF"
+            android:background="@color/colorTransparentWhite"
             android:orientation="vertical"
             android:paddingLeft="@dimen/button_mini_margin"
             android:paddingRight="@dimen/button_mini_margin"
@@ -48,7 +47,7 @@
                 android:layout_marginTop="@dimen/recycler_widespace"
 
                 android:layout_weight="3"
-                app:colorRange="@color/colorPrimary"
+                app:colorRange="@color/colorAccent"
                 app:colorRangeBar="@color/primaryBackground"
                 app:colorThumb="@color/colorAccent"
                 app:colorThumbPressed="@color/colorAccentDark"
@@ -96,9 +95,10 @@
                 android:layout_marginTop="@dimen/recycler_widespace"
                 android:layout_weight="3"
                 android:adjustViewBounds="false"
-                android:background="@drawable/roundbutton"
+                android:theme="@style/PrimaryFlatButton"
+                android:background="?attr/selectableItemBackground"
                 android:cropToPadding="false"
-                app:srcCompat="@drawable/ic_play_circle_outline_white_24dp" />
+                app:srcCompat="@drawable/ic_play_circle_outline_black_24dp" />
 
 
         </LinearLayout>

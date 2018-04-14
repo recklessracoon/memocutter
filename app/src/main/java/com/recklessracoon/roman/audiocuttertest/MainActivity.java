@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     private void initButtons(){
         insert = (Button) findViewById(com.recklessracoon.roman.audiocuttertest.R.id.first_button);
         last = (Button) findViewById(com.recklessracoon.roman.audiocuttertest.R.id.first_button_last);
-        another = (Button) findViewById(com.recklessracoon.roman.audiocuttertest.R.id.first_button_other_app);
+        //another = (Button) findViewById(com.recklessracoon.roman.audiocuttertest.R.id.first_button_other_app);
         merge = (Button) findViewById(com.recklessracoon.roman.audiocuttertest.R.id.first_button_merge);
 
         insert.setOnClickListener(new View.OnClickListener() {
@@ -80,12 +80,14 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 fileBrowserIntent();
             }
         });
+        /*
         another.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 otherAppIntent();
             }
         });
+        */
         merge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

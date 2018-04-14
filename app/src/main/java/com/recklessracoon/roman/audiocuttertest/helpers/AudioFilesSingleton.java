@@ -45,6 +45,15 @@ public class AudioFilesSingleton {
                     e.printStackTrace();
                 }
             }
+
+            for (Wrap w : audioFiles) {
+                try {
+                    w.mediaPlayer.release();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
         }
         audioFiles = new ArrayList<>();
     }

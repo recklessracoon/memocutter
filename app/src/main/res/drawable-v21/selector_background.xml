@@ -3,12 +3,12 @@
     <item>
         <selector>
             <item android:state_selected="true"
-                android:drawable="@android:color/holo_blue_light" />
+                android:drawable="@color/colorAccent" />
             <item android:drawable="@android:color/transparent" />
         </selector>
     </item>
     <item>
-        <ripple android:color="@android:color/holo_blue_light">
+        <ripple android:color="@color/colorAccent">
             <item android:id="@android:id/mask">
                 <color android:color="@android:color/white" />
             </item>

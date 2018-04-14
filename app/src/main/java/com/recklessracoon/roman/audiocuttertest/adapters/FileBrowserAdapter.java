@@ -66,11 +66,15 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
         public final Runnable updateBar = new Runnable() {
             @Override
             public void run() {
-                if(mediaPlayer != null){
-                    mSeekBar.setProgress(mediaPlayer.getCurrentPosition());
-                    mTextViewTime.setText(Cutter.formatDurationPrecise(mediaPlayer.getCurrentPosition()));
-                    if(mediaPlayer.isPlaying())
-                        mHandler.postDelayed(this, 50);
+                try {
+                    if (mediaPlayer != null) {
+                        mSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+                        mTextViewTime.setText(Cutter.formatDurationPrecise(mediaPlayer.getCurrentPosition()));
+                        if (mediaPlayer.isPlaying())
+                            mHandler.postDelayed(this, 50);
+                    }
+                } catch (IllegalStateException e){
+                    e.printStackTrace();
                 }
             }
         };
@@ -122,8 +126,12 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     if(mediaPlayer != null && fromUser){
-                        mediaPlayer.seekTo(progress);
-                        mTextViewTime.setText(Cutter.formatDurationPrecise(progress));
+                        try{
+                            mediaPlayer.seekTo(progress);
+                            mTextViewTime.setText(Cutter.formatDurationPrecise(progress));
+                        } catch (IllegalStateException e){
+                            e.printStackTrace();
+                        }
                     }
                 }
             });
@@ -131,15 +139,19 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
             mPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mediaPlayer != null){
-                        if(!mediaPlayer.isPlaying()) {
-                            mediaPlayer.start();
-                            mHandler.post(updateBar);
-                            mPlay.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
-                        } else {
-                            mediaPlayer.pause();
-                            mPlay.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+                    try {
+                        if (mediaPlayer != null) {
+                            if (!mediaPlayer.isPlaying()) {
+                                mediaPlayer.start();
+                                mHandler.post(updateBar);
+                                mPlay.setImageResource(R.drawable.ic_pause_circle_outline_black_24dp);
+                            } else {
+                                mediaPlayer.pause();
+                                mPlay.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+                            }
                         }
+                    } catch (IllegalStateException e){
+                        e.printStackTrace();
                     }
                 }
             });
@@ -206,6 +218,8 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
             Log.d("WRAPS",""+wrap.toString());
         }
 */
+        try{
+
         holder.mTextView.setText(mDataset.get(position).name);
         holder.mediaPlayer = mDataset.get(position).mediaPlayer;
 
@@ -248,6 +262,9 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
         else
             new RenameableViewDecorator().onView(holder.view).withViewHolder(holder).withFile(holder.actualFile).withRenameable(this).apply();
             */
+        } catch (IllegalStateException e){
+            e.printStackTrace();
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -277,19 +294,27 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
     public void removeCutFile(int position){
         final Wrap wrap = mDataset.get(position);
 
-        if(wrap.mediaPlayer != null && wrap.mediaPlayer.isPlaying())
-            wrap.mediaPlayer.pause();
+        try {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                wrap.actualFile.delete();
-            }
-        }).start();
+            if (wrap.mediaPlayer != null && wrap.mediaPlayer.isPlaying())
+                wrap.mediaPlayer.pause();
 
-        mDataset.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeRemoved(position, mDataset.size());
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    wrap.mediaPlayer.stop();
+                    wrap.mediaPlayer.release();
+                    wrap.actualFile.delete();
+                }
+            }).start();
+
+            mDataset.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeRemoved(position, mDataset.size());
+
+        } catch (IllegalStateException e){
+            e.printStackTrace();
+        }
     }
 
     public void notifyItemNotRemoved(int position){
@@ -334,10 +359,13 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
     }
 
     public void pauseAll(){
-        for(Wrap wrap : mDataset)
-            if(wrap.mediaPlayer.isPlaying())
-                wrap.mediaPlayer.pause();
-
+        try {
+            for (Wrap wrap : mDataset)
+                if (wrap.mediaPlayer.isPlaying())
+                    wrap.mediaPlayer.pause();
+        } catch (IllegalStateException e){
+            e.printStackTrace();
+        }
     }
 
     public void invalidate(){
