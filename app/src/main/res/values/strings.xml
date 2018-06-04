@@ -12,14 +12,14 @@
     <string name="first_button_other_app">Share from another app</string>
 
     <!--> Edit Activity </-->
-    <string name="edit_load_fail">Could not load the sound file</string>
+    <string name="edit_load_fail">Could not load the file. The file format is not supported.</string>
     <string name="edit_wait">Please wait..</string>
     <string name="edit_concat">Concatenating audio files...</string>
     <string name="edit_concat_success">Concatenation was successful</string>
     <string name="edit_concat_fail">Unexpected error while concatenating</string>
     <string name="edit_convert">Converting to .mp3</string>
     <string name="edit_cut">Cutting the audio file...</string>
-    <string name="edit_cut_fail">Error occurred. There might be compatibility issues between FFMPEG and the current android OS.</string>
+    <string name="edit_cut_fail">Error occurred. The file format is not supported.</string>
     <string name="edit_cut_not_allowed">You must set a valid beginning and end time</string>
 
     <!--> Search activity </-->
@@ -70,7 +70,7 @@
     <string name="about_page_txt">About</string>
 
     <string name="about_page_description">MemoCutter: Contact, credits, licenses \nNote that this project is open source and can be viewed with its perspective license in the "Connect with us" section</string>
-    <string name="about_page_version" translatable="false">Version 0.9.6</string>
+    <string name="about_page_version" translatable="false">Version 0.9.7</string>
 
     <string name="about_page_git_project">This project on GitHub</string>
     <string name="about_page_git_project_link" translatable="false">https://github.com/recklessracoon/memocutter</string>
@@ -111,4 +111,7 @@
 
     <string name="list_files_cannot_browse_no_permission">We need a permission to view all your folders and audio files.</string>
     <string name="list_files_cannot_browse_no_permission_given">Permissions are granted, but app has to be restarted.</string>
+
+    <string name="renameable_not_renamed">Could not rename the file.</string>
+    <string name="removable_not_removed">Could not remove the file.</string>
 </resources>

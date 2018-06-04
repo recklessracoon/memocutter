@@ -1,7 +1,9 @@
 package com.recklessracoon.roman.audiocuttertest.decorators;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -79,7 +81,13 @@ public class RenameableViewDecorator {
             public void onClick(DialogInterface dialog, int which) {
                 String in = input.getText().toString();
 
-                renameable.renameFile(holder.getAdapterPosition(), actualFile, in);
+                try {
+                    renameable.renameFile(holder.getAdapterPosition(), actualFile, in);
+                } catch (ArrayIndexOutOfBoundsException e){
+                    e.printStackTrace();
+                    notRenamed();
+                }
+
             }
         }).setNegativeButton(context.getString(R.string.search_delete_no), new DialogInterface.OnClickListener() {
             @Override
@@ -89,4 +97,14 @@ public class RenameableViewDecorator {
         }).show(); // Show
 
     }
+
+    private void notRenamed(){
+        makeSnackbar(context.getString(R.string.renameable_not_renamed));
+    }
+
+    private void makeSnackbar(String text) {
+        Snackbar snackbar1 = Snackbar.make(((Activity)context).getWindow().getDecorView().getRootView(), text, Snackbar.LENGTH_LONG);
+        snackbar1.show();
+    }
+
 }

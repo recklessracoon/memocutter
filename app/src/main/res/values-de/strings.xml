@@ -4,7 +4,7 @@
     <string name="edit_convert">Konvertiere zu .mp3</string>
     <string name="edit_cut">Schneide die Audiodatei...</string>
     <string name="edit_cut_not_allowed">Zuerst muss ein gültiger Zeitbereich ausgewählt sein.</string>
-    <string name="edit_load_fail">Konnte die Datei nicht laden</string>
+    <string name="edit_load_fail">Konnte die Datei nicht laden. Das Dateiformat wird nicht unterstützt.</string>
     <string name="edit_wait">Bitte warten..</string>
     <string name="first_button">Ordner durchsuchen</string>
     <string name="first_button_last">Geschnittene Audios</string>
@@ -15,7 +15,7 @@
     <string name="search_delete">Diese Datei löschen?</string>
     <string name="search_delete_yes">Löschen</string>
     <string name="search_delete_no">Abbruch</string>
-    <string name="edit_cut_fail">Fehler beim Vorgang. Mögliches Kompatibilitätsproblem zwischen FFMPEG und dem benutzten Android Betriebssystem</string>
+    <string name="edit_cut_fail">Fehler beim Vorgang. Das Dateiformat ist nicht unterstützt.</string>
     <string name="intro_slide1_title">MemoCutter</string>
     <string name="intro_slide1_text">Eine einfache Möglichkeit um Memos und Audio Dateien zu schneiden. Lesen und schreiben von Audios im /AudioCutter Ordner ist essentiell für die meiste Funktionalität, daher benötigen wir die entsprechende Berechtigung.</string>
     <string name="intro_slide2_title">Eine Memo laden</string>
@@ -78,4 +78,7 @@
 
     <string name="list_files_cannot_browse_no_permission">Wir brauchen enstsprechende Rechte um Ordner und Audios anzuzeigen.</string>
     <string name="list_files_cannot_browse_no_permission_given">Rechte sind gegeben, aber die App muss neu gestartet werden.</string>
+
+    <string name="renameable_not_renamed">Datei konnte nicht umbenannt werden.</string>
+    <string name="removable_not_removed">Datei konnte nicht entfernt werden.</string>
 </resources>

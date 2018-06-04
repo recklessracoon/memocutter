@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.Menu;
@@ -94,6 +96,16 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
                 mergeBrowserIntent();
             }
         });
+
+        //Workaround for android <= Lollipop, where vector drawables cannot be set directly in xml als drawableRight etc.
+        Drawable chevron = AppCompatResources.getDrawable(this, R.drawable.ic_chevron_right_black_24dp);
+        Drawable scissor = AppCompatResources.getDrawable(this, R.drawable.ic_content_cut_black_24dp);
+        Drawable done = AppCompatResources.getDrawable(this, R.drawable.ic_done_all_black_24dp);
+        Drawable folder = AppCompatResources.getDrawable(this, R.drawable.ic_folder_black_24dp);
+
+        insert.setCompoundDrawablesWithIntrinsicBounds(folder, null, chevron, null);
+        merge.setCompoundDrawablesWithIntrinsicBounds(done, null, chevron, null);
+        last.setCompoundDrawablesWithIntrinsicBounds(scissor, null, chevron, null);
     }
 
     private void handleIntro(){

@@ -1,7 +1,9 @@
 package com.recklessracoon.roman.audiocuttertest.decorators;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -54,8 +56,13 @@ public class SwipeableDeletableRecyclerViewDecorator implements SwipeableDeletab
                     builder.setPositiveButton(context.getString(R.string.search_delete_yes), new DialogInterface.OnClickListener() { //when click on DELETE
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ((RecyclerViewAdapterWithRemoveOption)mRecyclerView.getAdapter()).removeCutFile(viewHolder.getAdapterPosition());
-                            ((Invalidateable)mRecyclerView.getAdapter()).invalidate();
+                            try {
+                                ((RecyclerViewAdapterWithRemoveOption) mRecyclerView.getAdapter()).removeCutFile(viewHolder.getAdapterPosition());
+                                ((Invalidateable) mRecyclerView.getAdapter()).invalidate();
+                            } catch (ArrayIndexOutOfBoundsException e){
+                                e.printStackTrace();
+                                notRemoved();
+                            }
                         }
                     }).setNegativeButton(context.getString(R.string.search_delete_no), new DialogInterface.OnClickListener() {  //not removing items if cancel is done
                         @Override
@@ -77,6 +84,15 @@ public class SwipeableDeletableRecyclerViewDecorator implements SwipeableDeletab
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(mRecyclerView); //set swipe to recylcerview
+    }
+
+    private void notRemoved(){
+        makeSnackbar(context.getString(R.string.removable_not_removed));
+    }
+
+    private void makeSnackbar(String text) {
+        Snackbar snackbar1 = Snackbar.make(((Activity)context).getWindow().getDecorView().getRootView(), text, Snackbar.LENGTH_LONG);
+        snackbar1.show();
     }
 
 }

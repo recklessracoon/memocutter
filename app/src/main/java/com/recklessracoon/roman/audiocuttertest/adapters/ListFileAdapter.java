@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.recklessracoon.roman.audiocuttertest.EditActivity;
+import com.recklessracoon.roman.audiocuttertest.ListFileActivity;
 import com.recklessracoon.roman.audiocuttertest.R;
 
 import java.io.File;
@@ -91,9 +93,11 @@ public class ListFileAdapter extends BaseAdapter {
 
         final File current = mFiles.get(position);
 
-        if(!current.isDirectory()) { //change descriptions
+        if(!current.isDirectory() && ListFileActivity.isSupportedAudioFile(current)) { //change descriptions
             imageView.setImageResource(R.drawable.ic_library_music_black_24dp);
             //explanation.setText(R.string.list_files_audio);
+        } else if(!current.isDirectory()){
+            imageView.setImageResource(R.drawable.ic_insert_drive_file_black_24dp);
         }
 
         name.setText(current.getName());

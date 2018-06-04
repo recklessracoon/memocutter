@@ -27,6 +27,7 @@ import com.recklessracoon.roman.audiocuttertest.io.Cutter;
 import com.recklessracoon.roman.audiocuttertest.io.Wrap;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -291,7 +292,7 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
         notifyDataSetChanged();
     }
 
-    public void removeCutFile(int position){
+    public void removeCutFile(int position) {
         final Wrap wrap = mDataset.get(position);
 
         try {
@@ -324,7 +325,7 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
     }
 
     @Override
-    public void renameFile(int position, File actualFile, String in){
+    public void renameFile(int position, File actualFile, String in) {
         File newFile;
 
         actualFile.renameTo(newFile = new File(actualFile.getParentFile(), in+".mp3"));

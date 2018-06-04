@@ -70,7 +70,7 @@ public class ListFileActivity extends AppCompatActivity implements AdapterView.O
     private void folderOpened(final File folder){
         mAdapter.doClearData();
         for(File f : folder.listFiles()){
-            if(isAllowedFolder(f) || isAllowedAudio(f))
+            if(isAllowedFolder(f) || isAllowedFileToBeShown(f))
                 mAdapter.addFile(f);
         }
 
@@ -187,7 +187,14 @@ public class ListFileActivity extends AppCompatActivity implements AdapterView.O
         return false;
     }
 
-    private boolean isAllowedAudio(File audio){
+    private boolean isAllowedFileToBeShown(File audio){ //TODO think about showing all files and warning the user if he tries to mess with unsupported files
+        if(audio.exists())
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean isSupportedAudioFile(File audio){
         if(getFileExtension(audio).contains("mp3"))
             return true;
 
@@ -197,10 +204,25 @@ public class ListFileActivity extends AppCompatActivity implements AdapterView.O
         if(getFileExtension(audio).contains("opus"))
             return true;
 
+        if(getFileExtension(audio).contains("m4a"))
+            return true;
+
+        if(getFileExtension(audio).contains("wav"))
+            return true;
+
+        if(getFileExtension(audio).contains("aac"))
+            return true;
+
+        if(getFileExtension(audio).contains("wma"))
+            return true;
+
+        if(getFileExtension(audio).contains("ogg"))
+            return true;
+
         return false;
     }
 
-    private String getFileExtension(File file) {
+    public static String getFileExtension(File file) {
         String name = file.getName();
         try {
             return name.substring(name.lastIndexOf(".") + 1);
