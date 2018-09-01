@@ -74,6 +74,9 @@ public class ListFileActivity extends AppCompatActivity implements AdapterView.O
                 mAdapter.addFile(f);
         }
 
+        mAdapter.sortFilesByName();
+
+        /*
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -85,16 +88,21 @@ public class ListFileActivity extends AppCompatActivity implements AdapterView.O
                 updateListAndTitle(folder);
             }
         }).start();
+        */
+        updateListAndTitle(folder);
     }
 
     private void updateListAndTitle(final File folder){
+        /*
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mAdapter.notifyDataSetChanged();
+                //mAdapter.notifyDataSetChanged();
                 getSupportActionBar().setTitle(folder.getName());
             }
         });
+        */
+        getSupportActionBar().setTitle(folder.getName());
     }
 
     private void audioOpened(File audio){
@@ -163,7 +171,7 @@ public class ListFileActivity extends AppCompatActivity implements AdapterView.O
             boolean resultUndo = mAdapter.undoClearData();
 
             if(resultUndo){
-                mAdapter.notifyDataSetChanged();
+                //mAdapter.notifyDataSetChanged();
                 try {
                     getSupportActionBar().setTitle(((File) mAdapter.getItem(0)).getParentFile().getName());
                 }catch (Exception e){
@@ -181,14 +189,14 @@ public class ListFileActivity extends AppCompatActivity implements AdapterView.O
     }
 
     private boolean isAllowedFolder(File folder){
-        if(folder.isDirectory() && folder.exists())
+        if(folder.isDirectory() && folder.exists() && folder.getName().indexOf(".") != 0)
             return true;
 
         return false;
     }
 
     private boolean isAllowedFileToBeShown(File audio){ //TODO think about showing all files and warning the user if he tries to mess with unsupported files
-        if(audio.exists())
+        if(audio.exists() && audio.getName().indexOf(".") != 0)
             return true;
         else
             return false;

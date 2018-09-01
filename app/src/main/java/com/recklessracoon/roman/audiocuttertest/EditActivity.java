@@ -107,10 +107,17 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
         initRecyclerView();
         initMediaPlayerAndCutter();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        android.support.v7.app.ActionBar bar = getSupportActionBar();
 
-        getSupportActionBar().setTitle(audioFile.getName());
+        if(bar != null) {
+
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setDisplayShowHomeEnabled(true);
+
+            if (audioFile != null && audioFile.getName() != null)
+                bar.setTitle(audioFile.getName());
+
+        }
 
         mLinear = (LinearLayout) findViewById(R.id.activity_edit_linear);
         mLinear.setBackground(BackgroundStyle.getBackgroundDrawable(this));
