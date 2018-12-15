@@ -189,14 +189,14 @@ public class ListFileActivity extends AppCompatActivity implements AdapterView.O
     }
 
     private boolean isAllowedFolder(File folder){
-        if(folder.isDirectory() && folder.exists() && folder.getName().indexOf(".") != 0)
+        if(folder.isDirectory() && folder.exists() /*&& folder.getName().indexOf(".") != 0*/)
             return true;
 
         return false;
     }
 
     private boolean isAllowedFileToBeShown(File audio){ //TODO think about showing all files and warning the user if he tries to mess with unsupported files
-        if(audio.exists() && audio.getName().indexOf(".") != 0)
+        if(audio.exists() /*&& audio.getName().indexOf(".") != 0*/)
             return true;
         else
             return false;

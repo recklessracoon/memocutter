@@ -109,9 +109,13 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
     }
 
     private void handleIntro(){
-        if(isIntroActivated(this)) {
+        boolean firstAppStart = isFirstAppStart(this);
+        if(isIntroActivated(this) || firstAppStart) {
             Intent intent = new Intent(this, IntroActivity.class);
             startActivity(intent);
+        }
+        if(firstAppStart) {
+            setFirstAppStart(this, false);
         }
     }
 
@@ -233,9 +237,21 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
         snackbar1.show();
     }
 
+    public static boolean isFirstAppStart(Activity activity) {
+        SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        return sh.getBoolean("APP_START", true);
+    }
+
+    public static void setFirstAppStart(Activity activity, boolean value) {
+        SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        SharedPreferences.Editor edit = sh.edit();
+        edit.putBoolean("APP_START", value);
+        edit.apply();
+    }
+
     public static boolean isIntroActivated(Activity activity) {
         SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        return sh.getBoolean("INTRO", true);
+        return sh.getBoolean("INTRO", false);
     }
 
     public static void setIntroActivated(Activity activity, boolean value) {
@@ -248,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuI
 
     public static boolean isPatterActivated(Activity activity) {
         SharedPreferences sh = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        return sh.getBoolean("PATTER", true);
+        return sh.getBoolean("PATTER", false);
     }
 
     public static void setPatterActivated(Activity activity, boolean value) {

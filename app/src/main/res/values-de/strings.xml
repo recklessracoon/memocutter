@@ -17,13 +17,13 @@
     <string name="search_delete_no">Abbruch</string>
     <string name="edit_cut_fail">Fehler beim Vorgang. Das Dateiformat ist nicht unterstützt.</string>
     <string name="intro_slide1_title">MemoCutter</string>
-    <string name="intro_slide1_text">Eine einfache Möglichkeit um Memos und Audio Dateien zu schneiden. Lesen und schreiben von Audios im /AudioCutter Ordner ist essentiell für die meiste Funktionalität, daher benötigen wir die entsprechende Berechtigung.</string>
+    <string name="intro_slide1_text">Geschnittene Audios werden im Ordner /AudioCutter gespeichert, daher benötigen wir die Zugriff auf den Speicher Berechtigung.</string>
     <string name="intro_slide2_title">Eine Memo laden</string>
-    <string name="intro_slide2_text">Benutze die Teilen-Funktion und wähle diese App als Ziel. Alternativ ist es möglich manuell in den Verzeichnissen nach Audios zu suchen.</string>
+    <string name="intro_slide2_text">Benutze die Teilen-Funktion und wähle diese App als Ziel um Audios noch schneller zu schneiden.</string>
     <string name="intro_slide3_title">Eine Memo schneiden</string>
-    <string name="intro_slide3_text">Die Range-Bar definiert den Bereich der ausgeschnitten wird. Der Button rechts unten startet den Vorgang. Geschnittene Memos können von hier aus direkt geteilt werden!</string>
-    <string name="intro_slide4_title">Audio Dateien</string>
-    <string name="intro_slide4_text">Die App gibt eine Übersicht über alle entstandenen Audios. Per Wisch nach links kann eine gelöscht werden. Lange drücken zum umbenennen. Audios werden im Ordner /AudioCutter gespeichert.</string>
+    <string name="intro_slide3_text">Wähle den Bereich, der ausgeschnitten werden soll und klicke auf den grünen Button.</string>
+    <string name="intro_slide4_title">Audio Dateien löschen/umbenennen</string>
+    <string name="intro_slide4_text">Wische nach links um eine Audio Datei zu löschen. Halte eine Datei gedrückt um sie umzubenennen.</string>
     <string name="first_checkbox">Appintro immer anzeigen</string>
     <string name="first_button_other_app">Aus einer anderen App teilen</string>
     <string name="search_delete_confirm">Bestätigen</string>
@@ -34,7 +34,7 @@
     <string name="edit_concat_fail">Ein unerwarteter Fehler ist während des Zusammenschneidens aufgetaucht</string>
     <string name="edit_concat_success">Die Audios wurden zusammengeschnitten</string>
     <string name="intro_slide5_title">Audios kombinieren</string>
-    <string name="intro_slide5_text">Lange klicken bis eine Audio ausgewählt ist. Zum Bestätigen dann auf den Button unten rechts. Die Reihenfolge der Auswahl ist relevant.</string>
+    <string name="intro_slide5_text">Audios gedrückt halten zum Auswählen. Die Auswahlreihenfolge ist relevant.</string>
     <string name="combine_not_possible">Zuerst müssen mindestens 2 Audios ausgewählt sein.</string>
 
     <string name="background_standard_txt">Simpler Style</string>

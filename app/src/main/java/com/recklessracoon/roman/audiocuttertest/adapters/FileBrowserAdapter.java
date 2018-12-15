@@ -25,10 +25,12 @@ import com.recklessracoon.roman.audiocuttertest.decorators.Renameable;
 import com.recklessracoon.roman.audiocuttertest.decorators.RenameableViewDecorator;
 import com.recklessracoon.roman.audiocuttertest.io.Cutter;
 import com.recklessracoon.roman.audiocuttertest.io.Wrap;
+import com.recklessracoon.roman.audiocuttertest.io.WrapComparator;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -163,6 +165,7 @@ public class FileBrowserAdapter extends RecyclerView.Adapter<FileBrowserAdapter.
     // Provide a suitable constructor (depends on the kind of dataset)
     public FileBrowserAdapter(ArrayList<Wrap> myDataset, boolean mergeModeOn, final FloatingActionButton mCombineButton) {
         mDataset = myDataset;
+        Collections.sort(mDataset, new WrapComparator());
         this.mergeModeOn = mergeModeOn;
         enqueued = new ArrayList<>();
         invalidateables = new ArrayList<>();

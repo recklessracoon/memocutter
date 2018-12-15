@@ -1,7 +1,6 @@
 package com.recklessracoon.roman.audiocuttertest.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import java.util.Stack;
 public class ListFileAdapter extends BaseAdapter {
 
     private ArrayList<File> mFiles;
+    private int size;
     private LayoutInflater mInflater;
     private Context mContext;
 
@@ -73,6 +73,7 @@ public class ListFileAdapter extends BaseAdapter {
         this.mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         mPreviousLists = new Stack<>();
+        size = mFiles.size();
     }
 
     public void sortFilesByName(){
@@ -107,6 +108,12 @@ public class ListFileAdapter extends BaseAdapter {
         return true;
     }
 
+    @Override
+    public void notifyDataSetChanged(){
+        size = mFiles.size();
+        super.notifyDataSetChanged();
+    }
+
     public void addFile(File file){
         mFiles.add(file);
         notifyDataSetChanged();
@@ -119,7 +126,7 @@ public class ListFileAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mFiles.size();
+        return size;
     }
 
     @Override

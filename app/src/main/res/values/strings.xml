@@ -32,15 +32,15 @@
 
     <!--> AppIntro </-->
     <string name="intro_slide1_title">MemoCutter</string>
-    <string name="intro_slide1_text">An easy way to cut and resend audio memos and audio files. Most functionality depends on reading and writing files in the /AudioCutter folder, thus we need the corresponding permission.</string>
-    <string name="intro_slide2_title">How to load a file</string>
-    <string name="intro_slide2_text">Look out for the share symbol over an audio file and choose this app as the target. Alternatively, you can browse your folders to choose a file manually.</string>
-    <string name="intro_slide3_title">How to cut a file</string>
-    <string name="intro_slide3_text">Use the range bar to define which part of the file you want to cut out. Press the bottom right button to cut out. Now you can instantly share your new audio files!</string>
-    <string name="intro_slide4_title">Audio files</string>
-    <string name="intro_slide4_text">The app gives you an overview over your audio files. You can delete a file by swiping it to the left. You can rename a file by long clicking an item. For your information, they are stored in the folder /AudioCutter.</string>
+    <string name="intro_slide1_text">Audio files are saved in the /AudioCutter folder, thus we need the storage permission.</string>
+    <string name="intro_slide2_title">Load an audio quickly</string>
+    <string name="intro_slide2_text">Use the share-function from another app to select an audio file more quickly.</string>
+    <string name="intro_slide3_title">Cut an audio</string>
+    <string name="intro_slide3_text">Choose the range you want to cut out and confirm by pressing the green button.</string>
+    <string name="intro_slide4_title">Delete/rename files</string>
+    <string name="intro_slide4_text">Delete a file by swiping it to the left. Long click a file to rename it.</string>
     <string name="intro_slide5_title">Combine audios</string>
-    <string name="intro_slide5_text">Long click on the items you want to combine. Order is relevant. Then click the bottom right button.</string>
+    <string name="intro_slide5_text">Long click on the items you want to combine. Selection order matters. Confirm by pressing the green button.</string>
 
     <!--> Other </-->
     <string name="other_share">Share audio via</string>
