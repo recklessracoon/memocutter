@@ -3,6 +3,7 @@ package com.recklessracoon.roman.audiocuttertest.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
@@ -125,17 +126,22 @@ public class EditMemoAdapter extends RecyclerView.Adapter<EditMemoAdapter.ViewHo
             mShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String sharePath = actualFile.getAbsolutePath();
-                    Uri uri = Uri.parse(sharePath);
-                    Intent share = new Intent(Intent.ACTION_SEND);
-                    share.setType("audio/*");
-                    share.putExtra(Intent.EXTRA_STREAM, uri);
-                    Context context = v.getContext();
-                    context.startActivity(Intent.createChooser(share, context.getString(R.string.other_share)));
+                    shareFromContentUri(v.getContext(), actualFile);
                 }
             });
         }
+    }
 
+    private static void shareFromContentUri(final Context context, File file) {
+        MediaScannerConnection.scanFile(context, new String[]{file.getAbsolutePath()}, null, new MediaScannerConnection.OnScanCompletedListener() {
+            @Override
+            public void onScanCompleted(String path, Uri uri) {
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("audio/*");
+                share.putExtra(Intent.EXTRA_STREAM, uri);
+                context.startActivity(Intent.createChooser(share, context.getString(com.recklessracoon.roman.audiocuttertest.R.string.other_share)));
+            }
+        });
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)

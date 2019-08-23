@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -385,12 +386,19 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
 
     @Override
     public void share(File actualFile) {
-        String sharePath = actualFile.getAbsolutePath();
-        Uri uri = Uri.parse(sharePath);
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType("audio/*");
-        share.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(Intent.createChooser(share, getString(com.recklessracoon.roman.audiocuttertest.R.string.other_share)));
+        shareFromContentUri(actualFile);
+    }
+
+    private void shareFromContentUri(File file) {
+        MediaScannerConnection.scanFile(getBaseContext(), new String[]{file.getAbsolutePath()}, null, new MediaScannerConnection.OnScanCompletedListener() {
+            @Override
+            public void onScanCompleted(String path, Uri uri) {
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("audio/*");
+                share.putExtra(Intent.EXTRA_STREAM, uri);
+                startActivity(Intent.createChooser(share, getString(com.recklessracoon.roman.audiocuttertest.R.string.other_share)));
+            }
+        });
     }
 
     // create an action bar button
