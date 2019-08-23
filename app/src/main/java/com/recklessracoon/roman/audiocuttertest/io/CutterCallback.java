@@ -2,8 +2,6 @@ package com.recklessracoon.roman.audiocuttertest.io;
 
 import android.media.MediaPlayer;
 
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
-
 import java.io.File;
 
 /**
@@ -22,5 +20,5 @@ public interface CutterCallback {
     void concatFinished(MediaPlayer mediaPlayer, File file);
     void concatFailed(Exception e);
 
-    void ffmpegInitFailed(FFmpegNotSupportedException e);
+    void ffmpegInitFailed();
 }

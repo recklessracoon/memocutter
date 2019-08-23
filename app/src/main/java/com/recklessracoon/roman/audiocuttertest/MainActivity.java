@@ -1,20 +1,14 @@
 package com.recklessracoon.roman.audiocuttertest;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
@@ -24,15 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
-import com.recklessracoon.roman.audiocuttertest.helpers.AudioFilesPreloader;
 import com.recklessracoon.roman.audiocuttertest.intro.IntroActivity;
 import com.recklessracoon.roman.audiocuttertest.io.AudioLoader;
-import com.recklessracoon.roman.audiocuttertest.io.Cutter;
-import com.recklessracoon.roman.audiocuttertest.io.CutterCallback;
-import com.recklessracoon.roman.audiocuttertest.io.CutterImpl;
 import com.recklessracoon.roman.audiocuttertest.theming.BackgroundStyle;
 
 import java.io.File;

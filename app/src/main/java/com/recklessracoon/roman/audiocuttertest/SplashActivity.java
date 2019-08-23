@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.recklessracoon.roman.audiocuttertest.helpers.AudioFilesPreloader;
 import com.recklessracoon.roman.audiocuttertest.io.Cutter;
 import com.recklessracoon.roman.audiocuttertest.io.CutterCallback;
@@ -94,7 +93,7 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             @Override
-            public void ffmpegInitFailed(FFmpegNotSupportedException e) {
+            public void ffmpegInitFailed() {
 
             }
         }, null, null); // so the cutter will init ffmpeg TODO check whether this solves issue on android 7 of not being able to convert/cut on first appstart

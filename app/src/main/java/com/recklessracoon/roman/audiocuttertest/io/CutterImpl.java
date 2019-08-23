@@ -8,12 +8,12 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import nl.bravobit.ffmpeg.FFcommandExecuteResponseHandler;
+import nl.bravobit.ffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 
 /**
  * Created by Roman on 05.09.2017.
@@ -116,7 +116,7 @@ public class CutterImpl extends Cutter {
         cmd[8] = resultLocation.getAbsolutePath();
 
         try {
-            fFmpeg.execute(cmd, new FFmpegExecuteResponseHandler() {
+            fFmpeg.execute(cmd, new FFcommandExecuteResponseHandler() {
                 @Override
                 public void onSuccess(String message) {
                     Log.d("FFMPEG",message);
@@ -192,7 +192,7 @@ public class CutterImpl extends Cutter {
             Log.d("TOCONCAT",""+cmd[i]);
 
         try {
-            fFmpeg.execute(cmd, new FFmpegExecuteResponseHandler() {
+            fFmpeg.execute(cmd, new FFcommandExecuteResponseHandler() {
                 @Override
                 public void onSuccess(String message) {
                     fileOfDisplayedMedia = newDestination;
@@ -256,7 +256,7 @@ public class CutterImpl extends Cutter {
         cmd[4] = newDestination.getAbsolutePath();
 
         try {
-            fFmpeg.execute(cmd, new FFmpegExecuteResponseHandler() {
+            fFmpeg.execute(cmd, new FFcommandExecuteResponseHandler() {
                 @Override
                 public void onSuccess(String message) {
                     fileOfDisplayedMedia = newDestination;

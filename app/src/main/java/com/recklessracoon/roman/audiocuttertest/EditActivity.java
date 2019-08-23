@@ -9,13 +9,13 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,6 +27,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.roman.thesimplerangebar.SimpleRangeBar;
+import com.example.roman.thesimplerangebar.SimpleRangeBarOnChangeListener;
 import com.recklessracoon.roman.audiocuttertest.adapters.EditMemoAdapter;
 import com.recklessracoon.roman.audiocuttertest.adapters.EditMemoAdapterShareCallback;
 import com.recklessracoon.roman.audiocuttertest.decorators.SwipeableDeletableRecyclerViewDecorator;
@@ -36,9 +38,6 @@ import com.recklessracoon.roman.audiocuttertest.io.CutterCallback;
 import com.recklessracoon.roman.audiocuttertest.io.CutterImpl;
 import com.recklessracoon.roman.audiocuttertest.io.Wrap;
 import com.recklessracoon.roman.audiocuttertest.theming.BackgroundStyle;
-import com.example.roman.thesimplerangebar.SimpleRangeBar;
-import com.example.roman.thesimplerangebar.SimpleRangeBarOnChangeListener;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
 import java.io.File;
 import java.io.IOException;
@@ -484,7 +483,7 @@ public class EditActivity extends AppCompatActivity implements EditMemoAdapterSh
     }
 
     @Override
-    public void ffmpegInitFailed(FFmpegNotSupportedException e) {
+    public void ffmpegInitFailed() {
         //makeSnackbar(getString(R.string.edit_cut_ffmpeg_fail));
         makeSnackbar(getString(com.recklessracoon.roman.audiocuttertest.R.string.edit_cut_fail));
     }
